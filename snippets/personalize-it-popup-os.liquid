@@ -1,0 +1,1557 @@
+<style>
+  
+  /* Popup css starts */
+  .personalize-product-popup-all-content-os {
+      /* padding: 4rem;
+      background: #F0F0F0;
+      border-radius: 20px;
+      border: 1px solid #000; */
+  }
+  .popup-close-btn-os {
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    color: #274864;
+    min-width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    right: 0;
+    z-index: 2;
+  }
+  .personalize-product-popup-heading-os h2 {
+    margin: 0;
+    width: calc(100% - 60px);
+    text-align: center;
+  }
+  .personalize-product-popup-heading-os {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 1.5rem;
+    position: relative;
+    z-index: 2;
+  }
+  .popup-overlay-os {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7); 
+      z-index: 5;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+  }
+  
+  .personalize-product-popup-section-os {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(.8);
+      width: 95%;
+      margin: 0 auto;
+      height: auto;
+      max-height: calc(100vh - 2rem);
+      max-width: 1200px;
+      padding: 3rem 4rem;
+      box-shadow: 0 4px 12px #0000001a;
+      z-index: 5;
+      visibility: hidden;
+      opacity: 0;
+      overflow-y: auto;
+      transition: opacity .3s ease, transform .3s ease;
+      background: var(--bg-color--body);
+      border-radius: 20px;
+      border: 1px solid #000;
+  }
+ .personalize-product-popup-section-os::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+  }
+  
+  .personalize-product-popup-section-os::-webkit-scrollbar {
+ 	width: 12px;
+	background-color: #F5F5F5;
+  }
+  
+  .personalize-product-popup-section-os::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #888888;
+    border: 1px solid #888888;
+  }
+  
+  .popup-visible .popup-overlay-os {
+      visibility: visible; 
+      opacity: 1;
+  }
+  
+  .popup-visible .personalize-product-popup-section-os {
+      visibility: visible;
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+  }
+  
+  .popup-closing .popup-overlay-os,
+  .popup-closing .personalize-product-popup-section-os {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.8);
+  }
+  
+  .popup-closing .popup-overlay-os,
+  .popup-closing .personalize-product-popup-section-os {
+      visibility: hidden;
+  }
+  /* Popup css ends */
+  .font-dropdown-list-os .font-option-os:last-child {
+    padding-bottom: 0;
+  }
+  .font-dropdown-list-os .font-option-os {
+    padding-bottom: 4px;
+    cursor: pointer;
+  }
+  .custom-font-dropdown-os .font-dropdown-list-os {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      z-index: 1;
+      background-color: #fff;
+      border: 1px solid #000;
+      width: 180px;
+      display: none;
+      max-height: 300px;
+      overflow-y: auto;
+      padding: 12px;
+  }
+  .custom-font-dropdown-os .font-dropdown-button-os {
+      position: relative;
+      background-color: #fff;
+      color: #000;
+      padding: 8px 1rem;
+      border: none;
+      border-radius: var(--button--radius);
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+  }
+  .custom-font-dropdown-os {
+    position: relative;
+  }
+  .font-dropdown-arrow-os {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-bottom: 2px solid #818181;
+    border-left: 2px solid #818181;
+    right: 16px;
+    transform: rotate(-45deg);
+  }
+
+  /* Mobile fields css starts */
+  .personalize-product-popup-col-3-os {
+    padding-left: 1rem;
+    border-left: 1px solid #000;
+    display: none;
+  }
+  
+  .pagination-controls-button-os {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: #fff;
+    border-radius: 40px;
+  }
+
+  .pagination-controls-button-os button {
+    background-color: #fff;
+    color: #fff;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 25px;
+    max-width: 95px;
+    width: 100%;
+    border: 1px solid #274864;
+  }
+  .pagination-controls-button-os button:last-child {
+    background-color: #274864;
+  }
+
+  .pagination-counter-os {
+    font-size: 16px;
+  }
+
+  .mobile-font-buttons-os {
+    margin-bottom: 16px;
+  }
+
+.mobile-font-buttons-os .mobile-font-option-os {
+    background: none;
+    border: 1px solid #274864;
+    color: #274864;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 12px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 24px;
+    min-height: 60px;
+    min-width: 100% !important;
+    max-width:100% !important;
+    flex:100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+.mobile-font-buttons-os .mobile-font-option-os.flourish {
+    font-size: 14px;
+    line-height: 20px;
+}
+.mobile-font-buttons-os .mobile-font-option-os span {
+    position: relative;
+    top: 8px;
+}
+  .mobile-font-buttons-os .slick-track, .mobile-custom-thread-color-list-os .slick-track {
+    /* display: flex; */
+  }
+
+  .mobile-font-buttons-os .mobile-font-option-os.selected {
+    background-color: #274864;
+    color: #fff;
+  }
+
+  .mobile-embroideryType-buttons-os button {
+      background: none;
+      border: 1px solid #274864;
+      color: #274864;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+      min-height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 49%;
+      font-size: 16px;
+      line-height: 20px;
+  }
+  .mobile-embroideryType-buttons-col-os {
+    width: calc(50% - 4px);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+  }
+  .mobile-embroideryType-buttons-os {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .mobile-embroideryType-buttons-os button.selected {
+    background-color: #274864;
+    color: #fff;
+  }
+
+  .mobile-custom-thread-color-list-os {
+    /* display: flex;
+    flex-wrap: wrap;
+    padding-bottom: 1rem; */
+  }
+
+.mobile-custom-thread-color-list-os .mobile-swatch-os {
+    border-radius: 50%;
+    border: 2px solid transparent;
+    /* margin: 4px; */
+    cursor: pointer;
+    transition: border 0.3s;
+    position: relative;
+    /* min-width: 50px; */
+    min-height: 80px;
+}
+.mobile-custom-thread-color-list-os .mobile-swatch-col-os span, .mobile-custom-thread-color-list-os .mobile-swatch-os span {
+    display: none;
+    /* font-size: 0;
+    height: 50px;
+    width: 50px;
+    display: flex; */
+}
+
+  .mobile-custom-thread-color-list-os .mobile-swatch-os.selected:after {
+    content: "";
+    position: absolute;
+    width: calc(100% + 10px);
+    height: calc(100% + 10px);
+    border: 2px solid #000;
+    top: -5px;
+    left: -5px;
+    border-radius: 50%;
+  }
+  .mobile-custom-thread-color-list-os .mobile-swatch-os.selected {
+      /* border: 2px solid #000; */
+  }
+
+  .error-message-os {
+    color: red;
+    margin: 10px 0;
+    display: none;
+  }
+
+  .pagination-controls-button-os button svg {
+    width: 20px;
+    height: auto;
+  }
+  
+.personalize-product-popup-buyNow-os button, .mobile-personalize-addToCart-os button {
+    /* color: var(--button--bdr-color);
+    background: var(--color--accent-1);
+    border: 2px solid var(--color--accent-1); */
+    color: var(--bg-color--body);
+    background: var(--button--bg-color);
+    border: 2px solid var(--button--bg-color);
+    border-radius: var(--button--radius);
+    font-weight: var(--font--accent--weight);
+    text-transform: uppercase;
+    font-size: var(--font--accent--size);
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 45px;
+    width: 100%;
+  }
+  .personalize-product-popup-buyNow-os {
+    padding-bottom: 1rem;
+  }
+  .mobile-personalize-fields-col-os h4 {
+    margin: 0;
+  }
+  .personalize-product-popup-row-os>div {
+    width: 50%;
+  }
+  .mobile-monogram-os input[type="text"] {
+    max-width: 45px;
+    min-height: 40px;
+    border-radius: 0;
+    border: 1px solid #274864;
+    padding: 12px;
+    margin: 0;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .mobile-monogram-os input[type="text"]:nth-child(3) {
+    min-height: 60px;
+  }
+  .mobile-monogram-inputs-os {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .mobile-personalize-fields-col-os {
+      padding-bottom: 1rem;
+      /* min-height: 150px; */
+  }
+  .mobile-personalize-fields-col-os .mobile-custom-thread-color-list-os {
+    margin-bottom: 1.5rem;
+  }
+  .mobile-personalize-fields-col-os .mobile-custom-thread-color-list-os .slick-dots {
+    bottom: -25px;
+  }
+  .mobile-personalize-fields-col-os .mobile-wordNumber-os textarea {
+    margin-bottom: 0;
+  }
+  .mobile-personalize-field-heading-os {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-bottom: 12px;
+    position: relative;
+  }
+  .mobile-words-numbers-letter-count-row-os span {
+    font-size: 14px;
+    line-height: 18px;
+  }
+  
+
+  .main-product-tabs-os .main-product-tabs-col-os {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+  }
+  
+  .mobile-embroideryType-buttons-col-os .tooltip, .main-product-tabs-col-os .tooltip {
+      visibility: hidden;
+      width: 200px;
+      background-color: #274864;
+      color: #fff;
+      text-align: center;
+      border-radius: 5px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      top: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      font-size: 12px;
+      line-height: 16px;
+  }
+  
+  .mobile-embroideryType-buttons-col-os .tooltip::after, .main-product-tabs-col-os .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent transparent #274864 transparent;
+  }
+  .mobile-embroideryType-buttons-col-os .tooltip-container p, .main-product-tabs-col-os .tooltip-container p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 18px;
+    padding-bottom: 0;
+    text-transform: capitalize;
+  }
+
+  .mobile-font-buttons-os .slick-slide {
+    padding-right: 8px;
+    /* box-sizing: border-box;
+    min-width: 185px; */
+  }
+
+  .mobile-font-buttons-os {
+    max-width: 100%;
+  }
+  .mobile-font-buttons-os .slick-dots {
+    bottom: -20px;
+  }
+  .mobile-font-buttons-os .slick-slide > div {
+    padding-bottom: 8px;
+  }
+  .personalize-product-popup-fonts-os {
+    display: none;
+  }
+  body.template--product .slick-dots li button:before {
+      font-size: 12px;
+  }
+
+  .tooltip-container {
+    display: flex;
+    align-items: center;
+  }
+  .tooltip-container .info-icon {
+    display: inline-block;
+    background-color: #274864;
+    color: #fff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    font-size: 15px;
+    line-height: 20px;
+    cursor: pointer;
+  }
+  .tooltip-container:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+  .tooltip-container .tooltip {
+      visibility: hidden;
+      min-width: 200px;
+      max-width: 250px;
+      width: 100%;
+      background-color: #274864;
+      color: #fff;
+      /* text-align: center; */
+      border-radius: 5px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      top: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      font-size: 12px;
+      line-height: 16px;
+  }
+  .tooltip-container .tooltip div:last-child {
+    padding-bottom: 0;
+  }
+  .tooltip-container .tooltip div {
+    padding-bottom: 4px;
+  }
+  .tooltip-container .tooltip span {
+      display: flex;
+      text-align: start;
+      flex-direction: column;
+      flex-wrap: wrap;
+  }
+  .mobile-tooltip-row-os {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      position: relative;
+  }
+  .mobile-personalize-fields-col-os .mobile-tooltip-row-os {
+      margin-bottom: 12px;
+      justify-content: center;
+      flex-wrap: nowrap;
+      align-items: self-start;
+  }
+  .mobile-personalize-fields-col-os .mobile-tooltip-row-os h4 {
+      margin-bottom: 0;
+  }
+  .tooltip-row-os p {
+    padding-bottom: 0;
+  }
+  .tooltip-row-os {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 2px;
+      position: relative;
+  }
+
+   /* .container {
+        width: 80%;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .fabric-options,
+    .thread-options {
+        margin-bottom: 30px;
+    }
+
+    .fabric-swatches,
+    .desktop-custom-thread-color-list-os {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .swatch-container {
+        margin: 5px;
+        text-align: center;
+    }
+
+    .swatch {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 1px solid #ccc;
+    }
+
+    .swatch.selected {
+        border: 2px solid black;
+    } */
+
+    .thread-color-tooltip-os {
+        /* position: relative;
+        color: #007BFF; */
+        display: inline-block;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    .thread-color-tooltip-os .tooltip-info-icon-os {
+        display: inline-block;
+        background-color: #274864;
+        color: #fff;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        text-align: center;
+        font-size: 15px;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    .thread-color-tooltip-os .tooltip-content-row-os {
+        visibility: hidden;
+        width: 100%;
+        max-width: 180px;
+        max-height: 285px;
+        height: auto;
+        overflow-y: auto;
+        background-color: #f9f9f9;
+        color: #274864;
+        text-align: left;
+        border-radius: 5px;
+        padding: 10px;
+        position: absolute;
+        z-index: 2;
+        bottom: 50%;
+        /* left: 50%; */
+        right: 0%;
+        /* transform: translateX(-50%); */
+        opacity: 0;
+        transition: opacity 0.3s;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    .thread-color-tooltip-os .tooltip-content-row-os span {
+        display: flex;
+        padding-bottom: 8px;
+        font-size: 12px;
+        line-height: 16px;
+        color: #274864;
+    }
+
+    .thread-color-tooltip-os:hover .tooltip-content-row-os {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .tooltip-thread-color-swatch-os {
+        /* display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        padding-bottom: 8px; */
+    }
+    .tooltip-thread-color-swatch-row-os {
+        display: flex    ;
+        align-items: center;
+        gap: 8px;
+        padding-bottom: 8px;
+    }
+    .tooltip-thread-color-swatch-row-os:last-child {
+        padding-bottom: 0;
+    }
+
+    .thread-color-tooltip-os .tooltip-swatch {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 1px solid #ccc;
+    }
+   .thread-color-tooltip-os .tooltip-color-name-os {
+      display: flex;
+      font-size: 12px;
+      line-height: 16px;
+      color: #274864;
+    }
+  .mobile-personalize-fields-col-os .mobile-custom-thread-color-list-os .slick-slide > div {
+    padding: 4px 8px;
+  }  
+  .font-btn-row-os .font-option-os {
+      font-size: 16px;
+      line-height: 20px;
+      border: 2px solid #ddd;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      min-height: 40px;
+      position: relative;
+      border-radius: 8px;
+  }
+  .font-btn-row-os .font-option-os.disabled-os {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .desktop-custom-thread-color-list-os .disabled-os {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+  }
+
+  
+  .font-btn-row-os .font-option-os.active {
+      /* background: #ddd; */
+      border: 2px solid #274864;
+  }
+  .font-btn-row-os {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-bottom: 1.5rem;
+  }
+  .font-btn-row-os .font-option-os.fancy {
+      font-size: 20px;
+      line-height: 24px;
+  }
+  .font-btn-row-os .font-option-os.amalfi, .font-btn-row-os .font-option-os.casually-cool {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  .font-btn-row-os .font-option-os.flourish {
+      font-size: 10px;
+      line-height: 20px;
+  }
+  .font-btn-row-os .font-option-os.flourish span {
+      display: flex;
+      position: relative;
+      top: 6px;
+  }
+  .font-btn-row-os .font-option-os.signature {
+    font-size: 20px;
+    line-height: 24px;
+  }
+  .font-btn-row-os .font-option-os.memorize {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  .words-numbers-with-tooltip-row-os {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      position: relative;
+  }
+  .mobile-words-numbers-with-tooltip-row-os {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+  }
+  .mobile-personalize-heading-without-tooltip-os {
+    text-align: center;
+    padding-bottom: 12px;
+  }
+  
+  .input-field-os .printing-textarea-os {
+      margin: 0;
+  }
+  .printing-textarea-os[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+  }
+  
+  .main-product-tabs-os {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-bottom: 1.5rem;
+  }
+  .main-product-tabs-os .embroidery-tab-os.active {
+      border: 2px solid #274864;
+  }
+  .main-product-tabs-os .embroidery-tab-os.disabled-os {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+  }  
+  .main-product-tabs-os .tab-1-os, .main-product-tabs-os .tab-2-os {
+      font-size: 16px;
+      line-height: 20px;
+      border: 2px solid #ddd;
+      padding: 8px;
+      display: flex;
+      cursor: pointer;
+      border-radius: 8px;
+  }
+  .input-field-os .printing-textarea-os.disabled-os {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+  }
+  
+  .monogram-input-field-os>input {
+      max-width: 45px;
+      min-height: 45px;
+      border-radius: 8px;
+      border: 1px solid #274864;
+      padding: 12px;
+      margin: 0;
+      text-align: center;
+  }
+  .monogram-input-field-os .printing-text-2-os {
+      min-height: 60px;
+  }
+  .monogram-input-field-os {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+  }
+
+  /* Loader css starts */
+  @keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to { 
+        transform: rotate(360deg);
+    }
+  }
+  
+  .addToCart-loader-os {
+      width: 30px;
+      height: 30px;
+      border: solid 4px #274864;
+      border-radius: 50%;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      animation: rotate 1s linear infinite;
+      display: none;
+  }
+  
+  .personalize-product-popup-buyNow-os.active-addToCart-loader-os button {
+      display: none;
+  }
+  .mobile-personalize-addToCart-os.active-addToCart-loader-os button {
+      display: none;
+  }  
+  .personalize-product-popup-buyNow-os.active-addToCart-loader-os .addToCart-loader-os {
+      display: block; /* Show loader */
+      margin: auto;
+  }
+  .mobile-personalize-addToCart-os.active-addToCart-loader-os .addToCart-loader-os {
+      display: block; /* Show loader */
+      margin: auto;
+  }  
+  .personalize-product-popup-buyNow-os.active-addToCart-loader-os {
+      position: relative;
+      color: #274864;
+      background: var(--color--accent-1);
+      border: 2px solid var(--color--accent-1);
+      border-radius: var(--button--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 45px;
+      width: 100%;
+      opacity: 0.8;
+  }
+  .mobile-personalize-addToCart-os.active-addToCart-loader-os {
+      position: relative;
+      color: #274864;
+      background: var(--color--accent-1);
+      border: 2px solid var(--color--accent-1);
+      border-radius: var(--button--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 45px;
+      width: 100%;
+      opacity: 0.8;
+  }
+  /* Loader css ends */
+
+  .mobile-personalize-addToCart-os {
+    padding-bottom: 1rem;
+  }
+
+  .pk-promises-content-os {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 1.5rem;
+    position: relative;
+  }
+  .lock-icon-os img {
+    max-width: 20px;
+    width: 100%;
+    height: auto;
+  }
+  .pk-promises-content-os p {
+    padding-bottom: 0;
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 600;
+  }
+
+  .lock-icon-tooltip-container-os:hover .lock-icon-tooltip-os {
+    visibility: visible;
+    opacity: 1;
+  }
+  .lock-icon-tooltip-container-os .lock-icon-tooltip-os {
+      visibility: hidden;
+      min-width: 200px;
+      max-width: 250px;
+      width: 100%;
+      background-color: #274864;
+      color: #fff;
+      /* text-align: center; */
+      border-radius: 5px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      font-size: 12px;
+      line-height: 16px;
+  }
+
+  {% comment %}  {% endcomment %}
+  :root {
+    --trust-badge-color: #274864;
+  }
+
+  .trust-badge-os {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 18px;
+    background: #fff;
+    color: var(--trust-badge-color);
+    border: 2px solid var(--trust-badge-color);
+    border-radius: 8px;
+    max-width: 560px;
+    position: relative;
+    margin-top: 2rem;
+  }
+
+  .trust-badge-top-os {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    top: -18px;
+    left: 16px;
+    background: #fff;
+    padding: 0px 8px;
+  }
+
+  .trust-badge-icon-os{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .trust-badge-icon-os img{
+    display:block;
+    width: 20px;
+    height: auto;
+  }
+
+  .trust-badge-title-os {
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 14px;
+    line-height: 20px;
+    font-family: Lora, serif;
+  }
+
+  .trust-badge-os .trust-badge-message-os {
+      padding-top: 0;
+      padding-bottom: 0;
+  }
+
+  {% comment %}  {% endcomment %}
+
+  @media screen and (max-width: 767px) {
+    .personalize-product-popup-row-os>div {
+        width: 100%;
+    }
+    .personalize-product-popup-col-2-os {
+        padding-left: 0;
+        padding-top: 4rem;
+        border-left: none;
+        border-top: 1px solid #000;
+    }
+    .personalize-product-popup-col-1-os {
+      padding-right: 0;
+      padding-bottom: 0;
+    }
+    .personalize-product-popup-section-os {
+      padding: 2.5rem 1rem;
+    }
+    .personalize-product-popup-col-3-os {
+      display: block;
+      padding-left: 0;
+      padding-top: 1rem;
+      border: none;
+    }
+    .personalize-product-popup-col-2-os {
+      display: none;
+    }
+    .personalize-product-popup-row-os>div {
+      width: 100%;
+    }
+    .mobile-embroideryType-buttons-col-os .tooltip, .main-product-tabs-col-os .tooltip {
+      top: 105%;
+    }
+    .personalize-product-popup-heading-os {
+      padding-bottom: 0;
+      margin-bottom: -2rem;
+      gap: 12px;
+    }
+    .personalize-product-popup-heading-os h2 {
+      font-size: 18px;
+      line-height: 24px;
+    }
+    .mobile-personalize-fields-row-os .error-message-os {
+      text-align: center;
+    }
+  }
+
+  @media screen and (max-width: 576px) {
+    .mobile-custom-thread-color-list-os .mobile-swatch-os {
+        min-height: 74px;
+    }
+    {% comment %} .mobile-personalize-heading-without-tooltip-os {
+      display:none;
+    } {% endcomment %}
+  }
+  @media screen and (max-width: 500px) {
+    .mobile-custom-thread-color-list-os .mobile-swatch-os {
+        min-height: 60px;
+    }
+  }
+  @media screen and (max-width: 450px) {
+    .mobile-custom-thread-color-list-os .mobile-swatch-os {
+        min-height: 55px;
+    }
+  }
+  @media screen and (max-width: 400px) {
+    .mobile-custom-thread-color-list-os .mobile-swatch-os {
+        min-height: 50px;
+    }
+    .mobile-personalize-fields-col-os .mobile-tooltip-row-os h4 {
+        font-size: 14px;
+        line-height: 20px;
+    }
+    .thread-color-tooltip-os .tooltip-info-icon-os {
+        width: 20px;
+        height: 20px;
+    }
+  }
+  @media screen and (max-width: 375px) {
+    .mobile-custom-thread-color-list-os .mobile-swatch-os {
+        min-height: 50px;
+    }
+    .mobile-personalize-fields-col-os .mobile-custom-thread-color-list-os .slick-slide > div {
+        padding: 4px 6px;
+    }
+  }
+  @media screen and (max-width: 350px) {
+    .mobile-custom-thread-color-list-os .mobile-swatch-os {
+        min-height: 45px;
+    }
+    .pagination-controls-button-os button {
+        max-width: 71px;
+    }
+    .pagination-controls-text-os {
+        font-size: 14px;
+        line-height: 20px;
+    }
+  }
+  @media screen and (max-width: 320px) {
+    .mobile-custom-thread-color-list-os .mobile-swatch-os {
+        min-height: 40px;
+    }
+  }
+  /* Mobile fields css ands */
+</style>
+
+
+<!-- Overlay and Loader -->
+<div id="overlay" class="loading-overlay-content-os">
+  <!-- <div class="loading-overlay-loader-os"></div> -->
+  <!-- <div class="loading-overlay-loader-meesage-os">We’re making your trunk…</div> -->
+  <div class="loading-overlay-loader-meesage-os">Just a moment while we craft your design…</div>
+</div>
+  
+<div class="popup-overlay-os"></div>
+<section class="personalize-product-popup-section-os">
+  <!-- <img src="" class="testing-image-os" /> -->
+ <form id="mobile-desktop-product" method="post" action="/cart/add" enctype="multipart/form-data">
+    <input name="id" class="properties-cstm-id" value="{{ product.selected_or_first_available_variant.id }}" type="hidden" />
+    <input type="hidden" name="quantity" value="1" />
+    <input type="text" hidden="" class="properties-cstm-trunks-color" name="properties[Exterior Trunk Color]" id="trunks-color" value="White-Trunk">
+    <input type="text" hidden="" class="properties-cstm-fabrics-color" name="properties[Fabric]" id="fabrics-color" value="Uptown Girl" tabindex="0">
+
+    <div class="personalize-product-popup-all-content-os">
+      <div class="personalize-product-popup-heading-os">
+        <!-- <h2>Your design, beautifully embroidered</h2> -->
+        <h2>Quality Craftsmanship for your Core Memories</h2>
+        <div class="popup-close-btn-os">X</div>
+      </div>
+      <div class="personalize-product-popup-row-os">
+        <div class="personalize-product-popup-col-1-os">
+          <div class="custom-images-os">
+            <img class="main-trunk-image-os" src="" alt="Trunk Image" />
+            <img class="main-fabric-image-os" src="" alt="Fabric Image" />
+            <h4 class="textarea-text-display-os"></h4>
+            <h4 class="monogram-text-display-os"></h4>
+          </div>
+        </div>
+        <div class="personalize-product-popup-col-2-os">               
+          <div class="main-product-tab-data-content-os">
+            <div class="heading-content-os">
+              <h4>4. Add monogram, initials or a custom message</h4>
+              <div class="tooltip-row-os">
+                <!-- <p>Embroidery Type (+ $25 for each)</p> -->
+                <p>Embroidery Type (starting at $25)</p>
+                <div class="tooltip-container">
+                  <span class="info-icon">?
+                      <!-- <img src="https://cdn.shopify.com/s/files/1/0588/5834/0425/files/IMG_6760.jpg?v=1733741226" alt="" /> -->
+                  </span>
+                  <div class="tooltip">
+                    <div>
+                      <span><b>WORDS/NUMBERS :</b> Add up to 40 characters - great for names, dates and more</span>                      
+                    </div>
+                    <div>
+                      <span><i>18 Characters or less - $25</i></span>
+                      <span><i>18 - 28 characters - $35</i></span>
+                      <span><i>28 - 40 characters - $40</i></span>
+                    </div>
+                    <div>
+                      <span><b>MONOGRAM  :</b> Add three characters for your monogram. Note the letter in the middle will be bigger.</span>
+                      <span><i>Monogram - $25</i></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="main-product-tabs-os">
+              <!-- <div class="main-product-tabs-col-os"> -->
+                <div class="embroidery-tab-os tab-1-os">
+                  <input type="radio" hidden class="properties-cstm" name="properties[Embroidery Type]" id="tab1" value="{{ 'Words/Numbers' }}">
+                  Words/Numbers
+                </div>
+              <!-- </div> -->
+              <!-- <div class="main-product-tabs-col-os"> -->
+                <div class="embroidery-tab-os tab-2-os">
+                  <input type="radio" hidden class="properties-cstm" name="properties[Embroidery Type]" id="tab2" value="{{ 'Monogram' }}">
+                  Monogram
+                </div>
+              <!-- </div> -->
+              <div class="embroidery-tab-os tab-3-os" style="display: none;">
+                None
+              </div>
+            </div>
+            <div class="main-product-tab-contents-os">
+              <div class="main-product-tab-content-1-os">
+                <div class="main-product-tab-input-col-os">
+                  <div class="labels-os">
+                    <div class="words-numbers-with-tooltip-row-os">
+                      <p>Words/Numbers</p>
+                      <div class="tooltip-container">
+                        <span class="info-icon">?
+                            <!-- <img src="https://cdn.shopify.com/s/files/1/0588/5834/0425/files/IMG_6760.jpg?v=1733741226" alt="" /> -->
+                        </span>
+                        <div class="tooltip">
+                          <div>
+                            <span><b>CUSTOM EMBROIDERY : </b>Price is based on character count.</span>
+                          </div>
+                          <div>
+                            <span><i>18 Characters or less - $25</i></span>
+                            <span><i>18 - 28 characters - $35</i></span>
+                            <span><i>28 - 40 characters - $40</i></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <span><span class="textarea-letter-count-os">40</span> characters left</span>
+                  </div>
+                  <div class="input-field-os">
+                    <textarea rows="5" name="properties[WordsNumbers]" class="printing-textarea-os properties-cstm" cols="5" placeholder="Enter next" maxlength="40"></textarea>
+                  </div>
+                </div>              
+              </div>
+              
+              <div class="main-product-tab-content-2-os">
+                <div class="main-product-tab-input-col-os">
+                  <div class="labels-os">
+                    <p>Monogram 3 Letters</p>
+                    <span><span class="monogram-letter-count-os">3</span> characters left</span>
+                  </div>
+                  <div class="monogram-input-field-os">
+                    <input type="hidden" name="properties[Monogram]" class="monogram-text-value-os properties-cstm properties-cstm-monogram" value="">
+                    <input type="text" class="printing-text-1-os" maxlength="1" />
+                    <input type="text" class="printing-text-2-os" maxlength="1" />
+                    <input type="text" class="printing-text-3-os" maxlength="1" />
+                  </div>
+                </div>
+              </div>
+  
+              <div class="main-product-tab-content-3-os"></div>
+            </div>
+  
+            <div class="personalize-product-popup-fonts-os">           
+              <div class="heading-content-os">
+                <h4>5. Choose your font</h4>
+              </div>
+              <div class="font-btn-row-os">
+                <input type="hidden" name="properties[Font]" class="custom-font-names-os properties-cstm properties-cstm-font">
+                <input type="hidden" name="properties[_Font Name]" class="custom-font-official-names-os properties-cstm">
+                <div class="font-option-os vintage" data-font="vintage">Vintage</div>
+                <div class="font-option-os headliner" data-font="headliner">Headliner</div>
+                <div class="font-option-os letter-jacket" data-font="letter-jacket">Letter Jacket</div>
+                <div class="font-option-os western" data-font="western">Western</div>
+                <div class="font-option-os royal" data-font="royal">Royal</div>
+                <div class="font-option-os fondly-yours" data-font="fondly-yours">Fondly Yours</div>
+                <div class="font-option-os signature" data-font="signature">Signature</div>
+                <div class="font-option-os amalfi" data-font="amalfi">Amalfi</div>
+                <div class="font-option-os fancy" data-font="fancy">Fancy</div>
+                <div class="font-option-os memorize" data-font="memorize">Memorize</div>
+                <div class="font-option-os casually-cool" data-font="casually-cool">Casually Cool</div>
+                <div class="font-option-os flourish" data-font="flourish"><span>Flourish</span></div>
+                <!-- <div class="font-option-os ave-fedan" data-font="ave-fedan">Ave-Fedan</div> -->
+                <!-- <div class="font-option-os copperplate-cc" data-font="copperplate-cc">Copperplate-CC</div> -->
+                <!-- <div class="font-option-os block-bold" data-font="block-bold">All Business</div> -->
+                <!-- <div class="font-option-os all-business" data-font="all-business">All Business</div> -->
+                <!-- <div class="font-option-os athletica" data-font="athletica">Athletica</div> -->
+                <!-- <div class="font-option-os gotham-book" data-font="gotham-book">Gotham-Book</div> -->
+                <!-- <div class="font-option-os italianno" data-font="italianno">Italianno</div> -->
+                <!-- <div class="font-option-os amsterdam" data-font="amsterdam">Amsterdam</div> -->
+                
+              </div>
+            </div>
+            
+            <div class="personalize-product-popup-color-variants-os">            
+              <div class="heading-content-os">
+                <h4>6. CHOOSE YOUR THREAD COLOR</h4>
+                <div class="tooltip-row-os">
+                  <p>Choose a thread color <span class="desktop-active-thread-color-name-os"></span></p>
+  
+                  <div class="thread-color-tooltip-os">
+                      <span class="tooltip-info-icon-os">?</span>
+                      <div class="tooltip-content-row-os">
+                          <span>We recommend</span>
+                          <div class="tooltip-content-os">
+                            <div class="tooltip-thread-color-swatch-os"></div>
+                            <div class="tooltip-color-name-os"></div>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                
+              </div>
+  
+              <!-- Custom dropdown for color starts -->
+              <div class="custom-dropdown-os custom-thread-colors-list-row-os">
+                <div class="dropdown-button-os" style="display:none;">
+                  <div class="color-swatch-selected-os"></div>
+                  <span>Select a color</span>
+                  <div class="font-dropdown-arrow-os" style="display: none;"></div>
+                </div>
+                <input type="hidden" name="properties[_Thread Hex Code]" class="custom-thread-hex-code-os properties-cstm">
+                <div class="desktop-custom-thread-color-list-os" >
+                </div>
+              </div>
+              <!-- Custom dropdown for color ends -->
+            </div>
+
+            {% comment %} <div class="pk-promises-content-os">
+              <p>PK Promise</p>
+              <div class="lock-icon-tooltip-container-os">
+                <div class="lock-icon-os">
+                  <img src="//memorizeyourlife.com/cdn/shop/files/memorize-lock-blue-rgb-900px-w-72ppi.png?v=1751344119" alt="" height="" width="">
+                </div>
+                <div class="lock-icon-tooltip-os">
+                  Tailored with care or we’ll take care of it!  Also, always free shipping.
+                </div>
+                
+              </div>
+            </div> {% endcomment %}
+
+            {% comment %} <div class="pk-promises-content-os">
+              <h4>Quality Assurance Pledge 
+                <span>
+                  <img src="//memorizeyourlife.com/cdn/shop/files/memorize-lock-blue-rgb-900px-w-72ppi.png?v=1751344119" alt="" height="" width="">
+                </span> :</h4> Tailored with care or we’ll take care of it! Also, always free shipping.
+            </div> {% endcomment %}
+
+  
+            <div class="personalize-product-popup-buyNow-os">
+              {% comment %}<button type="button" class="">Limited Stock - Order Now ({{ product.price | plus: 2500 | money }})</button>
+              <button type="button" class="">Add To Cart ({{ product.price | plus: 2500 | money }})</button>{% endcomment %}
+              <button type="button" class=""></button>
+              <div class="addToCart-loader-os"></div>
+            </div>
+
+            <template id="__NAME_OF_BUTTON__">
+               <style>
+               #button {
+                  color: var(--button--bdr-color);
+                  background: var(--color--accent-1);
+                  border: 2px solid var(--color--accent-1);
+                  border-radius: var(--button--radius);
+                  font-family: var(--font--paragraph--family);
+                  font-weight: var(--font--accent--weight);
+                  text-transform: uppercase;
+                  font-size: var(--font--accent--size);
+                  line-height: 20px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  height: 45px;
+                  width: 100%;
+                }
+              </style>
+            </template>
+
+
+            <giftnote-button
+             data-styles="__NAME_OF_BUTTON__"
+             data-add="Add a gift message"
+             data-edit="Edit gift message"
+            ></giftnote-button>
+
+            <!-- Trust badge / confidence message -->
+            <div class="trust-badge-os" role="note" aria-label="Quality Assurance Pledge">
+              <div class="trust-badge-top-os">
+                <span class="trust-badge-icon-os" aria-hidden="true">
+                  <img src="//memorizeyourlife.com/cdn/shop/files/memorize-lock-blue-rgb-900px-w-72ppi.png?v=1751344119" alt="" />
+                </span>
+                <span class="trust-badge-title-os">QUALITY ASSURANCE PLEDGE</span>
+              </div>
+
+              <p class="trust-badge-message-os">
+                Tailored with the utmost care or we’ll take care of it!
+              </p>
+            </div>
+
+            <div class="product-cart-note-os">
+              <label for="desktop-cart-note-os">Add a note for this order:</label>
+              <textarea name="note" id="desktop-cart-note-os" rows="3" placeholder="Leave a note for the Memorize team e.g., font sizing, thread colors, or other special requests."></textarea>
+            </div>
+            
+          </div>
+        </div>
+  
+        <div class="personalize-product-popup-col-3-os">
+          <div class="mobile-personalize-fields-row-os">
+            <div class="mobile-personalize-fields-col-os" style="display:none;">
+              <div class="mobile-tooltip-row-os">
+                <h4>CHOOSE AN EMBROIDERY TYPE</h4>
+                <div class="tooltip-container">
+                  <span class="info-icon">?</span>
+                  <div class="tooltip">
+                    <div>
+                      <span><b>WORDS/NUMBERS :</b> Add up to 40 characters - great for names, dates and more</span>
+                    </div>
+                    <div>
+                      <span><i>18 Characters or less - $25</i></span>
+                      <span><i>18 - 28 characters - $35</i></span>
+                      <span><i>28 - 40 characters - $40</i></span>
+                    </div>
+                    <div>
+                      <span><b>MONOGRAM :</b> Add three characters for your monogram. Note the letter in the middle will be bigger.</span>
+                      <span><i>Monogram - $25</i></span>
+                    </div>
+                    <!-- Lorem Ipsum is simply dummy text of the printing and typesetting industry. -->
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mobile-embroideryType-buttons-os">
+                <button type="button" class="mobile-embroidery-btn-1" onclick="selectMobileEmbroideryType('WordNumber', this)">
+                  Words/Numbers
+                  <input type="radio" hidden class="mobile-embroideryType-input-os properties-cstm" name="properties[Embroidery Type]" value="Words/Numbers">
+                </button>
+                <button type="button" class="mobile-embroidery-btn-2" onclick="selectMobileEmbroideryType('Monogram', this)">
+                  Monogram
+                  <input type="radio" hidden class="mobile-embroideryType-input-os properties-cstm" name="properties[Embroidery Type]" value="Monogram">
+                </button>
+              </div>
+  
+              <!-- <div class="mobile-embroideryType-buttons-os">
+                <label class="embroidery-type-button" onclick="selectMobileEmbroideryType('Words/Numbers', this)">
+                  <input type="radio" class="mobile-embroideryType-input-os properties-cstm" name="properties[Embroidery Type]" value="Words/Numbers">
+                  Words/Numbers
+                </label>
+                
+                <label class="embroidery-type-button" onclick="selectMobileEmbroideryType('Monogram', this)">
+                  <input type="radio" class="mobile-embroideryType-input-os properties-cstm" name="properties[Embroidery Type]" value="Monogram">
+                  Monogram
+                </label>
+              </div> -->
+  
+  
+              <!-- <input type="hidden" class="mobile-embroideryType-input-os"  name="properties[Embroidery Type]" value="" /> -->
+              <div class="error-message-os" id="embroideryError">Please select an embroidery type.</div>
+            </div>
+  
+            <div class="mobile-personalize-fields-col-os">
+              <div class="mobile-wordNumber-os" style="display:none;">              
+                <div class="mobile-personalize-field-heading-os">                 
+
+                  <div class="mobile-words-numbers-with-tooltip-row-os">
+                    <h4>WORDS/NUMBERS</h4>
+                    <div class="tooltip-container">
+                      <span class="info-icon">?</span>
+                      <div class="tooltip">
+                        <div>
+                          <span><b>CUSTOM EMBROIDERY : </b>Price is based on character count.</span>                          
+                        </div>
+                        <div>
+                          <span><i>18 Characters or less - $25</i></span>
+                          <span><i>18 - 28 characters - $35</i></span>
+                          <span><i>28 - 40 characters - $40</i></span>                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- <h4>Words/Numbers</h4> -->
+                  <span class="mobile-words-numbers-letter-count-row-os"><span class="mobile-textarea-letter-count-os">40</span> characters left</span>
+                </div>
+                <textarea name="properties[WordsNumbers]" maxlength="40" cols="3" rows="3"></textarea>
+                <div class="error-message-os" id="wordNumberError">Please enter a word/number.</div>
+              </div>
+              <div class="mobile-monogram-os" style="display:none;">
+                <!-- <h4>Monogram</h4> -->
+                <div class="mobile-personalize-field-heading-os">
+                  <h4>MONOGRAM</h4>
+                  <span><span class="mobile-monogram-letter-count-os">3</span> characters left</span>
+                </div>
+                <div class="mobile-monogram-inputs-os">
+                  <input type="hidden" class="mobile-monogram-text-value-os" name="properties[Monogram]" value="">
+                  <!-- <input type="text" placeholder="" maxlength="1" oninput="updateMonogramHiddenValue()" />
+                  <input type="text" placeholder="" maxlength="1" oninput="updateMonogramHiddenValue()" />
+                  <input type="text" placeholder="" maxlength="1" oninput="updateMonogramHiddenValue()" /> -->
+                  <input type="text" placeholder="" maxlength="1" />
+                  <input type="text" placeholder="" maxlength="1" />
+                  <input type="text" placeholder="" maxlength="1" />
+                </div>
+                <!-- <div class="error-message-os" id="monogramError">Please fill all three fields.</div> -->
+                <div class="error-message-os" id="monogramError">Please enter all three letters.</div>
+              </div>
+  
+            </div>
+            <div class="mobile-personalize-fields-col-os" style="display:none;">
+              <div class="mobile-personalize-heading-without-tooltip-os">
+                <h4>CHOOSE A FONT</h4>
+              </div>
+              <div class="mobile-font-buttons-os">
+                <div class="mobile-font-option-os vintage" onclick="selectMobileFont('vintage', this)">Vintage</div>
+                <div class="mobile-font-option-os letter-jacket" onclick="selectMobileFont('letter-jacket', this)">Letter Jacket</div>
+                <div class="mobile-font-option-os headliner" onclick="selectMobileFont('headliner', this)">Headliner</div>
+                <div class="mobile-font-option-os western" onclick="selectMobileFont('western', this)">Western</div>
+                <div class="mobile-font-option-os royal" onclick="selectMobileFont('royal', this)">Royal</div>
+                <div class="mobile-font-option-os signature" onclick="selectMobileFont('signature', this)">Signature</div>
+                <div class="mobile-font-option-os fondly-yours" onclick="selectMobileFont('fondly-yours', this)">Fondly Yours</div>
+                <div class="mobile-font-option-os amalfi" onclick="selectMobileFont('amalfi', this)">Amalfi</div>
+                <div class="mobile-font-option-os fancy" onclick="selectMobileFont('fancy', this)">Fancy</div>
+                <div class="mobile-font-option-os casually-cool" onclick="selectMobileFont('casually-cool', this)">Casually Cool</div>
+                <div class="mobile-font-option-os memorize" onclick="selectMobileFont('memorize', this)">Memorize</div>
+                <div class="mobile-font-option-os flourish" onclick="selectMobileFont('flourish', this)"><span>Flourish</span></div>
+                <!-- <div class="mobile-font-option-os ave-fedan" onclick="selectMobileFont('ave-fedan', this)">Ave-Fedan</div> -->
+                <!-- <div class="mobile-font-option-os copperplate-cc" onclick="selectMobileFont('copperplate-cc', this)">Copperplate-CC</div> -->
+                <!-- <div class="mobile-font-option-os block-bold" onclick="selectMobileFont('block-bold', this)">All Business</div> -->
+                <!-- <div class="mobile-font-option-os all-business" onclick="selectMobileFont('all-business', this)">All Business</div> -->
+                <!-- <div class="mobile-font-option-os" onclick="selectMobileFont('athletica', this)">Athletica</div> -->
+                <!-- <div class="mobile-font-option-os gotham-book" onclick="selectMobileFont('gotham-book', this)">Gotham-Book</div> -->
+                <!-- <div class="mobile-font-option-os italianno" onclick="selectMobileFont('italianno', this)">Italianno</div> -->
+                <!-- <div class="mobile-font-option-os amsterdam" onclick="selectMobileFont('', this)">Amsterdam</div> -->
+              </div>
+              <input type="hidden" class="mobile-custom-font-names-os selectedFont" value="" />
+              <div class="error-message-os" id="fontError">Please select a font.</div>
+            </div>
+  
+            <div class="mobile-personalize-fields-col-os" style="display:none;">
+              <div class="mobile-tooltip-row-os">
+                <!-- <h4>Choose a Color <span class="active-mobile-color-name-os"></span></h4> -->
+                <h4>CHOOSE A THREAD COLOR <span class="active-mobile-color-name-os"></span></h4>
+                <!-- <div class="tooltip-container">
+                  <span class="info-icon">?</span>
+                  <div class="tooltip">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</div>
+                </div> -->
+  
+                <div class="thread-color-tooltip-os">
+                  <span class="tooltip-info-icon-os">?</span>
+                  <div class="tooltip-content-row-os">
+                      <span>We recommend</span>
+                      <div class="tooltip-content-os">
+                        <div class="tooltip-thread-color-swatch-os"></div>
+                        <div class="tooltip-color-name-os"></div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mobile-custom-thread-color-list-os"></div>
+              <input type="hidden" name="properties[Thread Color]" class="selectedColor" value="" />
+              <div class="error-message-os" id="colorError">Please select a color.</div>
+            </div>
+  
+  
+            <div class="mobile-personalize-fields-col-os " style="display:none;">
+              <div class="mobile-personalize-heading-without-tooltip-os">
+                <h4>MEMORIES TO TREASURE, STYLE TO CELEBRATE, QUALITY YOU CAN TRUST.</h4>
+                <h4>LIMITED STOCK - ORDER NOW!</h4>
+              </div>
+
+              <div class="mobile-personalize-addToCart-os">
+                {% comment %}<button type="button" class=" mobile-personalize-fields-col-btn-os" >Add To Cart ({{ product.price | plus: 2500 | money }})</button>{% endcomment %}
+                <button type="button" class="mobile-personalize-fields-col-btn-os" ></button>
+                <div class="addToCart-loader-os"></div>
+                <!-- <div class="error-message-os" id="orderNowError-os">Please select Order Now.</div> -->
+              </div>
+
+              <giftnote-button
+               data-styles="__NAME_OF_BUTTON__"
+               data-add="Add a gift message"
+               data-edit="Edit gift message"
+              ></giftnote-button>
+
+              <!-- Trust badge / confidence message -->
+              <div class="trust-badge-os" role="note" aria-label="Quality Assurance Pledge">
+                <div class="trust-badge-top-os">
+                  <span class="trust-badge-icon-os" aria-hidden="true">
+                    <img src="//memorizeyourlife.com/cdn/shop/files/memorize-lock-blue-rgb-900px-w-72ppi.png?v=1751344119" alt="" />
+                  </span>
+                  <span class="trust-badge-title-os">QUALITY ASSURANCE PLEDGE</span>
+                </div>
+
+                <p class="trust-badge-message-os">
+                  Tailored with the utmost care or we’ll take care of it!
+                </p>
+              </div>
+
+              <div class="product-cart-note-os">
+                <label for="mobile-cart-note-os">Add a note for this order:</label>
+                <textarea name="note" id="mobile-cart-note-os" rows="3" placeholder="Leave a note for the Memorize team e.g., font sizing, thread colors, or other special requests."></textarea>
+              </div>
+              
+            </div>
+          </div>
+          <div class="pagination-controls-button-os">
+            <button class="backward-step-os" type="button" onclick="changeContent(-1)">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 10" style="stroke: rgb(35, 35, 35);">
+                <path d="M16.893 5H1.107M5.357.75 1.107 5l4.25 4.25"></path>
+              </svg>
+            </button>
+            <div class="pagination-controls-text-os">Step
+              <span class="pagination-counter-os">1/4</span>
+            </div>
+            <button class="forward-step-os" type="button" onclick="validateMobileStepsAndProceed()">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 10"
+                style="stroke: rgb(255, 255, 255);">
+                <path d="M1.107 5h15.786M12.643 9.25 16.893 5 12.643.75"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+      </div>
+  
+      <div class="personalize-product-canvas-os">
+        <canvas id="myCanvas" width="800" height="600"></canvas>
+        <!-- Image tag to display the generated image -->
+        <img id="canvasImage" src="" alt="Generated Image">
+  
+        <input type="hidden" name="properties[image]" class="properties-cstm-image">
+      </div>
+      
+    </div>
+    <!-- <button type="submit" class="submit" value="submit"> submit</button> -->
+    <input type="hidden" name="properties[personalize_it_variant_id]" class="personalize-it-variant-id-os" value="">
+  </form>
+ 
+</section>

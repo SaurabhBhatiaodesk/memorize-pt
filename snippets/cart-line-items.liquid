@@ -1,0 +1,406 @@
+
+  {%- liquid
+    assign id = view | append: '-updates-' | append: item.key
+
+    if item.variant.featured_media.preview_image
+      assign preview_image = item.variant.featured_media.preview_image
+    elsif item.product.featured_media.preview_image
+      assign preview_image = item.product.featured_media.preview_image
+    else
+      assign preview_image = false
+    endif
+  -%}
+
+  {%- capture desktop_items -%}
+    {{- desktop_items -}}
+
+    <div
+      class="cart--item"
+      data-variant-id="{{ item.variant_id }}"
+      data-management="{{ item.variant.inventory_management }}"
+      data-policy="{{ item.variant.inventory_policy }}"
+      data-quantity="{{ item.variant.inventory_quantity | default: 0 }}"
+      data-line-num="{{ forloop.index }}" data-line="{{ forloop.index }}" data_pplr_row= "{{ forloop.index }}" 
+      {% unless settings.transitions--other %}
+        data-transition-item="cart-{{ view }}"
+        {%- if async -%}
+          data-transition-active="true"
+        {%- endif -%}
+      {% endunless %}
+    >
+
+      
+      <div class="cart--item--image">
+        <!-- HC - 08 Mar '24 - cart lightbox -->
+      
+        
+          {% assign flag = false %}
+          {%- assign property_size = item.properties | size -%}
+             {% if property_size > 0 %}
+              {% for property in item.properties %}
+                {% if property.first contains '_image' %}
+                  {% if property.last != blank %}
+                     {% assign preview_image = property.last %}
+                        {% assign flag = true %}
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+          {% endif %}
+        
+        <a data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
+         {% if flag %}
+  
+           <img src="{{ preview_image }}" height="500px" width="500px" sizes="200px" >
+          
+           {% else %}
+          {%- if preview_image == false -%}
+            {% if item.product_id != 7351943430217 %}
+              {%- render "placeholder", type: 'product', aspect_ratio: 1, placeholder_index: 1 -%}
+            {% endif %}
+          {%- else -%}
+            
+            {{-
+              preview_image |
+              image_url: width: preview_image.width |
+              image_tag: widths: "300, 500", sizes: sizes
+            -}}
+          {%- endif -%}
+          {% endif %}
+        </a>
+      </div>
+
+      <div class="cart--item--title">
+        <div data-item="block-heading">
+          <a href="{{ item.url }}">{{ item.product.title }}</a>
+        </div>
+
+        {%- unless item.variant.title contains 'Default' -%}
+          <div class="cart--item--variant-name" data-item="accent-text">
+            <a href="{{ item.url }}">{{ item.variant.title }}</a>
+          </div>
+        {%- endunless -%}
+   
+        {%- assign property_size = item.properties | size -%}
+  
+
+          {% comment %}{% if property_size > 0 %}
+            <ul>
+              {% for property in item.properties %}
+                {% if property.first contains '_image' %}
+                  {% if property.last != blank %}<a href="{{ property.last }}" >Preview image</a>{% endif %}
+                  <img src="{{ property.last }}">
+                  {% elsif property.last != blank %}
+                  <li><strong>{{ property.first }}:</strong> {{ property.last }}</li>
+                {% endif %}
+              {% endfor %}
+              
+            </ul>
+          {% endif %}{% endcomment %}
+
+
+          {% if property_size > 0 %}
+            <ul>
+              
+              {% for property in item.properties %}      
+                {% if property.first contains 'personalize_it_variant_id' %}
+                    <div class="cart-embroidery-doubleCheck-text-os">Please double-check your spelling or initials.</div>
+                  {% continue %}
+                {% endif %}
+                
+                {% if property.first contains '_image' %}
+                  {% if property.last != blank %}
+                    <li class="preview-image-popup-list-os">
+                      <div class="cart-image-preview-os" onclick="showPopup(this)">Preview image</div>
+          
+                      <!-- Preview image popup starts -->
+                      {% 
+                        render 'preview-image-popup-os',
+                        image: property.last,
+                        index: forloop.index
+                      %}
+                      <!-- Preview image popup ends -->
+                    </li>
+                  {% endif %}
+                    
+                {% else %}
+                  {% if property.last != blank %}
+                    <li><strong>{{ property.first }}:</strong> {{ property.last }}</li>
+                    <!-- <li><strong>Test text</li> -->
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            </ul>
+
+          {% endif %}
+    
+          {% if item.product_id == 7351943430217 %}
+              <ul class="cart-custom-embroidery-text-os">
+                 <div class="cart-embroidery-doubleCheck-text-os">Embroidery charge for all trunks in the cart.</div>
+              </ul>
+          {% endif %}
+
+
+
+
+
+        {%- if item.selling_plan_allocation -%}
+          <div class="cart--item--selling-plan" data-item="small-text">
+            {{- item.selling_plan_allocation.selling_plan.name -}}
+          </div>
+        {%- endif -%}
+
+        {%- assign property_size = item.properties | size -%}
+
+        <span class="pplr_cart_item_property" data-line="{{item.index}}" ></span>
+
+        <div class='cart--error' data-item='small-text' style='display:none;'>
+          {{- all_items_added_t -}}
+        </div>
+      </div>
+
+      <div class="cart--item--price" data-item="accent-text">
+        {%- if item.original_price != item.final_price -%}
+          <div data-item="light-accent-text">
+            <s class="money">{{ item.original_price | money }}</s>
+          </div>
+        {%- endif -%}
+
+        <div class="money" data-item="accent-text">
+          {{- item.final_price | money -}}
+        </div>
+
+        <div class="cart--item--unit-price-container" data-item="small-text">
+          {%- liquid
+            if item.unit_price_measurement
+              echo item.unit_price | money | append: '/'
+              if item.unit_price_measurement.reference_value != 1
+                echo item.unit_price_measurement.reference_value
+              endif
+              echo item.unit_price_measurement.reference_unit
+            endif
+          -%}
+        </div>
+
+        {% if item.line_level_discount_allocations.size > 0 %}
+          <div class="money" data-item="light-accent-text">
+            {%- for discount_allocation in item.line_level_discount_allocations -%}
+              {{ discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | money }})
+            {%- endfor -%}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="cart--item--quantity">
+        {% if item.product_id != 7351943430217 %}
+          {%-
+            render 'quantity-selector',
+            id: id,
+            itemId: item.id,
+            productId: item.product_id,
+            type: 'cart',
+            value: item.quantity,
+            lineItems: item
+          -%}
+        {% endif %}
+      </div>
+
+
+      <div class="cart--item--total" data-item="accent-text">
+        {%- if item.original_line_price != item.final_line_price -%}
+          <div data-item="light-accent-text">
+            <s class="money">{{ item.original_line_price | money }}</s>
+          </div>
+        {%- endif -%}
+
+        <div class="money">
+          {{- item.final_line_price | money -}}
+        </div>
+      </div>
+    </div>
+  {%- endcapture -%}
+
+  {%- capture mobile_items -%}
+    {{- mobile_items -}}
+
+    <div
+      class="cart--item"
+      data-variant-id="{{ item.variant_id }}"
+      data-management="{{ item.variant.inventory_management }}"
+      data-policy="{{ item.variant.inventory_policy }}"
+      data-quantity="{{ item.variant.inventory_quantity | default: 0 }}"
+      data-line-num="{{ forloop.index }}" data-line="{{ forloop.index }}" data_pplr_row= "{{ forloop.index }}" 
+      {% unless settings.transitions--other %}
+        data-transition-item="cart-{{ view }}"
+        {%- if async -%}
+          data-transition-active="true"
+        {%- endif -%}
+      {% endunless %}
+    >
+      <div class="cart--item--title">
+        <div data-item="block-heading">
+          <a href="{{ item.url }}">{{ item.product.title }}</a>
+        </div>
+
+        <div class='cart--error' data-item='small-text' style='display:none;'>
+          {{- all_items_added_t -}}
+        </div>
+      </div>
+
+      <div class="cart--item--image">
+        <!-- HC - 08 Mar '24 - cart lightbox -->
+        <a data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
+                 {% if flag %}
+  
+           <img src="{{ preview_image }}" height="500px" width="500px" sizes="150px" >
+          
+           {% else %}
+          {%- if preview_image == false -%}
+            {% if item.product_id != 7351943430217 %}
+              {%- render "placeholder", type: 'product', aspect_ratio: 1, placeholder_index: 1 -%}
+            {% endif %}
+          {%- else -%}
+            
+            {{-
+              preview_image |
+              image_url: width: preview_image.width |
+              image_tag: widths: "300, 500", sizes: sizes
+            -}}
+          {%- endif -%}
+          {% endif %}
+        </a>
+      </div>
+
+      <div   class="cart--item--info">        
+        <!-- Mobile cart line items starts -->
+        {% comment %}{% if property_size > 0 %}
+          <ul>
+            {% for property in item.properties %}
+              {% if property.first contains '_image' %}
+
+                <li class="preview-image-popup-list-os">
+                  <div class="cart-image-preview-os" onclick="showPopup(this)">Preview image</div>
+                  <div class="cart-embroidery-doubleCheck-text-os">Please double-check your spelling.</div>
+      
+                  <!-- Preview image popup starts -->
+                  {% 
+                    render 'preview-image-popup-os',
+                    image: property.last,
+                    index: forloop.index
+                  %}
+                  <!-- Preview image popup ends -->
+                </li>
+                
+                {% elsif property.last != blank %}
+                <li><strong>{{ property.first }}:</strong> {{ property.last }}</li>
+              {% endif %}
+            {% endfor %}            
+          </ul>
+        {% endif %}{% endcomment %}
+
+          {% if property_size > 0 %}
+          <ul>
+            {% for property in item.properties %}           
+              {% if property.first contains 'personalize_it_variant_id' %}
+                  <div class="cart-embroidery-doubleCheck-text-os">Please double-check your spelling or initials.</div>
+                {% continue %}
+              {% endif %}
+              
+              {% if property.first contains '_image' %}
+                {% if property.last != blank %}
+                  <li class="preview-image-popup-list-os">
+                    <div class="cart-image-preview-os" onclick="showPopup(this)">Preview image</div>
+                    <!-- <div class="cart-embroidery-doubleCheck-text-os">Please double-check your spelling.</div> -->
+        
+                    <!-- Preview image popup starts -->
+                    {% 
+                      render 'preview-image-popup-os',
+                      image: property.last,
+                      index: forloop.index
+                    %}
+                    <!-- Preview image popup ends -->
+                  </li>
+                {% endif %}
+                  
+              {% else %}
+                {% if property.last != blank %}
+                  <li><strong>{{ property.first }}:</strong> {{ property.last }}</li>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if item.product_id == 7351943430217 %}
+          <ul class="cart-custom-embroidery-text-os">
+             <div class="cart-embroidery-doubleCheck-text-os">Embroidery charge for all trunks in the cart.</div>
+          </ul>
+        {% endif %}
+        <!-- Mobile cart line items starts -->
+        
+        {%- unless item.variant.title contains 'Default' -%}
+          <div class="cart--item--variant-name" data-item="accent-text">
+            <a href="{{ item.url }}">{{ item.variant.title }}</a>
+          </div>
+        {%- endunless -%}
+
+        {%- if item.selling_plan_allocation -%}
+          <div class="cart--item--selling-plan" data-item="small-text">
+            {{- item.selling_plan_allocation.selling_plan.name -}}
+          </div>
+        {%- endif -%}
+
+
+        
+
+        <span class="pplr_cart_item_property" data-line="{{item.index}}" ></span>
+
+        <div class="cart--item--price">
+          {%- if item.original_price > item.final_price -%}
+            <div class="cart--item--orig-price" data-item="light-accent-text">
+              <s class="money">{{ item.original_price | money }}</s>
+            </div>
+          {%- endif -%}
+
+          <div class="cart--item--total money" data-item="accent-text">
+            {{- item.final_price | money -}}
+          </div>
+
+          <div class="cart--item--unit-price-container" data-item="small-text">
+            {%- liquid
+              if item.unit_price_measurement
+                echo item.unit_price | money | append: '/'
+                if item.unit_price_measurement.reference_value != 1
+                  echo item.unit_price_measurement.reference_value
+                endif
+                echo item.unit_price_measurement.reference_unit
+              endif
+            -%}
+          </div>
+
+          {%- if item.line_level_discount_allocations.size > 0 -%}
+            <div class="cart--item--discounts" data-item="light-accent-text">
+              {%- for discount_allocation in item.line_level_discount_allocations -%}
+                {{ discount_allocation.discount_application.title }}&nbsp;
+                (–<span class="money">{{ discount_allocation.amount | money }}</span>)
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="cart--item--quantity">
+          {% if item.product_id != 7351943430217 %}
+              {%-
+                render 'quantity-selector',
+                id: id,
+                itemId: item.id,
+                type: 'cart',
+                value: item.quantity,
+                lineItems: item
+              -%}
+          {% endif %}
+        </div>
+        
+      </div>
+
+    </div>
+  {%- endcapture -%}

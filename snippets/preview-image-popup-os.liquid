@@ -1,0 +1,185 @@
+ <style>
+  /* .preview-image-popup-section-os {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    transition: opacity 0.5s ease;
+    opacity: 0;
+  }
+
+  .preview-image-popup-all-content-os {
+    position: relative;
+    margin: 15% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .preview-image-popup-section-os.show {
+    display: block;
+    opacity: 1;
+  }
+
+  .preview-image-popup-section-os.show .preview-image-popup-all-content-os {
+    opacity: 1;
+  }
+
+  .close-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    cursor: pointer;
+    font-size: 24px;
+    color: #333;
+  }
+
+  .show-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 20px;
+  }
+
+  .preview-image-popup-col-1-os img {
+    width: 100%;
+    height: auto;
+  } */
+
+
+   .preview-image-popup-section-os {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.6); /* Black background with opacity */
+  transition: opacity 0.5s ease; /* Transition for opacity */
+  opacity: 0; /* Start hidden */
+  display: flex; /* Use flexbox for centering */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+}
+
+.preview-image-popup-all-content-os {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    width: 100%;
+    max-width: 800px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.preview-image-popup-section-os.show {
+  display: flex; /* Ensure flexbox properties are active when shown */
+  opacity: 1; /* Fade in the background */
+}
+
+.preview-image-popup-section-os.show .preview-image-popup-all-content-os {
+    opacity: 1;
+}
+
+.close-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  cursor: pointer;
+  font-size: 24px;
+  color: #333;
+}
+
+.show-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 20px;
+}
+
+.preview-image-popup-col-1-os img {
+  width: 100%;
+  height: auto;
+}
+
+</style>
+
+
+
+
+
+<!-- Preview image popup starts -->
+<div class="overlay-os"></div>
+<section class="preview-image-popup-section-os" id="popup-{{ index }}" style="display:none;">
+  <div class="preview-image-popup-all-content-os">
+    <span class="close-button" onclick="hidePopup(event)">×</span>
+    <div class="preview-image-popup-row-os">
+      <div class="preview-image-popup-col-1-os">
+        <img src="{{ image }}" alt="Popup Image"> <!-- Ensure this uses the correct property image -->
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Preview image popup ends -->
+
+
+
+
+
+<script>
+  function showPopup(element) {
+    // Find the parent list item and the associated popup
+    const popupListItem = element.closest('.preview-image-popup-list-os');
+    const popup = popupListItem.querySelector('.preview-image-popup-section-os');
+
+    if (popup) {
+      popup.style.display = 'block'; // Show the popup
+      setTimeout(() => {
+        popup.classList.add('show'); // Add show class for transition effect
+      }, 10); // Delay to allow display block to take effect
+    }
+  }
+
+  function hidePopup(event) {
+    // Check if the click is on the popup backdrop (the section)
+    const popup = event.currentTarget.closest('.preview-image-popup-section-os');
+    if (popup) {
+      popup.classList.remove('show'); // Remove the show class
+      setTimeout(() => {
+        popup.style.display = 'none'; // Hide the popup after transition
+      }, 500); // Match this duration with your CSS transition duration
+    }
+  }
+
+  // Adding event listener to close popup when clicking outside
+  document.addEventListener('click', function(event) {
+    // Check if the clicked element is a popup section
+    const popup = event.target.closest('.preview-image-popup-section-os');
+    if (!popup && event.target.matches('.preview-image-popup-list-os *')) {
+      // If the click was outside the popup content and inside the list item, do nothing
+      return;
+    }
+    
+    // If click was outside of any popups, close all
+    document.querySelectorAll('.preview-image-popup-section-os.show').forEach(openPopup => {
+      hidePopup({ currentTarget: openPopup });
+    });
+  });
+</script>

@@ -1,0 +1,34 @@
+{%- if settings.quick-add--enabled and product.available -%}
+  {%- assign current_variant = product.selected_or_first_available_variant -%}
+
+  <product-quick-add
+    class="product--quick-add"
+    tabindex="0"
+    data-handle="{{ product.handle }}"
+    aria-haspopup="menu"
+    data-loading="false"
+    data-id="{{ current_variant.id }}"
+    {%- if product.has_only_default_variant -%}
+      data-form="false"
+      data-management="{{ current_variant.inventory_management }}"
+      data-policy="{{ current_variant.inventory_policy }}"
+      data-quantity="{{ current_variant.inventory_quantity | default: 0 }}"
+    {%- else -%}
+      data-form="true"
+    {%- endif -%}
+  >
+    <button class="product--quick-add--icon" type="button">
+      {%- liquid
+        if product.has_only_default_variant
+          render 'icons', icon: 'plus'
+        else
+          render 'icons', icon: 'ellipses'
+        endif
+      -%}
+    </button>
+
+    <div class="product--quick-add--spinner">
+      {%- render 'icons', icon: 'spinner' -%}
+    </div>
+  </product-quick-add>
+{%- endif -%}
