@@ -1,0 +1,403 @@
+{% if section.settings.removeStickyheader %}
+<style>
+header.layout--header-group {
+    position: relative !important;
+}
+</style>
+{% endif %}
+
+{%- liquid
+  assign search_t = 'layout.header.search' | t
+  assign account_t = 'layout.header.account' | t
+
+  assign bg_color = section.settings.background-color
+  assign cart_icon = section.settings.cart--icon
+  assign light_text = section.settings.light-text
+  assign logo_image = section.settings.logo
+  assign hover_logo_image = section.settings.hover_logo
+  assign logo_height = section.settings.logo-height
+  assign logo_center = section.settings.header-logo-center
+  assign menu_center = section.settings.header-menu-center
+  assign menu = section.settings.menu
+  assign mobile_logo_height = section.settings.mobile-logo-height
+
+  assign transparent_menu = false
+  if request.page_type == 'index'
+    assign transparent_menu = section.settings.transparent-menu
+  endif
+
+  assign region_enabled = false
+  if section.settings.show-region-selector and localization.available_countries.size > 1
+    assign region_enabled = true
+  endif
+
+  assign locale_enabled = false
+  if section.settings.show-locale-selector and localization.available_languages.size > 1
+    assign locale_enabled = true
+  endif
+-%}
+
+<header-root
+  class="header--root"
+  data-section-id="{{ section.id }}"
+  data-section-type="header-section"
+  data-spacing="none"
+  data-background-color="{{ bg_color }}"
+  data-center-logo="{{ logo_center }}"
+  data-center-menu="{{ menu_center }}"
+  data-light-text="{{ light_text }}"
+  data-transparent-menu="{{ transparent_menu }}"
+  style="--header--logo-height:{{ logo_height }}px;"
+>
+  <div class="header--y-menu-for-drawer" style="display:none;">
+    {%- render 'y-menu', handle: menu -%}
+  </div>
+
+  {%- if locale_enabled or region_enabled -%}
+    <div class="header--localization-for-drawer" style="display:none;">
+      {%- render
+        'localization',
+        locale_enabled: locale_enabled,
+        region_enabled: region_enabled,
+        loading: 'lazy',
+        id: 'drawer'
+      -%}
+    </div>
+  {%- endif -%}
+
+  <div class="header--top-row">
+
+
+  <!-- default code starts -->
+  <div class="header--bottom-row">
+    {%- liquid
+      if linklists[menu].links.size > 0
+        assign menu_alignment = 'left'
+        if menu_center
+          assign menu_alignment = 'center'
+        endif
+
+        echo '<div class="header--menu">'
+          render 'x-menu', align: menu_alignment, overlap_parent: 1, handle: menu
+        echo '</div>'
+    endif
+    -%}
+    {% comment %}
+
+      echo '<div class="header--cart">'
+        render 'header-cart', cart_icon: cart_icon
+      echo '</div>'
+    {% endcomment %}
+
+  </div>
+  <!-- default code ends -->
+
+
+    
+    {%- if locale_enabled or region_enabled -%}
+      <div class="header--localization">
+        {%- render
+          'localization',
+          locale_enabled: locale_enabled,
+          region_enabled: region_enabled,
+          id: 'header'
+        -%}
+      </div>
+    {%- endif -%}
+
+    {%- if request.page_type == 'index' -%}
+      <h1 class="header--logo header--logo-os" data-item="section-heading">
+        <div class="header--logo-off-hover-os">
+          {%-
+            render 'logo',
+            logo: logo_image,
+            height: logo_height,
+            mobile_height: mobile_logo_height
+          -%}
+        </div>
+
+        <div class="header--logo-on-hover-os">
+          {%-
+            render 'logo',
+            logo: hover_logo_image,
+            height: logo_height,
+            mobile_height: mobile_logo_height
+          -%}
+        </div>
+      </h1>
+        
+      <!-- </h1> -->
+    {%- else -%}
+      <div class="header--logo">
+        {%-
+          render 'logo',
+          logo: logo_image,
+          height: logo_height,
+          mobile_height: mobile_logo_height
+        -%}
+      </div>
+    {%- endif -%}
+
+    <div class="header_rt_part">
+        {%- liquid
+          if linklists[menu].links.size > 0
+            assign menu_alignment = 'left'
+            if menu_center
+              assign menu_alignment = 'center'
+            endif
+    
+            echo '<div class="header--menu">'
+              render 'x-menu1', align: menu_alignment, overlap_parent: 1, handle: menu
+            echo '</div>'
+        endif
+        -%}
+  
+       <div class="cart-search-user-row-os">
+         <div class="header--cart">
+           {% render 'header-cart', cart_icon: cart_icon %}
+          </div>
+    
+      
+          {%- if settings.search--show-in-header -%}
+            <div
+              class="header--search"
+              data-drawer-open="top"
+              data-drawer-view="search"
+              role="img"
+              tabindex="0"
+              aria-label="{{ search_t }}"
+            >
+              {%- render 'icons', icon: 'search' -%}
+            </div>
+          {%- endif -%}
+      
+          {%- if section.settings.header-account-show and shop.customer_accounts_enabled -%}
+            <a
+              class="header--account-icon"
+              {% if customer %}
+                href="{{ routes.account_url }}"
+              {% else %}
+                href="{{ routes.account_login_url }}"
+              {% endif %}
+              aria-label="{{ account_t }}"
+            >
+              {%- render 'icons', icon: 'account' -%}
+            </a>
+          {%- endif -%}
+        </div>
+    </div>
+  </div>
+
+
+  <!-- default code starts -->
+
+  
+{% comment %}
+  <div class="header--bottom-row">
+    {%- liquid
+      if linklists[menu].links.size > 0
+        assign menu_alignment = 'left'
+        if menu_center
+          assign menu_alignment = 'center'
+        endif
+
+        echo '<div class="header--menu">'
+          render 'x-menu', align: menu_alignment, overlap_parent: 1, handle: menu
+        echo '</div>'
+      endif
+
+      echo '<div class="header--cart">'
+        render 'header-cart', cart_icon: cart_icon
+      echo '</div>'
+    -%}
+  </div>
+  {% endcomment %}
+
+  
+  <!-- default code ends -->
+
+  <div
+    class="header--mobile"
+    data-background-color="{{ bg_color }}"
+    data-light-text="{{ light_text }}"
+  >
+    <div class="header--mobile--menu">
+      <div
+        tabindex="0"
+        data-drawer-open="left"
+        data-drawer-view="y-menu"
+        aria-haspopup="menu"
+      >
+        {%- render 'icons', icon: 'menu' -%}
+      </div>
+    </div>
+
+    <div class="header--mobile--title">
+      {%-
+        render 'logo',
+        logo: logo_image,
+        height: logo_height,
+        mobile_height: mobile_logo_height
+      -%}
+    </div>
+
+    <div class="header--mobile--cart" data-item="accent-text">
+      {%- render 'header-cart', cart_icon: cart_icon -%}
+    </div>
+  </div>
+</header-root>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section--header",
+  "settings": [
+     {
+      "type": "checkbox",
+      "id":"removeStickyheader",
+      "label":"Remove Sticky Header",
+      "default":true
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent-menu",
+      "label": "Transparent on home page",
+      "info": "Requires this section to be the last of the header group. Only recommended with a full width image in first template section."
+    },
+    {
+      "id": "background-color",
+      "label": "Background color",
+      "type": "select",
+      "options": [
+        {
+          "label": "Transparent",
+          "value": "none"
+        },
+        {
+          "label": "Light",
+          "value": "light"
+        },
+        {
+          "label": "Dark",
+          "value": "dark"
+        },
+        {
+          "label": "Accent 1",
+          "value": "accent-1"
+        },
+        {
+          "label": "Accent 2",
+          "value": "accent-2"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "id": "light-text",
+      "label": "Use light text color",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "header-account-show",
+      "label": "Enable customer account links",
+      "default": true,
+      "info": "[You will also need to enable customer accounts in your store settings](https:\/\/docs.shopify.com\/manual\/your-store\/customers\/customer-accounts)"
+    },
+    {
+      "type": "select",
+      "id": "cart--icon",
+      "label": "Cart icon",
+      "options": [
+        { "label": "Text", "value": "text" },
+        { "label": "Bag", "value": "bag" },
+        { "label": "Cart", "value": "cart" }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "header",
+      "content": "Menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "header-menu-center",
+      "label": "Center align"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "Country/region Selector",
+      "info": "To add a country/region, go to your [payment settings](/admin/settings/payments)."
+    },
+    {
+      "type": "checkbox",
+      "id": "show-region-selector",
+      "label": "Show country/region selector",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Language Selector",
+      "info": "To add a language, go to your [language settings](/admin/settings/languages)."
+    },
+    {
+      "type": "checkbox",
+      "id": "show-locale-selector",
+      "label": "Show language selector",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "checkbox",
+      "id": "header-logo-center",
+      "label": "Center align"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Image",
+      "info": "1600 x 200px max"
+    },
+    {
+      "type": "image_picker",
+      "id": "hover_logo",
+      "label": "Image",
+      "info": "1600 x 200px max"
+    },
+    {
+      "label": "Image height",
+      "id": "logo-height",
+      "type": "range",
+      "min": 15,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 50,
+      "info": "This is referring to the natural height and should be half the height of the image you uploaded to ensure it stays sharp on retina screens."
+    },
+    {
+      "label": "Mobile image height",
+      "id": "mobile-logo-height",
+      "type": "range",
+      "min": 15,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    }
+  ],
+  "enabled_on": {
+    "groups": ["header"]
+  }
+}
+{% endschema %}

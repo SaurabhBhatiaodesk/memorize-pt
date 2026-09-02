@@ -1,0 +1,361 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}" dir="ltr">
+<head>
+    <style>
+      .layout--header-group {position: sticky;top: 0px;z-index: 3;}
+      .product[data-product-type="PPLR_HIDDEN_PRODUCT"] .product-thumbnail .product-thumbnail__quantity {display: none !important;}
+    </style>
+
+    <meta charset="UTF-8">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
+    {%- if canonical_url != blank -%}
+      <link rel="canonical" href="{{ canonical_url }}">
+    {%- endif -%}
+    {%- if settings.favicon != blank -%}
+      <link rel="shortcut icon" href="{{ settings.favicon | image_url: width: 32 }}" type="image/png">
+      <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180 }}">
+    {%- endif -%}
+    <title>
+      {%- liquid
+        echo page_title
+        unless request.page_type == 'index'
+          echo ' | ' | append: shop.name
+        endunless
+      -%}
+    </title>
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {%- liquid
+      echo 'theme--critical.css' | asset_url | preload_tag: as: 'style'
+      echo 'theme--async.css' | asset_url | preload_tag: as: 'style'
+    -%}
+
+    {%- liquid
+      render 'meta-tags'
+      render 'css-typography'
+      render 'css-variables'
+      render 'custom-styles'
+      render 'js-variables'
+      render 'js-utils'
+      render 'js-modules'
+    -%}
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    {%- unless request.design_mode or request.path contains 'challenge' -%}
+    {%- render 'MemorizeYourLife' -%}{%- else -%}{{ content_for_header }}{%- endunless -%}
+    {%- if request.page_type contains 'customers' -%}
+      <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
+      <script src="{{ 'customer_area.js' | shopify_asset_url }}" defer="defer"></script>
+    {%- endif -%}
+
+    <link href="{{ "theme--critical.css" | asset_url }}" rel="stylesheet" media="all">
+    <link href="{{ "theme--async.css" | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+
+    <!-- HC - 08 Mar '24 - cart lightbox -->
+      <link rel="preload" href="{{ 'jquery.js' | asset_url }}" as="script">
+      {{ 'jquery.js' | asset_url | script_tag }}
+      <link rel="preload" href="{{ 'fancybox.css' | asset_url }}" as="style">
+      {{ 'fancybox.css' | asset_url | stylesheet_tag }}
+      <script>
+        $().fancybox({});
+        $("[data-fancybox]").fancybox({
+          beforeClose: function( instance, slide ) {}
+        });
+      </script>
+      <style>a[data-fancybox] {cursor: zoom-in;}</style>
+    <!-- END - HC - 08 Mar '24 - cart lightbox -->
+
+    <noscript>
+      <style>.layout--template > *, .layout--footer-group > * {opacity: 1;}</style>
+      <link href="{{ "theme--async.css" | asset_url }}" rel="stylesheet">
+    </noscript>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7KHWSGF10S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-7KHWSGF10S');
+    </script>
+
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "mobfqwhgq8");
+    </script>
+
+    <!-- CDN for Inter google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  
+    <!-- CDN for Poppins google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  
+    <!-- CDN for Roboto google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+  
+    <!-- CDN for Montserrat google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  
+    <!-- CDN for jquery and slick slider -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.9/slick.min.css"/> 
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.9/slick-theme.min.css"/>
+    
+    <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  
+    <!-- CDN for Owl Carousel slider -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <!-- CDN for Lora font starts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <!-- CDN for Lora font ends -->
+    <!-- CDN for Tenor font starts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tenor+Sans&display=swap" rel="stylesheet">
+    <!-- CDN for Tenor font ends -->
+    <!-- Rochester, Rouge Script and Cormorant Garamond font family cdn starts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Rochester&family=Rouge+Script&display=swap" rel="stylesheet">
+    <!-- Rochester, Rouge Script and Cormorant Garamond font family cdn ends -->
+</head>
+<body class="template--{{ template | split: '.' | first | remove: '_' | replace: '/', '--' }} page--{{ page_title | handle }}"
+  data-theme-id="606"
+  data-theme-name="Blockshop"
+  data-theme-version="9.4.1"
+  data-theme-preset="{{ settings.preset }}"
+  data-transition-container="viewport"
+  data-logged-in="{% if customer %}true{% else %}false{% endif %}"
+  {% if settings.border--enabled %}
+    data-show-border
+  {% endif %}>
+  
+  {% section 'custom-font' %}
+    <!--[if IE]>
+      <div style="text-align:center;padding:72px 16px;">{{ 'general.browser_unsupported' | t }}</div>
+      <style>.layout--viewport { display: none; }</style>
+    <![endif]-->
+
+    <a data-item="a11y-button" href='#main-content' id="a11y_skip">
+      {{- 'general.a11y.skip_main' | t -}}
+    </a>
+
+    <div class="layout--viewport" data-drawer-status="closed">
+      <div class="layout--main-content">
+        <header class="layout--header-group">
+          {%- sections 'header-group' -%}
+        </header>
+
+        <div class="layout--overlay-group">
+          {%- sections 'overlay-group' -%}
+        </div>
+
+        <main class="layout--template" id="main-content">
+          {{ content_for_layout }}
+        </main>
+
+        <footer class="layout--footer-group">
+          {%- sections 'footer-group' -%}
+        </footer>
+      </div>
+
+      {%- liquid
+        render 'drawer'
+        render 'layout--navigation'
+        render 'feedback-bar'
+      -%}
+    </div>
+
+    {%- render 'icons', icon: 'defs' -%}
+  
+   {% if product %}
+
+     <script>
+  window.addEventListener('load', function() {
+  var _learnq = window._learnq || [];
+  function addedToCart() {
+   fetch(`${window.location.origin}/cart.js`)
+   .then(res => res.clone().json().then(data => {
+    var cart = {
+      total_price: data.total_price/100,
+      $value: data.total_price/100,
+      total_discount: data.total_discount,
+      original_total_price: data.original_total_price/100,
+      items: data.items
+    }
+    if (item !== 'undefined') {
+      cart = Object.assign(cart, item)
+    }
+    if (klAjax) {
+       _learnq.push(['track', 'Added to Cart', cart]);
+       klAjax = false;
+      }
+   }))
+  };
+  (function (ns, fetch) {
+    ns.fetch = function() {
+      const response = fetch.apply(this, arguments);
+      response.then(res => {
+        if (`${window.location.origin}/cart/add.js`
+          .includes(res.url) && res.url !== '') {
+              addedToCart()
+        }
+      });
+      return response
+     }
+  }(window, window.fetch));
+  var klAjax = true;
+  var atcButtons = document.querySelectorAll("form[action*='/cart/add'] button[type='submit']");
+  for (var i = 0; i < atcButtons.length; i++) { 
+    atcButtons[i].addEventListener("click", function() {
+      if (klAjax) {
+        _learnq.push(['track', 'Added to Cart', item]);
+        klAjax = false;
+      }
+    })
+  }
+  });
+</script>
+
+<script type = "text/javascript" >
+window.pplr_custom_cart_track = function(data) {
+var klAjax = true;
+var _learnq = window._learnq || [];
+var cart = {
+total_price: data.total_price / 100,
+$value: data.total_price / 100,
+total_discount: data.total_discount,
+original_total_price: data.original_total_price / 100,
+items: data.items
+}
+if (item !== 'undefined') {
+cart = Object.assign(cart, item)
+}
+if (klAjax) {
+_learnq.push(['track', 'Added to Cart', cart]);
+klAjax = false;
+}
+}
+</script>
+
+    <script type="text/javascript">
+      var _learnq = _learnq || [];
+      var classname = document.getElementsByClassName("product-buy-buttons--primary p_a_t_c");
+      var addToCart = function() {_learnq.push(['track', 'Added to Cart', item]);};
+      for (var i = 0; i < classname.length; i++) {classname[i].addEventListener('click', addToCart, false);}
+    </script>
+
+   {% endif %}
+
+      <!-- Product redirections -->
+      <!-- <script>
+        // JavaScript to handle URL redirections based on conditions
+        document.addEventListener("DOMContentLoaded", function() {
+            var currentPath = window.location.pathname;  // Get the path of the current URL
+        
+            // Condition 1: Check if the path is '/products/baby-child'
+            if (currentPath === '/products/baby-child') {
+                window.location.href = '/products/baby-child-trunks-duplicate'; // Redirect to new URL
+            }
+            // Condition 2: Check if the path is '/products/other-family'
+            else if (currentPath === '/products/other-family') {
+                window.location.href = '/products/family-other-trunks-duplicate'; // Redirect to new URL
+            }
+            // Condition 3: Check if the path is '/products/weddings'
+            else if (currentPath === '/products/weddings') {
+                window.location.href = '/products/bridal-wedding-trunks-duplicate'; // Redirect to new URL
+            }
+            // Condition 4: Check if the path is '/products/graduations'
+            else if (currentPath === '/products/graduations') {
+                window.location.href = '/products/school-graduate-trunks-duplicate'; // Redirect to new URL
+            }
+        });
+      </script> -->
+      <script>
+        /* ============================================================
+   PDP ADD TO CART SPEED OPTIMIZER (SAFE VERSION)
+   - No functionality change
+   - Only improves canvas image speed
+   - Converts PNG → JPEG (lighter & faster)
+   - Applies ONLY on product page
+============================================================ */
+
+(function () {
+  // check if we are on product page (PDP)
+  function isProductPage() {
+    return (
+      document.querySelector(".main-product-os") ||
+      document.querySelector(".product-page--root") ||
+      document.body.classList.contains("template-product")
+    );
+  }
+
+  if (!isProductPage()) return;
+
+  const JPEG_QUALITY = 0.72;
+
+  const originalToDataURL = HTMLCanvasElement.prototype.toDataURL;
+  const originalToBlob = HTMLCanvasElement.prototype.toBlob;
+
+  function convertToJpeg(canvas) {
+    const tempCanvas = document.createElement("canvas");
+    const ctx = tempCanvas.getContext("2d");
+
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = canvas.height;
+
+    // JPEG me transparency nahi hoti → white background add
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+    ctx.drawImage(canvas, 0, 0);
+
+    return originalToDataURL.call(tempCanvas, "image/jpeg", JPEG_QUALITY);
+  }
+
+  // override only when PNG used
+  HTMLCanvasElement.prototype.toDataURL = function (type, quality) {
+    try {
+      if (!type || type === "image/png") {
+        return convertToJpeg(this);
+      }
+    } catch (e) {
+      console.warn("Canvas optimization fallback:", e);
+    }
+
+    return originalToDataURL.call(this, type, quality);
+  };
+
+  HTMLCanvasElement.prototype.toBlob = function (callback, type, quality) {
+    try {
+      if (!type || type === "image/png") {
+        return originalToBlob.call(this, callback, "image/jpeg", JPEG_QUALITY);
+      }
+    } catch (e) {
+      console.warn("Canvas blob fallback:", e);
+    }
+
+    return originalToBlob.call(this, callback, type, quality);
+  };
+
+  console.log("✅ PDP Canvas Optimizer Active (PNG → JPEG)");
+})();
+      </script>
+
+    </body>
+</html>
+   

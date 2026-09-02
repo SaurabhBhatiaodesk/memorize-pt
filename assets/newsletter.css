@@ -1,0 +1,1 @@
+.newsletter--wrapper{width:100%;max-width:var(--max-width--x-small);margin:0 auto;text-align:center;justify-content:center;flex-direction:column}.newsletter--body{max-width:300px;width:100%;margin-left:auto;margin-right:auto}.newsletter--failure{padding-top:var(--spacing--item);color:var(--color--fail)}input.newsletter--email{margin:0}

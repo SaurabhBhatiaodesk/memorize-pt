@@ -1,0 +1,204 @@
+{% liquid
+  assign cover_link = false
+  if link_url != blank and description == blank
+    assign cover_link = true
+  endif
+
+  assign mobile_overlay_style = "none"
+  unless overlay_style == "none"
+    if mobile_overlay
+      assign mobile_overlay_style = overlay_style
+    endif
+  endunless
+
+  assign show_placeholder_image = false
+  if image == blank and disable_image != true
+    assign show_placeholder_image = true
+  endif
+
+  assign text_exists = false
+  if overline != blank or title != blank or description != blank or link_text != blank
+    assign text_exists = true
+  endif
+%}
+
+<div
+  class="featured-content--root"
+  data-disable-image="{{ disable_image }}"
+  data-mobile-overlay="{{ mobile_overlay }}"
+  data-mobile-text-alignment="{{ mobile_text_alignment }}"
+  data-light-text="{{ light_text }}"
+  data-overlap="{{ overlap }}"
+  data-placeholder="{{ show_placeholder_image }}"
+  data-promo-width="{{ promo_width }}"
+  data-text-x-alignment="{{ text_x_alignment }}"
+  data-text-y-alignment="{{ text_y_alignment }}"
+  data-text-exists="{{ text_exists }}"
+  data-text-position="{{ text_position }}"
+  data-text-width="{{ text_width }}"
+  {%- if attributes -%}
+    {{- attributes -}}
+  {%- endif -%}
+>
+  {%- if cover_link -%}
+    <a
+      class="featured-content--cover-link"
+      href="{{ link_url }}"
+      {%- if title != blank -%}
+        aria-label="{{ title }}"
+      {%- else -%}
+        aria-label="{{ image.alt }}"
+      {%- endif -%}
+    >
+  {%- endif -%}
+
+  <div
+    class="featured-content--container"
+    {%- unless overlap -%}
+      data-background-color="{{ text_bg_color }}"
+    {%- endunless -%}
+  >
+    <div class="featured-content--image">
+      {%- unless sizes -%}
+        {%- capture sizes -%}
+          '(max-width: 767px) {{ 100 | divided_by: mobile_per_row }}vw, {{ 100 | divided_by: per_row }}vw'
+        {%- endcapture %}
+      {%- endunless -%}
+
+      {%- if image -%}
+        {%-
+          render "image",
+          image: image,
+          aspect_ratio: image_aspect_ratio,
+          display_type: image_display_type,
+          mobile_image: mobile_image,
+          mobile_display_type: mobile_image_display_type,
+          mobile_aspect_ratio: mobile_image_aspect_ratio,
+          mobile_overlay_style: mobile_overlay_style,
+          overlay_style: overlay_style,
+          parallax: parallax_enabled,
+          sizes: sizes
+        -%}
+      {%- elsif show_placeholder_image -%}
+        {%-
+          render "placeholder",
+          type: "lifestyle",
+          aspect_ratio: image_aspect_ratio,
+          display_type: image_display_type,
+          mobile_display_type: mobile_image_display_type,
+          mobile_aspect_ratio: mobile_image_aspect_ratio,
+          mobile_overlay_style: mobile_overlay_style,
+          overlay_style: overlay_style,
+          parallax: parallax_enabled,
+          placeholder_index: 2
+        -%}
+      {%- endif -%}
+      <!-- <div class="slidershow-custom-icon-os">
+        <img src="https://cdn.shopify.com/s/files/1/0588/5834/0425/files/memorize-circle-lock-wine-rgb-900px-w-72ppi.png?v=1750680528" alt="" />
+      </div> -->
+    </div>
+
+    {%- if text_exists -%}
+      <div
+        class="featured-content--text"
+        data-background-color="{{ text_bg_color }}"
+        data-translucent="{{ settings.content--box-translucent }}"
+      >
+        <div
+          class="featured-content--text-wrapper"
+          data-text-style="{{ text_style }}"
+          {% unless settings.transitions--text %}
+            data-transition-container="{{ transition_name }}"
+            data-transition-type="slide-in"
+            data-transition-cascade="vertical"
+            data-transition-cascade-interval="500"
+          {% endunless %}
+        >
+          {%- if title != blank -%}
+            <div
+              {% unless settings.transitions--text %}
+                data-transition-item="{{ transition_name }}"
+              {% endunless %}
+            >
+              {% comment %}<h1
+                class="featured-content--title"
+                data-item="{{ heading_type }}"
+              >
+                {%- render "utils", utility: "emphasized-text", text: title -%}
+              </h1>{% endcomment %}
+
+              <h2 data-item="section-heading" class="featured-content--title-os">{{ title }}</h2>
+            </div>
+          {%- endif -%}
+
+          {%- if overline != blank -%}
+            <div
+              class="featured-content--overline"
+              {% unless settings.transitions--text %}
+                data-transition-item="{{ transition_name }}"
+              {% endunless %}
+            >
+              <h3 data-item="overline">
+                {{- overline | escape -}}
+              </h3>
+            </div>
+          {%- endif -%}
+
+          {%- if description != blank -%}
+            <div
+              class="featured-content--description"
+              data-item="rte-content"
+              {% if mobile_hide_description %}
+                data-mq="medium-large"
+              {% endif %}
+              {% unless settings.transitions--text %}
+                data-transition-item="{{ transition_name }}"
+              {% endunless %}
+            >
+              {{- description -}}
+            </div>
+          {%- endif -%}
+
+          {%- if link_text != blank -%}
+            {%- if cover_link -%}
+              <div
+                class="featured-content--button"
+                data-item="{{- settings.buttons--style -}}"
+                data-text="{{ link_text }}"
+                {% unless settings.transitions--text %}
+                  data-transition-item="{{ transition_name }}"
+                  data-transition-type="fade-in"
+                {% endunless %}
+                {% unless settings.transitions--buttons %}
+                  data-transition-button
+                {% endunless %}
+              >
+                <span>{{- link_text -}}</span>
+              </div>
+            {%- else -%}
+              <a
+                class="featured-content--button"
+                href="{{ link_url }}"
+                data-item="{{- settings.buttons--style -}}"
+                data-text="{{ link_text }}"
+                {% unless settings.transitions--text %}
+                  data-transition-item="{{ transition_name }}"
+                  data-transition-type="fade-in"
+                {% endunless %}
+                {% unless settings.transitions--buttons %}
+                  data-transition-button
+                {% endunless %}
+              >
+                <span>{{- link_text -}}</span>
+              </a>
+            {%- endif -%}
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if cover_link -%}
+    </a>
+  {%- endif -%}
+</div>

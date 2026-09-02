@@ -1,0 +1,167 @@
+{% comment %} Usage:
+- Place inside loop of 'option' objects
+- If more than one product is included on one page, include a unique 'id'
+- If swatches are desired, set 'is_swatches' to true
+- display_swatches_only is used when no functionality is desired
+{% endcomment %}
+
+{%- liquid
+  unless is_swatches
+    assign is_swatches = false
+  endunless
+
+  capture radios_name
+    assign option_name = option.name | downcase | remove: ' '
+    echo id | append: '-' | append: option_name
+  endcapture
+
+  unless display_swatches_only
+    assign display_swatches_only = false
+  else
+    assign radios_name = radios_name | prepend: 'display-'
+    assign is_swatches = true
+  endunless
+-%}
+{% capture currentSwatch %}
+    {%- liquid
+      if display_swatches_only == false and is_swatches
+        echo '<span class="radios--option-current" data-item="light-accent-text">'
+        for value in option.values
+          if value == option.selected_value
+            echo value | escape
+          endif
+        endfor
+        echo '</span>'
+      endif
+    -%}
+{% endcapture %}
+
+<radios-root
+  class="radios--root"
+  data-is-swatches="{{ is_swatches }}"
+  data-display-only="{{ display_swatches_only }}"
+>
+  <div class="radios--header"> 
+    {% if option.name == block.settings.optionName1 %}
+    <label
+      class="radios--option-label customText"
+      id="{{ radios_name }}" 
+    >
+      {{ block.settings.optionName1replace | replace: '<span style="text-decoration:underline">','<span style="text-decoration:underline;cursor:pointer;" onclick="openSizeGuide()">' | replace: '[current]',currentSwatch}}
+    </label>
+    {% elsif option.name == block.settings.optionName2 %}
+    <label
+      class="radios--option-label customText"
+      id="{{ radios_name }}" 
+    >
+      {{ block.settings.optionName2replace | replace: '<span style="text-decoration:underline">','<span style="text-decoration:underline;cursor:pointer;" onclick="openPopup1()">'  | replace: '[current]',currentSwatch }}
+    </label>
+    {% elsif option.name == block.settings.optionName3 %}
+    <label
+      class="radios--option-label customText"
+      id="{{ radios_name }}" 
+    >
+      {{ block.settings.optionName3replace  | replace: '<span style="text-decoration:underline">','<span style="text-decoration:underline;cursor:pointer;" onclick="openPopup2()">' | replace: '[current]',currentSwatch }}
+    </label>
+    {% else %}
+    <label
+      class="radios--option-label"
+      id="{{ radios_name }}"
+      {% if display_swatches_only %}
+        data-item="hidden-text"
+      {% else %}
+        data-item="accent-text"
+      {% endif %}
+    >
+      {{ option.name | escape }}
+    </label>
+
+    {%- liquid
+      if display_swatches_only == false and is_swatches
+        echo '<span class="radios--option-current" data-item="light-accent-text">'
+        for value in option.values
+          if value == option.selected_value
+            echo value | escape
+          endif
+        endfor
+        echo '</span>'
+      endif
+    -%}
+    {% endif %}
+    
+  </div>
+
+  <div class="justAWrapper">
+  <div
+    class="radios--container 
+    {% if option.name == block.settings.optionName3 %}wrapperToMakeSlider IamSliderHere
+    gridScroll{{ id }}{% endif %}"
+    role="radiogroup"
+    aria-labelledby="{{ radios_name }}"
+  >
+    {% assign countItems = 0 %}
+    {%- for value in option.values -%}
+      <div class="radios--main sdev_radios_btn" value="{{ value | escape }}" >
+        <input
+          class="radios--input"
+          type="radio"
+          id="{{ radios_name }}-{{ value | downcase | remove: ' ' }}"
+          name="{{ radios_name }}"
+          value="{{ value | escape }}"
+          data-item="radio"
+          {% if display_swatches_only %}
+            disabled
+          {% elsif value == option.selected_value %}
+            checked
+          {% endif %}
+        />
+
+        {%- if is_swatches -%}
+          <label
+            {% comment %}class="radios--swatch-button radios--swatch-button-{{ value | escape }}"{% endcomment %}
+            class="radios--swatch-button radios--swatch-button-{{ value | escape | replace: ' ', '-' }}"
+            data-item="swatch"
+            for="{{ radios_name }}-{{ value | downcase | remove: ' ' }}"
+            aria-label="{{ value | escape }}"
+          ></label>
+
+        {%- else -%}
+          <label
+            for="{{ radios_name }}-{{ value | downcase | remove: ' ' }}"
+            class="radios--value-button radio-btn-{{ value | downcase | remove: ' ' }}"
+            data-item="secondary-button"
+            data-text="{{ value | escape }}"
+            {% unless settings.transitions--buttons %}
+              data-transition-button
+            {% endunless %}
+          >
+            <div>{{ value | escape }}</div>
+          </label>
+        {%- endif -%}
+
+      </div>
+      {% assign countItems = countItems | plus: 1 %}
+    {%- endfor -%}
+     
+  </div>
+
+    {% if option.name == block.settings.optionName3 and countItems > 5 %} 
+    <button class="nextArrow next" type="button" onclick="scrollNext('.gridScroll{{ id }}')" aria-label="Next">
+     <svg class="icon--root icon--chevron-right" width="10" height="6" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg"><path d="M5 4.058 8.53.528l.707.707-3.53 3.53L5 5.472.763 1.235 1.47.528 5 4.058Z" fill="#000" fill-rule="nonzero"></path></svg>    
+    </button> 
+    <button class="prev nextArrow hide" type="button" onclick="scrollPrev('.gridScroll{{ id }}')" aria-label="Next">
+    <svg class="icon--root icon--chevron-left" width="10" height="6" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg"><path d="M5 4.058 8.53.528l.707.707-3.53 3.53L5 5.472.763 1.235 1.47.528 5 4.058Z" fill="#000" fill-rule="nonzero"></path></svg>
+    </button> 
+    {% endif %}
+  </div>
+
+  {% if option.name == block.settings.optionName3 and countItems > 5 %} 
+    {% if block.settings.seeMore != blank and block.settings.seeLess != blank %}
+     <div class="seeMoreLessWrapper">
+      <span class="seeMore" style="display:none" onclick="removeSlider('.gridScroll{{ id }}')">{{ block.settings.seeMore }}</span>
+      <span class="seeLess" style="display:none" onclick="makeSlider('.gridScroll{{ id }}')">{{ block.settings.seeLess }}</span>
+     </div>
+    {% endif %}
+  {% endif %}
+  
+</radios-root>

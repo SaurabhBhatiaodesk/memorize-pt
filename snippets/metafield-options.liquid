@@ -1,0 +1,104 @@
+{% for i in (1..2) %}
+{% capture productList %}linked_products{{i}}{% endcapture %}
+{% capture uniqueID %}metafieldOption{{ i }}{% endcapture %}{% capture uniqueID2 %}metafieldOption11{{ i }}{% endcapture %}
+{% assign popupIndex = i | plus: 2 %}
+{% assign productListItems = block.settings[productList] %}
+{% assign currentHandle = product.handle %}
+{% capture topHeading %}optionNameMeta{{ i }}replace{% endcapture %}
+{%- paginate productListItems by 100 -%} 
+{% assign countValue = paginate.items %}
+{%- endpaginate -%}
+  
+{% if countValue > 0 %}
+<div class="radios--root metafieldOption" data-is-swatches="true" data-display-only="false">
+  <div class="radios--header">
+    <label class="radios--option-label customText" id="{{uniqueID2}}">
+      <label
+      class="radios--option-label customText"
+      id="metafieldOption{{ i }}" 
+    >
+      {% capture replaceString %}<span style="text-decoration:underline;cursor:pointer;" onclick="openPopup{{ popupIndex }}()">{% endcapture %}
+      {{ block.settings[topHeading] | replace: '<span style="text-decoration:underline">',replaceString }}
+    </label>
+    </label>
+  </div>
+
+  <div class="justAWrapper">
+    <div
+      class="radios--container IamSliderHere {{ uniqueID }} wrapperToMakeSlider"
+      role="radiogroup"
+      aria-labelledby="{{uniqueID2}}"
+    >
+
+    {% for product in productListItems %} 
+      {% assign url = product.handle %} 
+      <div class="radios--main">  
+        <input class="radios--input" type="radio"
+        {% if url == currentHandle %}checked{%endif%}
+        id="{{uniqueID2}}{{ product.handle }}" name="options{{ i }}" value="{{ product.title }}" data-item="radio" data-unavailable="false">
+        <label onclick="redirectToPageWithOptions('{{ shop.url }}/products/{{ url }}')"
+          for="{{uniqueID2}}{{ product.handle }}"
+          class="radios--swatch-button"
+          data-item="swatch" 
+          aria-label="{{ product.title }}"
+          style="background-image: url({{ product.metafields.custom.swatch_image | image_url: width:100 }});"
+        ></label> 
+      </div> 
+    {% endfor %}
+      
+    </div>
+
+     {% if countValue > 5 %} 
+    <button
+      class="nextArrow next"
+      type="button"
+      onclick="scrollNext('.{{ uniqueID }}')"
+      aria-label="Next"
+    >
+      <svg
+        class="icon--root icon--chevron-right"
+        width="10"
+        height="6"
+        viewBox="0 0 10 6"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M5 4.058 8.53.528l.707.707-3.53 3.53L5 5.472.763 1.235 1.47.528 5 4.058Z" fill="#000" fill-rule="nonzero"></path>
+      </svg>
+    </button>
+    <button
+      class="prev nextArrow hide"
+      type="button"
+      onclick="scrollPrev('.{{ uniqueID }}')"
+      aria-label="Next"
+    >
+      <svg
+        class="icon--root icon--chevron-left"
+        width="10"
+        height="6"
+        viewBox="0 0 10 6"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M5 4.058 8.53.528l.707.707-3.53 3.53L5 5.472.763 1.235 1.47.528 5 4.058Z" fill="#000" fill-rule="nonzero"></path>
+      </svg>
+    </button>
+    {% endif %}
+  </div>
+
+ {% if countValue > 5 %}         
+  <div class="seeMoreLessWrapper">
+    <span
+      class="seeMore"
+      style="display:none"
+      onclick="removeSlider('.{{ uniqueID }}')"
+      >{{ block.settings.seeMore }}</span>
+    <span
+      class="seeLess"
+      style="display:none"
+      onclick="makeSlider('.{{ uniqueID }}')"
+      >{{ block.settings.seeLess }}</span>
+  </div>
+ {% endif %}
+</div>
+
+{% endif %}
+{% endfor %}

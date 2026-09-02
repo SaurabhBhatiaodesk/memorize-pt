@@ -1,0 +1,2176 @@
+{%- liquid
+  assign checkout_t = 'cart.checkout' | t
+  assign all_items_added_t = 'cart.all_items_added' | t
+  assign continue_t = 'cart.continue' | t
+  assign empty_html_t = 'cart.empty_html' | t: collections_url: routes.all_products_collection_url
+  assign order_notes_t = 'cart.order_notes' | t
+  assign price_t = 'cart.price' | t
+  assign quantity_t = 'cart.quantity' | t
+  assign subtotal_t = 'cart.subtotal' | t
+  assign total_t = 'cart.total' | t
+  assign your_cart_t = 'cart.your_cart' | t
+
+  assign shipping_taxes_t = 'cart.shipping_taxes_not_included' | t
+  if cart.taxes_included
+    assign shipping_taxes_t = 'cart.shipping_taxes_included' | t
+  endif
+
+  assign show_cart_note = settings.cart--show-note
+
+  assign has_items = false
+  if cart.item_count > 0
+    assign has_items = true
+  endif
+
+  assign sizes = '150px'
+  if view == 'mobile'
+    assign sizes = '250px'
+  endif
+-%}
+
+<!-- Re-Order the cart items starts -->
+{%- assign matching_items = '' -%}
+
+{%- for item in cart.items -%}
+  {%- if item.product_id == 7351943430217 -%}
+    {%- assign matching_items = matching_items | append: item.id | append: ',' -%}
+  {%- else -%}
+     {%- liquid
+        assign id = view | append: '-updates-' | append: item.key
+    
+        if item.variant.featured_media.preview_image
+          assign preview_image = item.variant.featured_media.preview_image
+        elsif item.product.featured_media.preview_image
+          assign preview_image = item.product.featured_media.preview_image
+        else
+          assign preview_image = false
+        endif
+      -%}
+    
+      {%- capture desktop_items -%}
+        {{- desktop_items -}}
+    
+        <div
+          class="cart--item {% if item.product_id == 7351943430217 %}custom-embroidery-os{% endif %}"
+          data-variant-id="{{ item.variant_id }}"
+          data-management="{{ item.variant.inventory_management }}"
+          data-policy="{{ item.variant.inventory_policy }}"
+          data-quantity="{{ item.variant.inventory_quantity | default: 0 }}"
+          data-item-key="{{ item.key | escape }}" data-line-num="{{ forloop.index }}" data-line="{{ forloop.index }}" data_pplr_row= "{{ forloop.index }}" 
+          {% unless settings.transitions--other %}
+            data-transition-item="cart-{{ view }}"
+            {%- if async -%}
+              data-transition-active="true"
+            {%- endif -%}
+          {% endunless %}
+        >
+    
+          
+          <div class="cart--item--image">
+            <!-- HC - 08 Mar '24 - cart lightbox -->
+          
+            
+              {% assign flag = false %}
+              {%- assign property_size = item.properties | size -%}
+                 {% if property_size > 0 %}
+                  {% for property in item.properties %}
+                    {% if property.first contains 'image' %}
+                      {% if property.last != blank %}
+                         {% assign preview_image = property.last %}
+                            {% assign flag = true %}
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+              {% endif %}
+            
+            <a data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
+             {% if flag %}
+      
+               <img src="{{ preview_image }}" height="500px" width="500px" sizes="200px" >
+              
+               {% else %}
+              {%- if preview_image == false -%}
+                {% if item.product_id != 7351943430217 %}
+                  {%- render "placeholder", type: 'product', aspect_ratio: 1, placeholder_index: 1 -%}
+                {% endif %}
+              {%- else -%}
+                
+                {{-
+                  preview_image |
+                  image_url: width: preview_image.width |
+                  image_tag: widths: "300, 500", sizes: sizes
+                -}}
+              {%- endif -%}
+              {% endif %}
+            </a>
+          </div>
+    
+          <div class="cart--item--title">
+            <div data-item="block-heading">
+              <a href="{{ item.url }}">{{ item.product.title }}</a>
+            </div>
+    
+            {%- unless item.variant.title contains 'Default' -%}
+              <div class="cart--item--variant-name" data-item="accent-text">
+                <a href="{{ item.url }}">{{ item.variant.title }}</a>
+              </div>
+            {%- endunless -%}
+       
+            {%- assign property_size = item.properties | size -%}
+      
+    
+              {% comment %}{% if property_size > 0 %}
+                <ul>
+                  {% for property in item.properties %}
+                    {% if property.first contains 'image' %}
+                      {% if property.last != blank %}<a href="{{ property.last }}" >Preview image</a>{% endif %}
+                      <img src="{{ property.last }}">
+                      {% elsif property.last != blank %}
+                      <li><strong>{{ property.first }}:</strong> {{ property.last }}</li>
+                    {% endif %}
+                  {% endfor %}
+                  
+                </ul>
+              {% endif %}{% endcomment %}
+    
+    
+              {% if property_size > 0 %}
+                <ul>                  
+                  {% for property in item.properties %}      
+                    {% if property.first contains 'personalize_it_variant_id' %}
+                        <div class="cart-embroidery-doubleCheck-text-os">Please double-check your spelling or initials.</div>
+                      {% continue %}
+                    {% endif %}
+
+                    {% if property.first contains '_' %}
+                        {% continue %}
+                      {% endif %}
+                    
+                    {% if property.first contains 'image' %}
+                      {% if property.last != blank %}
+                        <li class="preview-image-popup-list-os">
+                          <div class="cart-image-preview-os" onclick="showPopup(this)">Preview image</div>
+              
+                          <!-- Preview image popup starts -->
+                          {% 
+                            render 'preview-image-popup-os',
+                            image: property.last,
+                            index: forloop.index
+                          %}
+                          <!-- Preview image popup ends -->
+                        </li>
+                      {% endif %}
+                        
+                    {% else %}
+                      {% if property.last != blank %}
+                        <li><strong>{{ property.first }}:</strong> {{ property.last }}</li>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+    
+              {% endif %}
+        
+              {% if item.product_id == 7351943430217 %}
+                  <ul class="cart-custom-embroidery-text-os">
+                     <li>Embroidery charge for all trunks in the cart.</li>
+                  </ul>
+              {% endif %}
+    
+    
+    
+    
+    
+            {%- if item.selling_plan_allocation -%}
+              <div class="cart--item--selling-plan" data-item="small-text">
+                {{- item.selling_plan_allocation.selling_plan.name -}}
+              </div>
+            {%- endif -%}
+    
+            {%- assign property_size = item.properties | size -%}
+    
+            <span class="pplr_cart_item_property" data-line="{{item.index}}" ></span>
+    
+            <div class='cart--error' data-item='small-text' style='display:none;'>
+              {{- all_items_added_t -}}
+            </div>
+          </div>
+    
+          <div class="cart--item--price" data-item="accent-text">
+            {%- if item.original_price != item.final_price -%}
+              <div data-item="light-accent-text">
+                <s class="money">{{ item.original_price | money }}</s>
+              </div>
+            {%- endif -%}
+    
+            <div class="money" data-item="accent-text">
+              {{- item.final_price | money -}}
+            </div>
+    
+            <div class="cart--item--unit-price-container" data-item="small-text">
+              {%- liquid
+                if item.unit_price_measurement
+                  echo item.unit_price | money | append: '/'
+                  if item.unit_price_measurement.reference_value != 1
+                    echo item.unit_price_measurement.reference_value
+                  endif
+                  echo item.unit_price_measurement.reference_unit
+                endif
+              -%}
+            </div>
+    
+            {% if item.line_level_discount_allocations.size > 0 %}
+              <div class="money" data-item="light-accent-text">
+                {%- for discount_allocation in item.line_level_discount_allocations -%}
+                  {{ discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | money }})
+                {%- endfor -%}
+              </div>
+            {% endif %}
+          </div>
+    
+          <div class="cart--item--quantity">
+            {% if item.product_id != 7351943430217 %}
+              {%-
+                render 'quantity-selector',
+                id: id,
+                itemId: item.id,
+                productId: item.product_id,
+                type: 'cart',
+                value: item.quantity,
+                lineItems: item
+              -%}
+            {% endif %}
+          </div>
+    
+    
+          <div class="cart--item--total" data-item="accent-text">
+            {%- if item.original_line_price != item.final_line_price -%}
+              <div data-item="light-accent-text">
+                <s class="money">{{ item.original_line_price | money }}</s>
+              </div>
+            {%- endif -%}
+    
+            <div class="money">
+              {{- item.final_line_price | money -}}
+            </div>
+          </div>
+        </div>
+      {%- endcapture -%}
+    
+      {%- capture mobile_items -%}
+        {{- mobile_items -}}
+    
+        <div
+          class="cart--item"
+          data-variant-id="{{ item.variant_id }}"
+          data-management="{{ item.variant.inventory_management }}"
+          data-policy="{{ item.variant.inventory_policy }}"
+          data-quantity="{{ item.variant.inventory_quantity | default: 0 }}"
+          data-item-key="{{ item.key | escape }}" data-line-num="{{ forloop.index }}" data-line="{{ forloop.index }}" data_pplr_row= "{{ forloop.index }}" 
+          {% unless settings.transitions--other %}
+            data-transition-item="cart-{{ view }}"
+            {%- if async -%}
+              data-transition-active="true"
+            {%- endif -%}
+          {% endunless %}
+        >
+          <div class="cart--item--title">
+            <div data-item="block-heading">
+              <a href="{{ item.url }}">{{ item.product.title }}</a>
+            </div>
+    
+            <div class='cart--error' data-item='small-text' style='display:none;'>
+              {{- all_items_added_t -}}
+            </div>
+          </div>
+    
+          <div class="cart--item--image">
+            <!-- HC - 08 Mar '24 - cart lightbox -->
+            <a data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
+                     {% if flag %}
+      
+               <img src="{{ preview_image }}" height="500px" width="500px" sizes="150px" >
+              
+               {% else %}
+              {%- if preview_image == false -%}
+                {% if item.product_id != 7351943430217 %}
+                  {%- render "placeholder", type: 'product', aspect_ratio: 1, placeholder_index: 1 -%}
+                {% endif %}
+              {%- else -%}
+                
+                {{-
+                  preview_image |
+                  image_url: width: preview_image.width |
+                  image_tag: widths: "300, 500", sizes: sizes
+                -}}
+              {%- endif -%}
+              {% endif %}
+            </a>
+          </div>
+    
+          <div   class="cart--item--info">        
+            <!-- Mobile cart line items starts -->
+            {% comment %}{% if property_size > 0 %}
+              <ul>
+                {% for property in item.properties %}
+                  {% if property.first contains 'image' %}
+    
+                    <li class="preview-image-popup-list-os">
+                      <div class="cart-image-preview-os" onclick="showPopup(this)">Preview image</div>
+                      <div class="cart-embroidery-doubleCheck-text-os">Please double-check your spelling.</div>
+          
+                      <!-- Preview image popup starts -->
+                      {% 
+                        render 'preview-image-popup-os',
+                        image: property.last,
+                        index: forloop.index
+                      %}
+                      <!-- Preview image popup ends -->
+                    </li>
+                    
+                    {% elsif property.last != blank %}
+                    <li><strong>{{ property.first }}:</strong> {{ property.last }}</li>
+                  {% endif %}
+                {% endfor %}            
+              </ul>
+            {% endif %}{% endcomment %}
+    
+              {% if property_size > 0 %}
+              <ul>
+                {% for property in item.properties %}           
+                  {% if property.first contains 'personalize_it_variant_id' %}
+                      <div class="cart-embroidery-doubleCheck-text-os">Please double-check your spelling or initials.</div>
+                    {% continue %}
+                  {% endif %}
+
+                  {% if property.first contains '_' %}
+                    {% continue %}
+                  {% endif %}
+                  
+                  {% if property.first contains 'image' %}
+                    {% if property.last != blank %}
+                      <li class="preview-image-popup-list-os">
+                        <div class="cart-image-preview-os" onclick="showPopup(this)">Preview image</div>
+                        <!-- <div class="cart-embroidery-doubleCheck-text-os">Please double-check your spelling.</div> -->
+            
+                        <!-- Preview image popup starts -->
+                        {% 
+                          render 'preview-image-popup-os',
+                          image: property.last,
+                          index: forloop.index
+                        %}
+                        <!-- Preview image popup ends -->
+                      </li>
+                    {% endif %}
+                      
+                  {% else %}
+                    {% if property.last != blank %}
+                      <li><strong>{{ property.first }}:</strong> {{ property.last }}</li>
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            {% endif %}
+    
+            {% if item.product_id == 7351943430217 %}
+              <ul class="cart-custom-embroidery-text-os">
+                 <li>Embroidery charge for all trunks in the cart.</li>
+              </ul>
+            {% endif %}
+            <!-- Mobile cart line items starts -->
+            
+            {%- unless item.variant.title contains 'Default' -%}
+              <div class="cart--item--variant-name" data-item="accent-text">
+                <a href="{{ item.url }}">{{ item.variant.title }}</a>
+              </div>
+            {%- endunless -%}
+    
+            {%- if item.selling_plan_allocation -%}
+              <div class="cart--item--selling-plan" data-item="small-text">
+                {{- item.selling_plan_allocation.selling_plan.name -}}
+              </div>
+            {%- endif -%}
+    
+    
+            
+    
+            <span class="pplr_cart_item_property" data-line="{{item.index}}" ></span>
+    
+            <div class="cart--item--price">
+              {%- if item.original_price > item.final_price -%}
+                <div class="cart--item--orig-price" data-item="light-accent-text">
+                  <s class="money">{{ item.original_price | money }}</s>
+                </div>
+              {%- endif -%}
+    
+              <div class="cart--item--total money" data-item="accent-text">
+                {{- item.final_price | money -}}
+              </div>
+    
+              <div class="cart--item--unit-price-container" data-item="small-text">
+                {%- liquid
+                  if item.unit_price_measurement
+                    echo item.unit_price | money | append: '/'
+                    if item.unit_price_measurement.reference_value != 1
+                      echo item.unit_price_measurement.reference_value
+                    endif
+                    echo item.unit_price_measurement.reference_unit
+                  endif
+                -%}
+              </div>
+    
+              {%- if item.line_level_discount_allocations.size > 0 -%}
+                <div class="cart--item--discounts" data-item="light-accent-text">
+                  {%- for discount_allocation in item.line_level_discount_allocations -%}
+                    {{ discount_allocation.discount_application.title }}&nbsp;
+                    (–<span class="money">{{ discount_allocation.amount | money }}</span>)
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+            </div>
+    
+            <div class="cart--item--quantity">
+              {% if item.product_id != 7351943430217 %}
+                  {%-
+                    render 'quantity-selector',
+                    id: id,
+                    itemId: item.id,
+                    type: 'cart',
+                    value: item.quantity,
+                    lineItems: item
+                  -%}
+              {% endif %}
+            </div>
+            
+          </div>
+    
+        </div>
+      {%- endcapture -%}
+  {%- endif -%}
+{%- endfor -%}
+
+
+<!-- Custom Embroidery Product -->
+{%- if matching_items != '' -%}
+  {%- assign item_ids = matching_items | split: ',' -%}
+  {%- assign item_ids = item_ids | slice: 0, item_ids.size | join: ',' -%} <!-- Remove trailing comma -->
+
+  {%- for item in cart.items -%}
+     {%- if item_ids contains item.id -%}
+        {%- liquid
+          assign id = view | append: '-updates-' | append: item.key
+      
+          if item.variant.featured_media.preview_image
+            assign preview_image = item.variant.featured_media.preview_image
+          elsif item.product.featured_media.preview_image
+            assign preview_image = item.product.featured_media.preview_image
+          else
+            assign preview_image = false
+          endif
+        -%}
+      
+        {%- capture desktop_items -%}
+          {{- desktop_items -}}
+      
+          <div
+            class="cart--item {% if item.product_id == 7351943430217 %}custom-embroidery-os{% endif %}"
+            data-variant-id="{{ item.variant_id }}"
+            data-management="{{ item.variant.inventory_management }}"
+            data-policy="{{ item.variant.inventory_policy }}"
+            data-quantity="{{ item.variant.inventory_quantity | default: 0 }}"
+            data-item-key="{{ item.key | escape }}" data-line-num="{{ forloop.index }}" data-line="{{ forloop.index }}" data_pplr_row= "{{ forloop.index }}" 
+            {% unless settings.transitions--other %}
+              data-transition-item="cart-{{ view }}"
+              {%- if async -%}
+                data-transition-active="true"
+              {%- endif -%}
+            {% endunless %}
+          >
+      
+            
+            <div class="cart--item--image">
+              <!-- HC - 08 Mar '24 - cart lightbox -->
+            
+              
+                {% assign flag = false %}
+                {%- assign property_size = item.properties | size -%}
+                   {% if property_size > 0 %}
+                    {% for property in item.properties %}
+                      {% if property.first contains 'image' %}
+                        {% if property.last != blank %}
+                           {% assign preview_image = property.last %}
+                              {% assign flag = true %}
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                {% endif %}
+              
+              <a data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
+               {% if flag %}
+        
+                 <img src="{{ preview_image }}" height="500px" width="500px" sizes="200px" >
+                
+                 {% else %}
+                {%- if preview_image == false -%}
+                  {% if item.product_id != 7351943430217 %}
+                    {%- render "placeholder", type: 'product', aspect_ratio: 1, placeholder_index: 1 -%}
+                  {% endif %}
+                {%- else -%}
+                  
+                  {{-
+                    preview_image |
+                    image_url: width: preview_image.width |
+                    image_tag: widths: "300, 500", sizes: sizes
+                  -}}
+                {%- endif -%}
+                {% endif %}
+              </a>
+            </div>
+      
+            <div class="cart--item--title">
+              <div data-item="block-heading">
+                <a href="{{ item.url }}">{{ item.product.title }}</a>
+              </div>
+      
+              {%- unless item.variant.title contains 'Default' -%}
+                <div class="cart--item--variant-name" data-item="accent-text">
+                  <a href="{{ item.url }}">{{ item.variant.title }}</a>
+                </div>
+              {%- endunless -%}
+         
+              {%- assign property_size = item.properties | size -%}      
+      
+                {% if property_size > 0 %}
+                  <ul>                    
+                    {% for property in item.properties %}      
+                      {% if property.first contains 'personalize_it_variant_id' %}
+                          <div class="cart-embroidery-doubleCheck-text-os">Please double-check your spelling or initials.</div>
+                        {% continue %}
+                      {% endif %}
+
+                      {% if property.first contains '_' %}
+                        {% continue %}
+                      {% endif %}
+                      
+                      {% if property.first contains '_Font Name' or property.first contains '_Thread Hex Code' %}
+                        {% continue %}
+                      {% endif %}
+                      
+                      {% if property.first contains 'image' %}
+                        {% if property.last != blank %}
+                          <li class="preview-image-popup-list-os">
+                            <div class="cart-image-preview-os" onclick="showPopup(this)">Preview image</div>
+                
+                            <!-- Preview image popup starts -->
+                            {% 
+                              render 'preview-image-popup-os',
+                              image: property.last,
+                              index: forloop.index
+                            %}
+                            <!-- Preview image popup ends -->
+                          </li>
+                        {% endif %}
+                          
+                      {% else %}
+                        {% if property.last != blank %}
+                          <li><strong>{{ property.first }}:</strong> {{ property.last }}</li>
+                          <!-- <li><strong>Test text</li> -->
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+      
+                {% endif %}
+          
+                {% if item.product_id == 7351943430217 %}
+                    <ul class="cart-custom-embroidery-text-os">
+                       <li>Embroidery charge for all trunks in the cart.</li>
+                    </ul>
+                {% endif %}
+      
+      
+      
+      
+      
+              {%- if item.selling_plan_allocation -%}
+                <div class="cart--item--selling-plan" data-item="small-text">
+                  {{- item.selling_plan_allocation.selling_plan.name -}}
+                </div>
+              {%- endif -%}
+      
+              {%- assign property_size = item.properties | size -%}
+      
+              <span class="pplr_cart_item_property" data-line="{{item.index}}" ></span>
+      
+              <div class='cart--error' data-item='small-text' style='display:none;'>
+                {{- all_items_added_t -}}
+              </div>
+            </div>
+      
+            <div class="cart--item--price" data-item="accent-text">
+              {%- if item.original_price != item.final_price -%}
+                <div data-item="light-accent-text">
+                  <s class="money">{{ item.original_price | money }}</s>
+                </div>
+              {%- endif -%}
+      
+              <div class="money" data-item="accent-text">
+                {{- item.final_price | money -}}
+              </div>
+      
+              <div class="cart--item--unit-price-container" data-item="small-text">
+                {%- liquid
+                  if item.unit_price_measurement
+                    echo item.unit_price | money | append: '/'
+                    if item.unit_price_measurement.reference_value != 1
+                      echo item.unit_price_measurement.reference_value
+                    endif
+                    echo item.unit_price_measurement.reference_unit
+                  endif
+                -%}
+              </div>
+      
+              {% if item.line_level_discount_allocations.size > 0 %}
+                <div class="money" data-item="light-accent-text">
+                  {%- for discount_allocation in item.line_level_discount_allocations -%}
+                    {{ discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | money }})
+                  {%- endfor -%}
+                </div>
+              {% endif %}
+            </div>
+      
+            <div class="cart--item--quantity">
+              {% if item.product_id != 7351943430217 %}
+                {%-
+                  render 'quantity-selector',
+                  id: id,
+                  itemId: item.id,
+                  productId: item.product_id,
+                  type: 'cart',
+                  value: item.quantity,
+                  lineItems: item
+                -%}
+              {% endif %}
+            </div>
+      
+      
+            <div class="cart--item--total" data-item="accent-text">
+              {%- if item.original_line_price != item.final_line_price -%}
+                <div data-item="light-accent-text">
+                  <s class="money">{{ item.original_line_price | money }}</s>
+                </div>
+              {%- endif -%}
+      
+              <div class="money">
+                {{- item.final_line_price | money -}}
+              </div>
+            </div>
+          </div>
+        {%- endcapture -%}
+      
+        {%- capture mobile_items -%}
+          {{- mobile_items -}}
+      
+          <div
+            class="cart--item"
+            data-variant-id="{{ item.variant_id }}"
+            data-management="{{ item.variant.inventory_management }}"
+            data-policy="{{ item.variant.inventory_policy }}"
+            data-quantity="{{ item.variant.inventory_quantity | default: 0 }}"
+            data-item-key="{{ item.key | escape }}" data-line-num="{{ forloop.index }}" data-line="{{ forloop.index }}" data_pplr_row= "{{ forloop.index }}" 
+            {% unless settings.transitions--other %}
+              data-transition-item="cart-{{ view }}"
+              {%- if async -%}
+                data-transition-active="true"
+              {%- endif -%}
+            {% endunless %}
+          >
+            <div class="cart--item--title">
+              <div data-item="block-heading">
+                <a href="{{ item.url }}">{{ item.product.title }}</a>
+              </div>
+      
+              <div class='cart--error' data-item='small-text' style='display:none;'>
+                {{- all_items_added_t -}}
+              </div>
+            </div>
+      
+            <div class="cart--item--image">
+              <!-- HC - 08 Mar '24 - cart lightbox -->
+              <a data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
+                       {% if flag %}
+        
+                 <img src="{{ preview_image }}" height="500px" width="500px" sizes="150px" >
+                
+                 {% else %}
+                {%- if preview_image == false -%}
+                  {% if item.product_id != 7351943430217 %}
+                    {%- render "placeholder", type: 'product', aspect_ratio: 1, placeholder_index: 1 -%}
+                  {% endif %}
+                {%- else -%}
+                  
+                  {{-
+                    preview_image |
+                    image_url: width: preview_image.width |
+                    image_tag: widths: "300, 500", sizes: sizes
+                  -}}
+                {%- endif -%}
+                {% endif %}
+              </a>
+            </div>
+      
+            <div   class="cart--item--info">        
+              <!-- Mobile cart line items starts -->      
+                {% if property_size > 0 %}
+                <ul>
+                  {% for property in item.properties %}           
+                    {% if property.first contains 'personalize_it_variant_id' %}
+                        <div class="cart-embroidery-doubleCheck-text-os">Please double-check your spelling or initials.</div>
+                      {% continue %}
+                    {% endif %}
+
+                    {% if property.first contains '_' %}
+                      {% continue %}
+                    {% endif %}
+                    
+                    {% if property.first contains 'image' %}
+                      {% if property.last != blank %}
+                        <li class="preview-image-popup-list-os">
+                          <div class="cart-image-preview-os" onclick="showPopup(this)">Preview image</div>
+                          <!-- <div class="cart-embroidery-doubleCheck-text-os">Please double-check your spelling.</div> -->
+              
+                          <!-- Preview image popup starts -->
+                          {% 
+                            render 'preview-image-popup-os',
+                            image: property.last,
+                            index: forloop.index
+                          %}
+                          <!-- Preview image popup ends -->
+                        </li>
+                      {% endif %}
+                        
+                    {% else %}
+                      {% if property.last != blank %}
+                        <li><strong>{{ property.first }}:</strong> {{ property.last }}</li>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              {% endif %}
+      
+              {% if item.product_id == 7351943430217 %}
+                <ul class="cart-custom-embroidery-text-os">
+                   <li>Embroidery charge for all trunks in the cart.</li>
+                </ul>
+              {% endif %}
+              <!-- Mobile cart line items starts -->
+              
+              {%- unless item.variant.title contains 'Default' -%}
+                <div class="cart--item--variant-name" data-item="accent-text">
+                  <a href="{{ item.url }}">{{ item.variant.title }}</a>
+                </div>
+              {%- endunless -%}
+      
+              {%- if item.selling_plan_allocation -%}
+                <div class="cart--item--selling-plan" data-item="small-text">
+                  {{- item.selling_plan_allocation.selling_plan.name -}}
+                </div>
+              {%- endif -%}
+      
+      
+              
+      
+              <span class="pplr_cart_item_property" data-line="{{item.index}}" ></span>
+      
+              <div class="cart--item--price">
+                {%- if item.original_price > item.final_price -%}
+                  <div class="cart--item--orig-price" data-item="light-accent-text">
+                    <s class="money">{{ item.original_price | money }}</s>
+                  </div>
+                {%- endif -%}
+      
+                <div class="cart--item--total money" data-item="accent-text">
+                  {{- item.final_price | money -}}
+                </div>
+      
+                <div class="cart--item--unit-price-container" data-item="small-text">
+                  {%- liquid
+                    if item.unit_price_measurement
+                      echo item.unit_price | money | append: '/'
+                      if item.unit_price_measurement.reference_value != 1
+                        echo item.unit_price_measurement.reference_value
+                      endif
+                      echo item.unit_price_measurement.reference_unit
+                    endif
+                  -%}
+                </div>
+      
+                {%- if item.line_level_discount_allocations.size > 0 -%}
+                  <div class="cart--item--discounts" data-item="light-accent-text">
+                    {%- for discount_allocation in item.line_level_discount_allocations -%}
+                      {{ discount_allocation.discount_application.title }}&nbsp;
+                      (–<span class="money">{{ discount_allocation.amount | money }}</span>)
+                    {%- endfor -%}
+                  </div>
+                {%- endif -%}
+              </div>
+      
+              <div class="cart--item--quantity">
+                {% if item.product_id != 7351943430217 %}
+                    {%-
+                      render 'quantity-selector',
+                      id: id,
+                      itemId: item.id,
+                      type: 'cart',
+                      value: item.quantity,
+                      lineItems: item
+                    -%}
+                {% endif %}
+              </div>
+              
+            </div>
+      
+          </div>
+        {%- endcapture -%}
+     {% endif %}
+   {%- endfor -%}
+{%- endif -%}
+<!-- Re-Order the cart items ends -->
+
+
+{% comment %}{%- for item in cart.items -%}
+  {%- liquid
+    assign id = view | append: '-updates-' | append: item.key
+
+    if item.variant.featured_media.preview_image
+      assign preview_image = item.variant.featured_media.preview_image
+    elsif item.product.featured_media.preview_image
+      assign preview_image = item.product.featured_media.preview_image
+    else
+      assign preview_image = false
+    endif
+  -%}
+
+  {%- capture desktop_items -%}
+    {{- desktop_items -}}
+
+    <div
+      class="cart--item {% if item.product_id == 7351943430217 %}custom-embroidery-os{% endif %}"
+      data-variant-id="{{ item.variant_id }}"
+      data-management="{{ item.variant.inventory_management }}"
+      data-policy="{{ item.variant.inventory_policy }}"
+      data-quantity="{{ item.variant.inventory_quantity | default: 0 }}"
+      data-line-num="{{ forloop.index }}" data-line="{{ forloop.index }}" data_pplr_row= "{{ forloop.index }}" 
+      {% unless settings.transitions--other %}
+        data-transition-item="cart-{{ view }}"
+        {%- if async -%}
+          data-transition-active="true"
+        {%- endif -%}
+      {% endunless %}
+    >
+
+      
+      <div class="cart--item--image">
+        <!-- HC - 08 Mar '24 - cart lightbox -->
+      
+        
+          {% assign flag = false %}
+          {%- assign property_size = item.properties | size -%}
+             {% if property_size > 0 %}
+              {% for property in item.properties %}
+                {% if property.first contains 'image' %}
+                  {% if property.last != blank %}
+                     {% assign preview_image = property.last %}
+                        {% assign flag = true %}
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+          {% endif %}
+        
+        <a data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
+         {% if flag %}
+  
+           <img src="{{ preview_image }}" height="500px" width="500px" sizes="200px" >
+          
+           {% else %}
+          {%- if preview_image == false -%}
+            {% if item.product_id != 7351943430217 %}
+              {%- render "placeholder", type: 'product', aspect_ratio: 1, placeholder_index: 1 -%}
+            {% endif %}
+          {%- else -%}
+            
+            {{-
+              preview_image |
+              image_url: width: preview_image.width |
+              image_tag: widths: "300, 500", sizes: sizes
+            -}}
+          {%- endif -%}
+          {% endif %}
+        </a>
+      </div>
+
+      <div class="cart--item--title">
+        <div data-item="block-heading">
+          <a href="{{ item.url }}">{{ item.product.title }}</a>
+        </div>
+
+        {%- unless item.variant.title contains 'Default' -%}
+          <div class="cart--item--variant-name" data-item="accent-text">
+            <a href="{{ item.url }}">{{ item.variant.title }}</a>
+          </div>
+        {%- endunless -%}
+   
+        {%- assign property_size = item.properties | size -%}
+        
+          {% if property_size > 0 %}
+            <ul>              
+              {% for property in item.properties %}      
+                {% if property.first contains 'personalize_it_variant_id' %}
+                    <div class="cart-embroidery-doubleCheck-text-os">Please double-check your spelling or initials.</div>
+                  {% continue %}
+                {% endif %}
+                
+                {% if property.first contains 'image' %}
+                  {% if property.last != blank %}
+                    <li class="preview-image-popup-list-os">
+                      <div class="cart-image-preview-os" onclick="showPopup(this)">Preview image</div>
+          
+                      <!-- Preview image popup starts -->
+                      {% 
+                        render 'preview-image-popup-os',
+                        image: property.last,
+                        index: forloop.index
+                      %}
+                      <!-- Preview image popup ends -->
+                    </li>
+                  {% endif %}
+                    
+                {% else %}
+                  {% if property.last != blank %}
+                    <li><strong>{{ property.first }}:</strong> {{ property.last }}</li>
+                    <!-- <li><strong>Test text</li> -->
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            </ul>
+
+          {% endif %}
+    
+          {% if item.product_id == 7351943430217 %}
+              <ul class="cart-custom-embroidery-text-os">
+                 <li>Embroidery charge for all trunks in the cart.</li>
+              </ul>
+          {% endif %}
+
+
+
+
+
+        {%- if item.selling_plan_allocation -%}
+          <div class="cart--item--selling-plan" data-item="small-text">
+            {{- item.selling_plan_allocation.selling_plan.name -}}
+          </div>
+        {%- endif -%}
+
+        {%- assign property_size = item.properties | size -%}
+
+        <span class="pplr_cart_item_property" data-line="{{item.index}}" ></span>
+
+        <div class='cart--error' data-item='small-text' style='display:none;'>
+          {{- all_items_added_t -}}
+        </div>
+      </div>
+
+      <div class="cart--item--price" data-item="accent-text">
+        {%- if item.original_price != item.final_price -%}
+          <div data-item="light-accent-text">
+            <s class="money">{{ item.original_price | money }}</s>
+          </div>
+        {%- endif -%}
+
+        <div class="money" data-item="accent-text">
+          {{- item.final_price | money -}}
+        </div>
+
+        <div class="cart--item--unit-price-container" data-item="small-text">
+          {%- liquid
+            if item.unit_price_measurement
+              echo item.unit_price | money | append: '/'
+              if item.unit_price_measurement.reference_value != 1
+                echo item.unit_price_measurement.reference_value
+              endif
+              echo item.unit_price_measurement.reference_unit
+            endif
+          -%}
+        </div>
+
+        {% if item.line_level_discount_allocations.size > 0 %}
+          <div class="money" data-item="light-accent-text">
+            {%- for discount_allocation in item.line_level_discount_allocations -%}
+              {{ discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | money }})
+            {%- endfor -%}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="cart--item--quantity">
+        {% if item.product_id != 7351943430217 %}
+          {%-
+            render 'quantity-selector',
+            id: id,
+            itemId: item.id,
+            productId: item.product_id,
+            type: 'cart',
+            value: item.quantity,
+            lineItems: item
+          -%}
+        {% endif %}
+      </div>
+
+
+      <div class="cart--item--total" data-item="accent-text">
+        {%- if item.original_line_price != item.final_line_price -%}
+          <div data-item="light-accent-text">
+            <s class="money">{{ item.original_line_price | money }}</s>
+          </div>
+        {%- endif -%}
+
+        <div class="money">
+          {{- item.final_line_price | money -}}
+        </div>
+      </div>
+    </div>
+  {%- endcapture -%}
+
+  {%- capture mobile_items -%}
+    {{- mobile_items -}}
+
+    <div
+      class="cart--item"
+      data-variant-id="{{ item.variant_id }}"
+      data-management="{{ item.variant.inventory_management }}"
+      data-policy="{{ item.variant.inventory_policy }}"
+      data-quantity="{{ item.variant.inventory_quantity | default: 0 }}"
+      data-line-num="{{ forloop.index }}" data-line="{{ forloop.index }}" data_pplr_row= "{{ forloop.index }}" 
+      {% unless settings.transitions--other %}
+        data-transition-item="cart-{{ view }}"
+        {%- if async -%}
+          data-transition-active="true"
+        {%- endif -%}
+      {% endunless %}
+    >
+      <div class="cart--item--title">
+        <div data-item="block-heading">
+          <a href="{{ item.url }}">{{ item.product.title }}</a>
+        </div>
+
+        <div class='cart--error' data-item='small-text' style='display:none;'>
+          {{- all_items_added_t -}}
+        </div>
+      </div>
+
+      <div class="cart--item--image">
+        <!-- HC - 08 Mar '24 - cart lightbox -->
+        <a data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
+                 {% if flag %}
+  
+           <img src="{{ preview_image }}" height="500px" width="500px" sizes="150px" >
+          
+           {% else %}
+          {%- if preview_image == false -%}
+            {% if item.product_id != 7351943430217 %}
+              {%- render "placeholder", type: 'product', aspect_ratio: 1, placeholder_index: 1 -%}
+            {% endif %}
+          {%- else -%}
+            
+            {{-
+              preview_image |
+              image_url: width: preview_image.width |
+              image_tag: widths: "300, 500", sizes: sizes
+            -}}
+          {%- endif -%}
+          {% endif %}
+        </a>
+      </div>
+
+      <div   class="cart--item--info">        
+        <!-- Mobile cart line items starts -->
+          {% if property_size > 0 %}
+          <ul>
+            {% for property in item.properties %}           
+              {% if property.first contains 'personalize_it_variant_id' %}
+                  <div class="cart-embroidery-doubleCheck-text-os">Please double-check your spelling or initials.</div>
+                {% continue %}
+              {% endif %}
+              
+              {% if property.first contains 'image' %}
+                {% if property.last != blank %}
+                  <li class="preview-image-popup-list-os">
+                    <div class="cart-image-preview-os" onclick="showPopup(this)">Preview image</div>
+                    <!-- <div class="cart-embroidery-doubleCheck-text-os">Please double-check your spelling.</div> -->
+        
+                    <!-- Preview image popup starts -->
+                    {% 
+                      render 'preview-image-popup-os',
+                      image: property.last,
+                      index: forloop.index
+                    %}
+                    <!-- Preview image popup ends -->
+                  </li>
+                {% endif %}
+                  
+              {% else %}
+                {% if property.last != blank %}
+                  <li><strong>{{ property.first }}:</strong> {{ property.last }}</li>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if item.product_id == 7351943430217 %}
+          <ul class="cart-custom-embroidery-text-os">
+             <li>Embroidery charge for all trunks in the cart.</li>
+          </ul>
+        {% endif %}
+        <!-- Mobile cart line items starts -->
+        
+        {%- unless item.variant.title contains 'Default' -%}
+          <div class="cart--item--variant-name" data-item="accent-text">
+            <a href="{{ item.url }}">{{ item.variant.title }}</a>
+          </div>
+        {%- endunless -%}
+
+        {%- if item.selling_plan_allocation -%}
+          <div class="cart--item--selling-plan" data-item="small-text">
+            {{- item.selling_plan_allocation.selling_plan.name -}}
+          </div>
+        {%- endif -%}
+
+
+        
+
+        <span class="pplr_cart_item_property" data-line="{{item.index}}" ></span>
+
+        <div class="cart--item--price">
+          {%- if item.original_price > item.final_price -%}
+            <div class="cart--item--orig-price" data-item="light-accent-text">
+              <s class="money">{{ item.original_price | money }}</s>
+            </div>
+          {%- endif -%}
+
+          <div class="cart--item--total money" data-item="accent-text">
+            {{- item.final_price | money -}}
+          </div>
+
+          <div class="cart--item--unit-price-container" data-item="small-text">
+            {%- liquid
+              if item.unit_price_measurement
+                echo item.unit_price | money | append: '/'
+                if item.unit_price_measurement.reference_value != 1
+                  echo item.unit_price_measurement.reference_value
+                endif
+                echo item.unit_price_measurement.reference_unit
+              endif
+            -%}
+          </div>
+
+          {%- if item.line_level_discount_allocations.size > 0 -%}
+            <div class="cart--item--discounts" data-item="light-accent-text">
+              {%- for discount_allocation in item.line_level_discount_allocations -%}
+                {{ discount_allocation.discount_application.title }}&nbsp;
+                (–<span class="money">{{ discount_allocation.amount | money }}</span>)
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="cart--item--quantity">
+          {% if item.product_id != 7351943430217 %}
+              {%-
+                render 'quantity-selector',
+                id: id,
+                itemId: item.id,
+                type: 'cart',
+                value: item.quantity,
+                lineItems: item
+              -%}
+          {% endif %}
+        </div>
+        
+      </div>
+
+    </div>
+  {%- endcapture -%}
+{%- endfor -%}{% endcomment %}
+
+
+<style>
+  /* Only hide the footer area when no cart product row remains */
+  cart-root:not(:has(.cart--body .cart--item)) .cart--footer {
+    display: none !important;
+  }
+</style>
+
+<cart-root
+  class="cart-page-os cart--root"
+  data-section-id="{{ section.id }}"
+  data-view="{{ view }}"
+  data-has-items="{{ has_items }}"
+  {% unless settings.transitions--other %}
+    data-transition-container="cart-{{ view }}"
+    data-transition-type="fade-in"
+    data-transition-cascade="vertical"
+    data-transition-cascade-interval="250"
+  {% endunless %}
+>
+  <div class="cart--header">
+    <h2 class="cart--title" data-item="section-heading">
+      Almost there!
+    </h2>
+    <h4>Your memories, our craftsmanship – quality that endures.</h4>
+  </div>
+
+  <form class="cart--form" action="{{ routes.cart_url }}" method="post" novalidate="">
+    <div class="cart--body">
+      {%- case view -%}
+        {%- when 'desktop' -%}
+          <div class="cart--headings" data-item="accent-text">
+            <div class="cart--heading--image"></div>
+            <div class="cart--heading--title"></div>
+            <div class="cart--heading--price">
+              {{- price_t -}}
+            </div>
+            <div class="cart--heading--quantity">
+              {{- quantity_t -}}
+            </div>
+            <div class="cart--heading--total">
+              {{- total_t -}}
+            </div>
+          </div>
+          {{- desktop_items -}}
+        {%- else -%}
+          {{- mobile_items -}}
+      {%- endcase -%}
+    </div>
+    <template id="__NAME_OF_BUTTON__">
+ <style>
+   #button {
+    font-family: Gotham;
+    font-weight: 400;
+    font-style: normal;
+     font-size: 13px;
+    text-transform: uppercase;
+    background-color: #274864;
+    width: 60%;
+    height: 51px;
+    border-radius: 50px;
+    border-color: #274864;
+    color: #ffffff;
+}
+ </style>
+</template>
+<giftnote-button
+ data-styles="__NAME_OF_BUTTON__"
+ data-add="Add a gift message"
+ data-edit="Edit gift message"
+></giftnote-button>
+    <div
+      class="cart--footer"
+      {% unless settings.transitions--other %}
+        data-transition-item="cart-{{ view }}"
+        {%- if async -%}
+          data-transition-active="true"
+        {%- endif -%}
+      {% endunless %}
+    >
+      {%- if show_cart_note -%}
+        <div class="cart--notes">
+          <label for="{{ view }}-cart-note" class="cart--notes--heading">
+            {{- order_notes_t -}}
+          </label>
+          <textarea
+            class="cart--notes--textarea"
+            id="{{ view }}-cart-note"
+            name="note"
+          >{{ cart.note }}</textarea>
+        </div>
+      {%- endif -%}
+
+      <div class="cart--totals">
+        {%- if cart.cart_level_discount_applications != blank -%}
+          <div class="cart--sub-total">
+            <div data-item="block-heading">
+              {{- subtotal_t -}}
+            </div>
+            <div class="money" data-item="accent-text">
+              {{- cart.items_subtotal_price | money -}}
+            </div>
+          </div>
+
+          <div class="cart--discounts">
+            <ul>
+              {%- for discount_application in cart.cart_level_discount_applications -%}
+                <li>
+                  <div data-item="accent-text">{{ discount_application.title }}</div>
+                  <span data-item="light-accent-text">
+                    –<span class="money">{{ discount_application.total_allocated_amount | money }}
+                    </span>
+                  </span>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        <div class="cart--total">
+          <div data-item="block-heading">
+            {{- total_t -}}
+          </div>
+          <div class="cart--total--price money" data-item="accent-text">
+            {{- cart.total_price | money_with_currency -}}
+          </div>
+        </div>
+
+        <div
+          class="cart--tax-info"
+          data-item="paragraph"
+        >
+          {{- shipping_taxes_t -}}
+        </div>
+
+        <div class="cart--nav">
+          <div class="cart--continue-shopping" data-item="block-link">
+            {%- if view == 'drawer' -%}
+              <p tabindex="0" aria-label="{{ 'general.a11y.close' | t }}" data-drawer-close>
+                {{- continue_t -}}
+              </p>
+            {%- else -%}
+              <a href="{{ routes.all_products_collection_url }}">
+                {{- continue_t -}}
+              </a>
+            {%- endif -%}
+          </div>
+
+          <button
+            type="submit"
+            name="checkout"
+            class="cart--checkout-button"
+            data-item="button"
+            data-text="{{- checkout_t -}}"
+            {% unless settings.transitions--buttons %}
+              data-transition-button
+            {% endunless %}
+          >
+            <span>
+              <span class="cart-button--text">
+                {{- checkout_t -}}
+              </span>
+              <span class="cart-button--spinner">
+                {%- render 'icons', icon: 'spinner' -%}
+              </span>
+            </span>
+          </button>
+        </div>
+
+        {%- if additional_checkout_buttons -%}
+          <div
+            class="cart--additional-buttons additional-checkout-buttons
+            {% unless view == 'desktop' %} additional-checkout-buttons--vertical{% endunless %}"
+          >
+            {{- content_for_additional_checkout_buttons -}}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </form>
+
+  <div
+    class="cart--no-items"
+    data-item="paragraph"
+  >
+    {{- empty_html_t -}}
+  </div>
+</cart-root>
+
+
+
+
+
+
+
+<script>
+  function showPopup(element) {
+    // Find the parent list item and the associated popup
+    const popupListItem = element.closest('.preview-image-popup-list-os');
+    const popup = popupListItem.querySelector('.preview-image-popup-section-os');
+
+    if (popup) {
+      popup.style.display = 'block'; // Show the popup
+      setTimeout(() => {
+        popup.classList.add('show'); // Add show class for transition effect
+      }, 10); // Delay to allow display block to take effect
+    }
+  }
+
+  function hidePopup(event) {
+    // Check if the click is on the popup backdrop (the section)
+    const popup = event.currentTarget.closest('.preview-image-popup-section-os');
+    if (popup) {
+      popup.classList.remove('show'); // Remove the show class
+      setTimeout(() => {
+        popup.style.display = 'none'; // Hide the popup after transition
+      }, 500); // Match this duration with your CSS transition duration
+    }
+  }
+
+  // Adding event listener to close popup when clicking outside
+  document.addEventListener('click', function(event) {
+    // Check if the clicked element is a popup section
+    const popup = event.target.closest('.preview-image-popup-section-os');
+    if (!popup && event.target.matches('.preview-image-popup-list-os *')) {
+      // If the click was outside the popup content and inside the list item, do nothing
+      return;
+    }
+    
+    // If click was outside of any popups, close all
+    document.querySelectorAll('.preview-image-popup-section-os.show').forEach(openPopup => {
+      hidePopup({ currentTarget: openPopup });
+    });
+  });
+</script>
+
+
+
+
+
+<script>
+  // Parse cart items data from Liquid
+  let cartLineItemsData = {{ cart.items | json }};
+  const final_items_array = {{ final_items_array | json }};
+  const first_part = {{ first_part | json }};
+  const last_part = {{ last_part | json }};
+  const last_item = {{ last_item | json }};
+
+  const updatedData = [
+    ...cartLineItemsData.filter(item => item.product_id !== 7351943430217),  // all items except id=5 and id=6
+    ...cartLineItemsData.filter(item => item.product_id === 7351943430217)   // id=5 and id=6 at the end
+  ];
+
+  // console.log("cartLineItemsData :::", cartLineItemsData);
+  // console.log("updatedData ::", updatedData);
+
+  // Create a map for quick lookup of cart items by variant_id
+  let cartItemsMap = cartLineItemsData.reduce((map, item) => {
+    map[item.key] = item;
+    return map;
+  }, {});
+
+  let cartUpdateInProgress = false;
+  // console.log("cartItemsMap :::", cartItemsMap);
+
+  // Make all increment, decrement, input and remove button disabled starts
+  function disableCartInputs() {
+    // Get all cart items
+    const cartItems = document.querySelectorAll('.cart--item');
+  
+    // Loop through each cart item
+    cartItems.forEach(item => {
+      // Disable the quantity input
+      const quantityInput = item.querySelector('.quantity-selector--input');
+      if (quantityInput) {
+        quantityInput.disabled = true;
+      }
+  
+      // Disable the plus and minus buttons
+      const plusButton = item.querySelector('.quantity-selector--plus');
+      const minusButton = item.querySelector('.quantity-selector--minus');
+      if (plusButton) {
+        plusButton.disabled = true;
+      }
+      if (minusButton) {
+        minusButton.disabled = true;
+      }
+  
+      // Disable the "Remove" button inside quantity-selector--remove-os
+      const removeButton = item.querySelector('.quantity-selector--remove-os button');
+      if (removeButton) {
+        removeButton.disabled = true;
+      }
+  
+      // Disable the "Remove" span inside quantity-selector--remove
+      const removeSpan = item.querySelector('.quantity-selector--remove span');
+      if (removeSpan) {
+        // Disable the span by adding a 'disabled' class
+        removeSpan.classList.add('disabled-default-cart-remove-button');
+        
+        // Disable the parent div to prevent interaction as well
+        const removeDiv = item.querySelector('.quantity-selector--remove');
+        if (removeDiv) {
+          removeDiv.classList.add('disabled-default-cart-remove-button');  // Disable the entire div as well
+        }
+      }
+    });
+  }
+  // Make all increment, decrement, input and remove button disabled ends 
+
+  // Utility function to parse and validate inputs
+  const parseAndValidateCartLineItemsData = (main_product_key, personalize_it_variant_id) => {
+    const productKeyString = main_product_key;
+    const personalizeItVariantIdNumber = Number(personalize_it_variant_id);
+    // const quantityNumber = Number(quantity);
+    
+    // console.log("parseAndValidateCartLineItemsData productKeyString ::", productKeyString);
+    // console.log("parseAndValidateCartLineItemsData personalizeItVariantIdNumber ::", personalizeItVariantIdNumber);
+
+    console.log("Parsed CartLineItemsData:", {
+      productKeyString,
+      personalizeItVariantIdNumber,
+    });
+
+    // Validate product key as string
+    if(typeof productKeyString !== "string" || productKeyString.trim() === "") {
+      throw new Error("Invalid input: product key must be a non-empty string.");
+    }
+
+    if (isNaN(personalizeItVariantIdNumber)) {
+      throw new Error('Invalid input: variant IDs must be numbers.');
+    }
+
+    const mainProduct = cartItemsMap[productKeyString];
+    // const personalizeItProduct = cartItemsMap[personalizeItVariantIdNumber];
+    const personalizeItProduct = cartLineItemsData.find(item => item.variant_id === personalizeItVariantIdNumber);
+
+    // console.log("Main Product:", mainProduct);
+    // console.log("Personalize It Product:", personalizeItProduct);
+
+    if (!mainProduct) {
+      throw new Error('Main product not found in the cart.');
+    }
+
+    if (!personalizeItProduct) {
+      throw new Error('Personalize It product not found in the cart.');
+    }
+
+    return { mainProduct, personalizeItProduct };
+  };
+
+
+  function enableCartInputs() {
+    document.querySelectorAll('.cart--item').forEach(item => {
+      item.querySelectorAll('input, button').forEach(control => {
+        control.disabled = false;
+      });
+
+      item.querySelectorAll('.disabled-default-cart-remove-button').forEach(control => {
+        control.classList.remove('disabled-default-cart-remove-button');
+      });
+    });
+  }
+
+  function formatCartMoney(cents) {
+    if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
+      return window.Shopify.formatMoney(cents);
+    }
+
+    return new Intl.NumberFormat(document.documentElement.lang || 'en', {
+      style: 'currency',
+      currency: {{ cart.currency.iso_code | default: shop.currency | json }}
+    }).format((Number(cents) || 0) / 100);
+  }
+
+  const CUSTOM_EMBROIDERY_PRODUCT_ID = 7351943430217;
+
+  function getRequiredEmbroideryQuantities(cartItems) {
+    const requiredByVariantId = {};
+
+    (cartItems || []).forEach(item => {
+      if (Number(item.product_id) === CUSTOM_EMBROIDERY_PRODUCT_ID) return;
+
+      const properties = item.properties || {};
+      const embroideryVariantId = Number(
+        properties.personalize_it_variant_id ||
+        properties._embroidery_variant_id ||
+        0
+      );
+
+      if (!embroideryVariantId) return;
+
+      requiredByVariantId[embroideryVariantId] =
+        (requiredByVariantId[embroideryVariantId] || 0) +
+        Math.max(Number(item.quantity) || 0, 0);
+    });
+
+    return requiredByVariantId;
+  }
+
+  async function removeOrphanEmbroideryCharges(cartData) {
+    const cartItems = Array.isArray(cartData?.items) ? cartData.items : [];
+    const requiredByVariantId = getRequiredEmbroideryQuantities(cartItems);
+    const embroideryGroups = {};
+
+    cartItems.forEach(item => {
+      if (Number(item.product_id) !== CUSTOM_EMBROIDERY_PRODUCT_ID) return;
+
+      const variantId = Number(item.variant_id);
+      if (!embroideryGroups[variantId]) {
+        embroideryGroups[variantId] = [];
+      }
+
+      embroideryGroups[variantId].push(item);
+    });
+
+    const updates = {};
+
+    Object.entries(embroideryGroups).forEach(([variantId, embroideryItems]) => {
+      const requiredQuantity = Math.max(
+        Number(requiredByVariantId[Number(variantId)]) || 0,
+        0
+      );
+
+      embroideryItems.forEach((item, index) => {
+        const expectedQuantity = index === 0 ? requiredQuantity : 0;
+        const currentQuantity = Math.max(Number(item.quantity) || 0, 0);
+
+        if (item.key && currentQuantity !== expectedQuantity) {
+          updates[item.key] = expectedQuantity;
+        }
+      });
+    });
+
+    if (Object.keys(updates).length === 0) {
+      return cartData;
+    }
+
+    const response = await fetch(
+      `${window.Shopify.routes.root}cart/update.js`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ updates })
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Embroidery cart cleanup failed with status ${response.status}`
+      );
+    }
+
+    return await response.json();
+  }
+
+  function syncCartUI(cartData) {
+    const safeItems = Array.isArray(cartData?.items) ? cartData.items : [];
+    const itemCount = Math.max(Number(cartData?.item_count) || 0, 0);
+    const totalPrice = Math.max(Number(cartData?.total_price) || 0, 0);
+
+    const itemsByKey = safeItems.reduce((map, item) => {
+      if (item?.key) map[String(item.key)] = item;
+      return map;
+    }, {});
+
+    const cartCount = document.querySelector('.header-cart-counter-os');
+    if (cartCount) cartCount.textContent = itemCount;
+
+    const cartRoot = document.querySelector('cart-root');
+    const cartForm = cartRoot?.querySelector('.cart--form');
+    const cartBody = cartRoot?.querySelector('.cart--body');
+    const emptyCartMessage = cartRoot?.querySelector('.cart--no-items');
+
+    if (cartRoot) {
+      cartRoot.dataset.hasItems = itemCount > 0 ? 'true' : 'false';
+    }
+
+    if (itemCount === 0) {
+      if (cartBody) cartBody.innerHTML = '';
+
+      if (cartForm) {
+        cartForm.hidden = true;
+        cartForm.style.display = 'none';
+      }
+
+      if (emptyCartMessage) {
+        emptyCartMessage.hidden = false;
+        emptyCartMessage.style.display = '';
+      }
+
+      const totalPriceElement = document.querySelector('.cart--total--price');
+      if (totalPriceElement) {
+        totalPriceElement.textContent = formatCartMoney(0);
+      }
+
+      return;
+    }
+
+    if (cartForm) {
+      cartForm.hidden = false;
+      cartForm.style.removeProperty('display');
+    }
+
+    if (emptyCartMessage) {
+      emptyCartMessage.hidden = true;
+      emptyCartMessage.style.display = 'none';
+    }
+
+    document
+      .querySelectorAll('.cart--item[data-item-key]')
+      .forEach(cartItemElement => {
+        const itemKey = String(cartItemElement.dataset.itemKey || '');
+        const lineItem = itemsByKey[itemKey];
+
+        if (!lineItem || Number(lineItem.quantity) <= 0) {
+          cartItemElement.remove();
+          return;
+        }
+
+        cartItemElement.dataset.quantity = String(lineItem.quantity);
+
+        const newLineNumber =
+          safeItems.findIndex(item => String(item?.key || '') === itemKey) + 1;
+
+        if (newLineNumber > 0) {
+          cartItemElement.dataset.lineNum = String(newLineNumber);
+          cartItemElement.dataset.line = String(newLineNumber);
+        }
+
+        const quantityInput = cartItemElement.querySelector(
+          '.quantity-selector--input, input[name^="updates"]'
+        );
+        if (quantityInput) quantityInput.value = lineItem.quantity;
+
+        const priceElement = cartItemElement.querySelector(
+          '.cart--item--price .money[data-item="accent-text"], .cart--item--price > .money'
+        );
+        if (priceElement) {
+          priceElement.textContent = formatCartMoney(lineItem.final_price);
+        }
+
+        const totalElement = cartItemElement.querySelector(
+          '.cart--item--total > .money, .cart--item--total.money'
+        );
+        if (totalElement) {
+          totalElement.textContent = formatCartMoney(lineItem.final_line_price);
+        }
+      });
+
+    const totalPriceElement = document.querySelector('.cart--total--price');
+    if (totalPriceElement) {
+      totalPriceElement.textContent = formatCartMoney(totalPrice);
+    }
+  }
+
+  async function fetchCurrentCartJson() {
+    const response = await fetch(
+      `${window.Shopify.routes.root}cart.js`,
+      {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        },
+        cache: 'no-store'
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Cart fetch failed with status ${response.status}`);
+    }
+
+    return await response.json();
+  }
+
+  async function refreshCartSectionAjax(cartData) {
+    const currentCartRoot = document.querySelector('cart-root');
+
+    if (!currentCartRoot) {
+      syncCartUI(cartData);
+      return;
+    }
+
+    const currentView = currentCartRoot.dataset.view || 'desktop';
+    const ajaxUrl =
+      `${window.Shopify.routes.root}cart?view=ajax-${encodeURIComponent(currentView)}` +
+      `&_=${Date.now()}`;
+
+    const response = await fetch(ajaxUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'text/html',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      cache: 'no-store'
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Cart section refresh failed with status ${response.status}`
+      );
+    }
+
+    const html = await response.text();
+    const parsedDocument = new DOMParser().parseFromString(
+      html,
+      'text/html'
+    );
+
+    const freshCartRoot =
+      parsedDocument.querySelector(
+        `cart-root[data-view="${CSS.escape(currentView)}"]`
+      ) ||
+      parsedDocument.querySelector('cart-root');
+
+    if (!freshCartRoot) {
+      syncCartUI(cartData);
+      return;
+    }
+
+    currentCartRoot.replaceWith(freshCartRoot);
+
+    document.dispatchEvent(
+      new CustomEvent('cart:ajax-rendered', {
+        detail: {
+          cart: cartData,
+          view: currentView
+        }
+      })
+    );
+  }
+
+  function removeCartRowImmediately(itemKey) {
+    const normalizedKey = String(itemKey || '');
+
+    document
+      .querySelectorAll('.cart--item[data-item-key]')
+      .forEach(cartItem => {
+        if (String(cartItem.dataset.itemKey || '') === normalizedKey) {
+          cartItem.remove();
+        }
+      });
+  }
+
+  // Update cart through Shopify AJAX and replace the cart section
+  // with fresh server-rendered markup. No browser refresh is used.
+  const updateCart = async (updates) => {
+    if (cartUpdateInProgress) return;
+
+    cartUpdateInProgress = true;
+    disableCartInputs();
+
+    try {
+      console.log("cartProductUpdates :::", updates);
+
+      const response = await fetch(`${window.Shopify.routes.root}cart/update.js`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ updates })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      let data = await response.json();
+      data = await removeOrphanEmbroideryCharges(data);
+
+      console.log('Cart updated successfully:', data);
+
+      cartLineItemsData = data.items || [];
+      cartItemsMap = cartLineItemsData.reduce((map, item) => {
+        map[item.key] = item;
+        return map;
+      }, {});
+
+      await refreshCartSectionAjax(data);
+    } catch (error) {
+      console.error('Error updating cart:', error);
+
+      try {
+        let currentCart = await fetchCurrentCartJson();
+        currentCart = await removeOrphanEmbroideryCharges(currentCart);
+
+        cartLineItemsData = currentCart.items || [];
+        cartItemsMap = cartLineItemsData.reduce((map, item) => {
+          map[item.key] = item;
+          return map;
+        }, {});
+
+        await refreshCartSectionAjax(currentCart);
+      } catch (recoveryError) {
+        console.error('Cart AJAX recovery failed:', recoveryError);
+      }
+
+      alert('There was an error updating your cart. Please try again.');
+    } finally {
+      cartUpdateInProgress = false;
+      enableCartInputs();
+    }
+  };
+
+  // Handler to subtract quantity
+  const handleSubtractQuantity = (main_product_key, personalize_it_variant_id, buttonElement) => {
+    console.log("handleSubtractQuantity is working -----");
+    try {
+      // console.log("handleSubtractQuantity buttonElement", buttonElement);
+      buttonElement.disabled = true;
+      const { mainProduct, personalizeItProduct } = parseAndValidateCartLineItemsData(main_product_key, personalize_it_variant_id);
+
+      const updates = {
+        [mainProduct.key]: Math.max(mainProduct.quantity - 1, 0),
+        [personalizeItProduct.key]: Math.max(personalizeItProduct.quantity - 1, 0)
+      };
+
+      console.log('handleSubtractQuantity updates :', updates);
+      
+
+      updateCart(updates);
+    } catch (error) {
+      console.error('Error in handleSubtractQuantity:', error);
+      alert(error.message);
+    }
+  };
+
+  // Handler to add quantity
+  const handleAdditionQuantity = (main_product_key, personalize_it_variant_id, buttonElement) => {
+    console.log("handleAdditionQuantity is working -----");
+    try {
+      console.log("handleAdditionQuantity buttonElement", buttonElement);
+      buttonElement.disabled = true;
+      const { mainProduct, personalizeItProduct } = parseAndValidateCartLineItemsData(main_product_key, personalize_it_variant_id);
+
+      const updates = {
+        [mainProduct.key]: mainProduct.quantity + 1,
+        [personalizeItProduct.key]: personalizeItProduct.quantity + 1
+      };
+
+      updateCart(updates);
+    } catch (error) {
+      console.error('Error in handleAdditionQuantity:', error);
+      alert(error.message);
+    }
+  };
+
+
+  function buildRemoveProductAndEmbroideryUpdates(mainProductKey) {
+    const normalizedMainProductKey = String(mainProductKey || '').trim();
+    const mainProduct = cartItemsMap[normalizedMainProductKey];
+
+    if (!mainProduct) {
+      throw new Error('Main product not found in the cart.');
+    }
+
+    const updates = {
+      [mainProduct.key]: 0
+    };
+
+    // Calculate how many embroidery charge units are still required
+    // after this exact main product has been removed.
+    const remainingRequiredByVariantId = {};
+
+    cartLineItemsData.forEach(item => {
+      if (
+        !item ||
+        String(item.key || '') === normalizedMainProductKey ||
+        Number(item.product_id) === CUSTOM_EMBROIDERY_PRODUCT_ID
+      ) {
+        return;
+      }
+
+      const properties = item.properties || {};
+      const embroideryVariantId = Number(
+        properties.personalize_it_variant_id ||
+        properties._embroidery_variant_id ||
+        0
+      );
+
+      if (!embroideryVariantId) {
+        return;
+      }
+
+      remainingRequiredByVariantId[embroideryVariantId] =
+        (remainingRequiredByVariantId[embroideryVariantId] || 0) +
+        Math.max(Number(item.quantity) || 0, 0);
+    });
+
+    // Remove orphan/duplicate embroidery lines in the same AJAX request.
+    const processedEmbroideryVariants = {};
+
+    cartLineItemsData.forEach(item => {
+      if (
+        !item ||
+        Number(item.product_id) !== CUSTOM_EMBROIDERY_PRODUCT_ID ||
+        !item.key
+      ) {
+        return;
+      }
+
+      const variantId = Number(item.variant_id);
+      const requiredQuantity = Math.max(
+        Number(remainingRequiredByVariantId[variantId]) || 0,
+        0
+      );
+
+      if (!processedEmbroideryVariants[variantId]) {
+        updates[item.key] = requiredQuantity;
+        processedEmbroideryVariants[variantId] = true;
+      } else {
+        updates[item.key] = 0;
+      }
+    });
+
+    return {
+      mainProduct,
+      updates
+    };
+  }
+
+  function removeUpdatedRowsImmediately(updates) {
+    Object.entries(updates || {}).forEach(([itemKey, quantity]) => {
+      if (Number(quantity) === 0) {
+        removeCartRowImmediately(itemKey);
+      }
+    });
+  }
+
+  // Handler to remove products
+  const handleRemoveProduct = (
+    main_product_key,
+    personalize_it_variant_id,
+    buttonElement
+  ) => {
+    console.log("handleRemoveProduct is working -----");
+
+    try {
+      if (buttonElement) {
+        buttonElement.disabled = true;
+      }
+
+      const {
+        mainProduct,
+        updates
+      } = buildRemoveProductAndEmbroideryUpdates(main_product_key);
+
+      console.log(
+        'Removing main product and embroidery charges:',
+        {
+          mainProductKey: mainProduct.key,
+          personalizeItVariantId: personalize_it_variant_id,
+          updates
+        }
+      );
+
+      // Remove the main product and any embroidery row whose final
+      // quantity is zero immediately, then confirm with Shopify AJAX.
+      removeUpdatedRowsImmediately(updates);
+      updateCart(updates);
+    } catch (error) {
+      console.error('Error in handleRemoveProduct:', error);
+      alert(error.message);
+    }
+  };
+
+  
+
+  // Handler to input quantity of products
+  const handleQuantityInputChange = (main_product_key, personalize_it_variant_id, event) => {
+      if (!event || event.isTrusted === false || cartUpdateInProgress) return;
+
+      const quantityValue = parseInt(event.target.value, 10);
+      const quantityInputElement = event.target;
+      console.log("handleQuantityInputChange event ::", event);
+      console.log("handleQuantityInputChange event.target ::", event.target);
+      quantityInputElement.disabled = true;
+    
+      // // Input validation
+      // if (isNaN(quantityValue) || quantityValue < 1) {
+      //   alert('Please enter a valid positive quantity.');
+      //   return;
+      // }
+
+     try {
+        const { mainProduct, personalizeItProduct } = parseAndValidateCartLineItemsData(main_product_key, personalize_it_variant_id);
+
+        if (quantityValue === mainProduct.quantity) {
+          quantityInputElement.disabled = false;
+          return;
+        }
+
+        let mainProductQuantityDifference;
+        let finalPersonalizeQuantity;
+        // Calculate the difference depending on whether the quantity increased or decreased
+        if (mainProduct.quantity >= quantityValue) {
+          // console.log("mainProduct.quantity >= quantityValue ifff ----");
+          mainProductQuantityDifference = mainProduct.quantity - quantityValue;
+          finalPersonalizeQuantity = personalizeItProduct.quantity - mainProductQuantityDifference;
+        } else {
+          // console.log("mainProduct.quantity >= quantityValue else ----");
+          mainProductQuantityDifference = quantityValue - mainProduct.quantity;
+          finalPersonalizeQuantity = personalizeItProduct.quantity + mainProductQuantityDifference;
+        }
+        const updates = {
+          [mainProduct.key]: quantityValue,
+          [personalizeItProduct.key]: finalPersonalizeQuantity,
+        };
+        // console.log("handleQuantityInputChange mainProduct ::", mainProduct);
+        // console.log("handleQuantityInputChange personalizeItProduct ::", personalizeItProduct);
+        console.log("handleQuantityInputChange mainProduct.quantity ::", mainProduct.quantity);
+        console.log("handleQuantityInputChange personalizeItProduct.quantity ::", personalizeItProduct.quantity);
+        console.log("handleQuantityInputChange quantityValue ::", quantityValue);
+        console.log("handleQuantityInputChange mainProductQuantityDifference ::", mainProductQuantityDifference);
+        console.log("handleQuantityInputChange finalPersonalizeQuantity ::", finalPersonalizeQuantity);
+        console.log("handleQuantityInputChange updates ::", updates);
+  
+        updateCart(updates);
+    } catch (error) {
+        console.error('Error in handleRemoveProduct:', error);
+        alert(error.message);
+    }
+  };
+
+
+  async function validateCartAfterPageLoad() {
+    try {
+      const response = await fetch(
+        `${window.Shopify.routes.root}cart.js`,
+        {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json'
+          },
+          cache: 'no-store'
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Cart validation failed with status ${response.status}`);
+      }
+
+      let cartData = await response.json();
+      cartData = await removeOrphanEmbroideryCharges(cartData);
+
+      cartLineItemsData = cartData.items || [];
+      cartItemsMap = cartLineItemsData.reduce((map, item) => {
+        map[item.key] = item;
+        return map;
+      }, {});
+
+      await refreshCartSectionAjax(cartData);
+    } catch (error) {
+      console.error('Cart validation error:', error);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', validateCartAfterPageLoad);
+  window.addEventListener('pageshow', event => {
+    if (event.persisted) {
+      validateCartAfterPageLoad();
+    }
+  });
+</script>
+
+<!-- Automatic back-navigation reload removed to prevent refresh loop. -->

@@ -1,0 +1,58 @@
+{% comment %}  {% endcomment %}
+
+<script>
+  function applyStyles(shopifyPaymentTerms) {
+      console.log('Function applyStyles is initialized ---------');
+
+      if (shopifyPaymentTerms && shopifyPaymentTerms.shadowRoot) {
+          const shadowRoot = shopifyPaymentTerms.shadowRoot; // Access the shadow root
+          const installmentElement = shadowRoot.querySelector('#shopify-installments');
+          
+          if (installmentElement) {
+              console.log('Target element (#shopify-installments) found inside shadow DOM! ::', installmentElement);
+              
+              installmentElement.style.fontFamily = "Gotham";
+              
+              const button = shadowRoot.querySelector('#shopify-installments-cta');
+              if (button) {
+                  console.log('Button (#shopify-installments-cta) found inside shadow DOM, applying styles!');
+                  button.style.fontFamily = 'Gotham';
+              } else {
+                  console.log('Button (#shopify-installments-cta) not found inside shadow DOM.');
+              }
+          } else {
+              console.log('Target element (#shopify-installments) not found inside shadow DOM yet.');
+          }
+      } else {
+          console.log('Shadow root not found yet for shopify-payment-terms element.');
+      }
+  }
+
+  let elementsProcessed = 0;
+
+  const checkInterval = setInterval(() => {
+      const shopifyPaymentTermsList = document.querySelectorAll('.paymentTerms shopify-payment-terms');
+
+      shopifyPaymentTermsList.forEach((shopifyPaymentTerms, index) => {
+          if (shopifyPaymentTerms && shopifyPaymentTerms.shadowRoot) {
+              const shadowRoot = shopifyPaymentTerms.shadowRoot;
+              const installmentElement = shadowRoot.querySelector('#shopify-installments');
+              
+              if (installmentElement) {
+                  console.log('Target element (#shopify-installments) rendered inside shadow DOM!');
+                  applyStyles(shopifyPaymentTerms);
+                  elementsProcessed++;
+                  console.log("index :::", index);
+              }
+          }
+      });
+
+      if (elementsProcessed >= shopifyPaymentTermsList.length) {
+          clearInterval(checkInterval);
+          console.log('Styles applied to all elements, interval stopped.');
+      }
+
+  }, 100);
+  
+  console.log('Started checking for the target element (#shopify-installments) inside the shadow DOM.');
+</script>
