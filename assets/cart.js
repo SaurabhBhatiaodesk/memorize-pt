@@ -1525,9 +1525,16 @@ class Cart extends HTMLElement {
       cart.items || [];
 
     const {
-      item_count,
       total_price
     } = cart;
+
+    const item_count = (cart.items || []).reduce(
+      (count, item) => {
+        if (Number(item?.product_id) === 7351943430217) return count;
+        return count + Math.max(Number(item?.quantity) || 0, 0);
+      },
+      0
+    );
 
     if (!skipDomUpdate) {
       Cart.updateTotals(
@@ -1570,6 +1577,15 @@ class Cart extends HTMLElement {
           "data-cart-count",
           count
         );
+      }
+    );
+
+    document.querySelectorAll(
+      ".header-cart-counter-os"
+    ).forEach(
+      (element) => {
+        element.textContent =
+          count;
       }
     );
 

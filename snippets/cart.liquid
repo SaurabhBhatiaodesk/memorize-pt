@@ -1665,7 +1665,10 @@
 
   function syncCartUI(cartData) {
     const safeItems = Array.isArray(cartData?.items) ? cartData.items : [];
-    const itemCount = Math.max(Number(cartData?.item_count) || 0, 0);
+    const itemCount = safeItems.reduce((count, item) => {
+      if (Number(item?.product_id) === CUSTOM_EMBROIDERY_PRODUCT_ID) return count;
+      return count + Math.max(Number(item?.quantity) || 0, 0);
+    }, 0);
     const totalPrice = Math.max(Number(cartData?.total_price) || 0, 0);
 
     const itemsByKey = safeItems.reduce((map, item) => {
@@ -1673,8 +1676,13 @@
       return map;
     }, {});
 
-    const cartCount = document.querySelector('.header-cart-counter-os');
-    if (cartCount) cartCount.textContent = itemCount;
+    document.querySelectorAll('[data-cart-count]').forEach((element) => {
+      element.setAttribute('data-cart-count', itemCount);
+    });
+
+    document.querySelectorAll('.header-cart-counter-os').forEach((element) => {
+      element.textContent = itemCount;
+    });
 
     const cartRoot = document.querySelector('cart-root');
     const cartForm = cartRoot?.querySelector('.cart--form');

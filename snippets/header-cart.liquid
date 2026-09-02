@@ -6,6 +6,13 @@
 
 {%- liquid
   assign cart_t = 'layout.header.cart' | t
+  assign cart_count = 0
+
+  for item in cart.items
+    unless item.product_id == 7351943430217
+      assign cart_count = cart_count | plus: item.quantity
+    endunless
+  endfor
 
   capture cart_icon
     if cart_icon == "bag"
@@ -21,7 +28,7 @@
 <a
   class="header--cart-toggle"
   aria-label="{{ cart_t }}"
-  data-cart-count="{{ cart.item_count }}"
+  data-cart-count="{{ cart_count }}"
   {% if settings.cart--type == 'drawer' %}
     data-drawer-open="right"
     data-drawer-view="cart-drawer"
@@ -32,7 +39,7 @@
   {% endif %}
 >
   {{ cart_icon }}
-  <span class="header-cart-counter header-cart-counter-os">{{ cart.item_count }}</span>
+  <span class="header-cart-counter header-cart-counter-os">{{ cart_count }}</span>
 </a>
 
 <noscript>
@@ -40,7 +47,7 @@
     class="header--cart-toggle"
     aria-label="{{ cart_t }}"
     href="{{ routes.cart_url }}"
-    data-cart-count="{{ cart.item_count }}"
+    data-cart-count="{{ cart_count }}"
   >
     {{ cart_icon }}
   </a>
