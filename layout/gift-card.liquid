@@ -32,6 +32,7 @@
       function selectText(element) {
         const doc = document;
         const text = doc.getElementById(element);
+
         if (doc.body.createTextRange) { // ms
           const range = doc.body.createTextRange();
           range.moveToElementText(text);
