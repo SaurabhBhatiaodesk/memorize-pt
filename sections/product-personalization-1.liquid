@@ -2450,24 +2450,26 @@ document.addEventListener('change', function(event) {
 
   if (monogramDisplay) {
 
-    // Normal monogram size
-    setScaledPreviewSize(monogramDisplay, 62, 64.4);
-
-
     const largeTextSpan = monogramDisplay.querySelector('.monogram-large-text-os');
 
 
-    if (largeTextSpan) {
+    if (monogramDisplay.classList.contains("flourish")) {
 
-      // Only Flourish font large letter reduce
-      if (monogramDisplay.classList.contains("flourish")) {
+      // Only Flourish font size reduced
+      setScaledPreviewSize(monogramDisplay, 52, 62.4);
 
+      if (largeTextSpan) {
         setScaledPreviewSize(largeTextSpan, 75, 90);
+      }
 
-      } else {
 
+    } else {
+
+      // Other fonts remain same
+      setScaledPreviewSize(monogramDisplay, 62, 64.4);
+
+      if (largeTextSpan) {
         setScaledPreviewSize(largeTextSpan, 102, 122.4);
-
       }
 
     }
