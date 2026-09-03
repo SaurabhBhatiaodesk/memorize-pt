@@ -2455,11 +2455,11 @@ document.addEventListener('change', function(event) {
 
     if (monogramDisplay.classList.contains("flourish")) {
 
-      // Flourish normal monogram size same
-      setScaledPreviewSize(monogramDisplay, 62, 64.4);
+      // Only Flourish main monogram size reduced
+      setScaledPreviewSize(monogramDisplay, 52, 62.4);
 
 
-      // Only Flourish large letter size reduced by 5px
+      // Only Flourish large letter size reduced
       if (largeTextSpan) {
         setScaledPreviewSize(largeTextSpan, 97, 116.4);
       }
