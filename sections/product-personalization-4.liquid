@@ -2257,11 +2257,24 @@ $(document).on("click", ".sdev_radios_btn", function () {
 
       if (monogramDisplay.classList.contains("flourish")) {
 
-        // Only Flourish font size reduced
-        setScaledPreviewSize(monogramDisplay, 28, 32.9);
+        if (window.matchMedia('(max-width: 767px)').matches) {
 
-        if (largeTextSpan) {
-          setScaledPreviewSize(largeTextSpan, 42, 53);
+          // Mobile Flourish size (reduced further)
+          setScaledPreviewSize(monogramDisplay, 22, 26);
+
+          if (largeTextSpan) {
+            setScaledPreviewSize(largeTextSpan, 33, 42);
+          }
+
+        } else {
+
+          // Desktop Flourish size (Client approved)
+          setScaledPreviewSize(monogramDisplay, 28, 32.9);
+
+          if (largeTextSpan) {
+            setScaledPreviewSize(largeTextSpan, 42, 53);
+          }
+
         }
 
 
