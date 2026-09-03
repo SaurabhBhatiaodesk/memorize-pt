@@ -2901,31 +2901,16 @@ label.radios--option-label.customText h3 {
       {% comment %} console.log("adjustFontSizeAndLineHeight0 monogramDisplay ------------------------", monogramDisplay); {% endcomment %}
       // Monogram text on the product image
       if (monogramDisplay) {
-        if (monogramDisplay.classList.contains("flourish")) {
-          const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
-          monogramDisplay.style.fontSize = isMobilePreview ? '16px' : '22px';
-          monogramDisplay.style.lineHeight = '30px';
-        } else if (monogramDisplay.classList.contains("memorize")) {
-          const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
-          monogramDisplay.style.fontSize = isMobilePreview ? '64px' : '62px';
-          monogramDisplay.style.lineHeight = '1.2';
-        } else if (monogramDisplay.classList.contains("fancy")) {
-          const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
-          monogramDisplay.style.fontSize = isMobilePreview ? '22px' : '62px';
-          monogramDisplay.style.lineHeight = '1.2';
-        } else {
-          monogramDisplay.style.fontSize = '62px';
-          monogramDisplay.style.lineHeight = '1.2'; // You can adjust this value as needed
-        }
-        
+        // Set font size for A and C
+        monogramDisplay.style.fontSize = '62px';
+        monogramDisplay.style.lineHeight = '1.2'; // You can adjust this value as needed
+
         // Find the span with class "monogram-large-text-os" (which contains B)
         const largeTextSpan = monogramDisplay.querySelector('.monogram-large-text-os');
         if (largeTextSpan) {
           // Set font size for B
-          largeTextSpan.style.fontFamily = 'inherit';
-          const baseMonogramFontSize = parseFloat(monogramDisplay.style.fontSize) || 22;
-          largeTextSpan.style.fontSize = (baseMonogramFontSize * 1.5) + 'px';
-          largeTextSpan.style.lineHeight = 'inherit';
+          largeTextSpan.style.fontSize = '102px';
+          largeTextSpan.style.lineHeight = '1.2';
         }
       }
       
@@ -4346,9 +4331,6 @@ label.radios--option-label.customText h3 {
   
       // Add the new font class
       item.classList.add(font);
-      if (font === 'flourish' || font === 'memorize' || font === 'fancy') {
-        adjustFontSizeAndLineHeight0(item);
-      }
     });
   }
 

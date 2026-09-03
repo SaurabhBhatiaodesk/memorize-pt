@@ -2251,32 +2251,10 @@ $(document).on("click", ".sdev_radios_btn", function () {
 
   function adjustFontSizeAndLineHeight0(monogramDisplay, textareaDisplay, textLength) {
       if (monogramDisplay) {
-        if (monogramDisplay.classList.contains("flourish")) {
-          const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
-          monogramDisplay.style.fontSize = isMobilePreview ? '16px' : '22px';
-          monogramDisplay.style.lineHeight = '30px';
-        } else if (monogramDisplay.classList.contains("memorize")) {
-          const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
-          setScaledPreviewSize(monogramDisplay, 62, 74.4);
-          if (isMobilePreview) {
-            const currentFontSize = parseFloat(monogramDisplay.style.fontSize);
-            monogramDisplay.style.fontSize = (currentFontSize + 2) + 'px';
-          }
-        } else if (monogramDisplay.classList.contains("fancy")) {
-          const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
-          setScaledPreviewSize(monogramDisplay, 62, 74.4);
-          if (isMobilePreview) {
-            monogramDisplay.style.fontSize = '22px';
-          }
-        } else {
-          setScaledPreviewSize(monogramDisplay, 62, 74.4);
-        }
+        setScaledPreviewSize(monogramDisplay, 62, 74.4);
         const largeTextSpan = monogramDisplay.querySelector('.monogram-large-text-os');
         if (largeTextSpan) {
-          largeTextSpan.style.fontFamily = 'inherit';
-          const baseMonogramFontSize = parseFloat(monogramDisplay.style.fontSize) || 22;
-          largeTextSpan.style.fontSize = (baseMonogramFontSize * 1.5) + 'px';
-          largeTextSpan.style.lineHeight = 'inherit';
+          setScaledPreviewSize(largeTextSpan, 102, 122.4);
         }
       }
 
@@ -3105,9 +3083,6 @@ $(document).on("click", ".sdev_radios_btn", function () {
       const newMonogramClasses = Array.from(item.classList).filter(className => className === 'monogram-text-display-os');
       item.className = newMonogramClasses.join(' ');
       item.classList.add(font);
-      if (font === 'flourish' || font === 'memorize' || font === 'fancy') {
-        adjustFontSizeAndLineHeight0(item);
-      }
     });
   }
 
