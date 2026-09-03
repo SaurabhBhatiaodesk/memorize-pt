@@ -2446,7 +2446,7 @@ document.addEventListener('change', function(event) {
       element.style.lineHeight = `${lineHeight * scale * embroideryTextScale}px`;
   }
 
-  function adjustFontSizeAndLineHeight0(monogramDisplay, textareaDisplay, textLength) {
+ function adjustFontSizeAndLineHeight0(monogramDisplay, textareaDisplay, textLength) {
 
   if (monogramDisplay) {
 
@@ -2455,11 +2455,26 @@ document.addEventListener('change', function(event) {
 
     if (monogramDisplay.classList.contains("flourish")) {
 
-      // Only Flourish font size reduced
-      setScaledPreviewSize(monogramDisplay, 22, 32.4);
 
-      if (largeTextSpan) {
-        setScaledPreviewSize(largeTextSpan, 40, 50);
+      if (window.innerWidth <= 767) {
+
+        // Mobile Flourish size
+        setScaledPreviewSize(monogramDisplay, 18, 28.4);
+
+        if (largeTextSpan) {
+          setScaledPreviewSize(largeTextSpan, 35, 45);
+        }
+
+
+      } else {
+
+        // Desktop Flourish size (Client approved)
+        setScaledPreviewSize(monogramDisplay, 22, 32.4);
+
+        if (largeTextSpan) {
+          setScaledPreviewSize(largeTextSpan, 40, 50);
+        }
+
       }
 
 
@@ -2557,6 +2572,11 @@ document.addEventListener('change', function(event) {
   }
 
 }
+
+
+
+
+
 
   function rescaleAllPersonalizationPreviews() {
       document.querySelectorAll('.textarea-text-display-os').forEach((display) => {
