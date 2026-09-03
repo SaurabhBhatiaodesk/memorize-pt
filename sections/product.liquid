@@ -2074,6 +2074,11 @@ label.radios--option-label.customText h3 {
               }
             } else {
               console.error("Image upload failed. Process cannot proceed.");
+              if (MainAddToCartButton) {
+                MainAddToCartButton.disabled = false;
+                MainAddToCartButton.textContent = 'ADD TO CART';
+              }
+              alert("Something went wrong while preparing your preview image. Please try again in a moment.");
             }
           }
           
@@ -3323,7 +3328,19 @@ label.radios--option-label.customText h3 {
         }
     });
 
-    formData.items.push(predefinedItem);
+    if (!formData.items[0].id) {
+      if (MainAddToCartButton) {
+        MainAddToCartButton.disabled = false;
+        MainAddToCartButton.textContent = 'ADD TO CART';
+      }
+      alert('Please select product options before adding to cart.');
+      return;
+    }
+
+    if (personalizeItVariantId) {
+      formData.items.push(predefinedItem);
+    }
+
       fetch(window.Shopify.routes.root + 'cart/add.js', {
           method: 'POST',
           headers: {
@@ -3331,10 +3348,10 @@ label.radios--option-label.customText h3 {
           },
           body: JSON.stringify(formData)
       })
-      .then(response => {
-      // if (!response.ok) {
-      //     throw new Error('Network response was not ok');
-      // }
+      .then(async response => {
+      if (!response.ok) {
+          throw new Error(await response.text() || 'Add to cart failed.');
+      }
       return response.json(); // Parse the JSON from the response
     })
     .then(data => {
@@ -3344,6 +3361,11 @@ label.radios--option-label.customText h3 {
     })
     .catch((error) => {
         console.error('Error:', error);
+        if (MainAddToCartButton) {
+          MainAddToCartButton.disabled = false;
+          MainAddToCartButton.textContent = 'ADD TO CART';
+        }
+        alert('We could not add this item to cart. Please try again.');
     });
   }
 

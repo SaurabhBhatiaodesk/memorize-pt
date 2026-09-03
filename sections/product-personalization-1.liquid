@@ -2995,7 +2995,17 @@ document.addEventListener('change', function(event) {
     });
     formData.items[0].id = productId;
     formData.items[0].properties = orderedProperties;
-    formData.items.push(predefinedItem);
+
+    if (!productId) {
+      if (MainAddToCartButton) toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+      alert('Please select product options before adding to cart.');
+      return;
+    }
+
+    if (personalizeItVariantId) {
+      formData.items.push(predefinedItem);
+    }
+
     if (cartNote) formData.note = cartNote;
     console.log("customformSubmission formData ::", formData);
     fetch(window.Shopify.routes.root + 'cart/add.js', {
@@ -3003,9 +3013,18 @@ document.addEventListener('change', function(event) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
     })
-    .then(response => response.json())
+    .then(async response => {
+      if (!response.ok) {
+        throw new Error(await response.text() || 'Add to cart failed.');
+      }
+      return response.json();
+    })
     .then(data => { window.location.href = '/checkout'; })
-    .catch((error) => { console.error('Error:', error); });
+    .catch((error) => {
+      console.error('Error:', error);
+      if (MainAddToCartButton) toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+      alert('We could not add this item to cart. Please try again.');
+    });
   }</script>
 
 <!-- All custom pdp js ends-->

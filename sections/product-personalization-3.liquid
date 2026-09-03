@@ -2338,6 +2338,8 @@ $(document).on("click", ".sdev_radios_btn", function () {
               }
             } else {
               console.error("Image upload failed. Process cannot proceed.");
+              toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+              alert("Something went wrong while preparing your preview image. Please try again in a moment.");
             }
           }
           
@@ -3737,7 +3739,15 @@ $(document).on("click", ".sdev_radios_btn", function () {
     formData.items[0].id = productId;
     formData.items[0].properties = orderedProperties;
 
-    formData.items.push(predefinedItem);
+    if (!productId) {
+      toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+      alert('Please select product options before adding to cart.');
+      return;
+    }
+
+    if (personalizeItVariantId) {
+      formData.items.push(predefinedItem);
+    }
 
     // Add the note data to the formData
     if (cartNote) {
@@ -3753,7 +3763,10 @@ $(document).on("click", ".sdev_radios_btn", function () {
       },
       body: JSON.stringify(formData)
     })
-    .then(response => {
+    .then(async response => {
+      if (!response.ok) {
+        throw new Error(await response.text() || 'Add to cart failed.');
+      }
       return response.json();
     })
     .then(data => {
@@ -3762,6 +3775,8 @@ $(document).on("click", ".sdev_radios_btn", function () {
     })
     .catch((error) => {
         console.error('Error:', error);
+        toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+        alert('We could not add this item to cart. Please try again.');
     });
   }
 

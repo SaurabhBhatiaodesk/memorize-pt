@@ -197,7 +197,7 @@
       original_total_price: data.original_total_price/100,
       items: data.items
     }
-    if (item !== 'undefined') {
+    if (typeof item !== 'undefined') {
       cart = Object.assign(cart, item)
     }
     if (klAjax) {
@@ -222,7 +222,7 @@
   var atcButtons = document.querySelectorAll("form[action*='/cart/add'] button[type='submit']");
   for (var i = 0; i < atcButtons.length; i++) { 
     atcButtons[i].addEventListener("click", function() {
-      if (klAjax) {
+      if (klAjax && typeof item !== 'undefined') {
         _learnq.push(['track', 'Added to Cart', item]);
         klAjax = false;
       }
@@ -242,7 +242,7 @@ total_discount: data.total_discount,
 original_total_price: data.original_total_price / 100,
 items: data.items
 }
-if (item !== 'undefined') {
+if (typeof item !== 'undefined') {
 cart = Object.assign(cart, item)
 }
 if (klAjax) {
@@ -255,7 +255,11 @@ klAjax = false;
     <script type="text/javascript">
       var _learnq = _learnq || [];
       var classname = document.getElementsByClassName("product-buy-buttons--primary p_a_t_c");
-      var addToCart = function() {_learnq.push(['track', 'Added to Cart', item]);};
+      var addToCart = function() {
+        if (typeof item !== 'undefined') {
+          _learnq.push(['track', 'Added to Cart', item]);
+        }
+      };
       for (var i = 0; i < classname.length; i++) {classname[i].addEventListener('click', addToCart, false);}
     </script>
 
@@ -330,7 +334,7 @@ klAjax = false;
   // override only when PNG used
   HTMLCanvasElement.prototype.toDataURL = function (type, quality) {
     try {
-      if (!type || type === "image/png") {
+      if (false && (!type || type === "image/png")) {
         return convertToJpeg(this);
       }
     } catch (e) {
@@ -342,7 +346,7 @@ klAjax = false;
 
   HTMLCanvasElement.prototype.toBlob = function (callback, type, quality) {
     try {
-      if (!type || type === "image/png") {
+      if (false && (!type || type === "image/png")) {
         return originalToBlob.call(this, callback, "image/jpeg", JPEG_QUALITY);
       }
     } catch (e) {
@@ -352,10 +356,9 @@ klAjax = false;
     return originalToBlob.call(this, callback, type, quality);
   };
 
-  console.log("✅ PDP Canvas Optimizer Active (PNG → JPEG)");
+  console.log("PDP Canvas Optimizer disabled for stable image upload");
 })();
       </script>
 
     </body>
 </html>
-   
