@@ -2460,6 +2460,12 @@ document.addEventListener('change', function(event) {
             const currentFontSize = parseFloat(monogramDisplay.style.fontSize);
             monogramDisplay.style.fontSize = (currentFontSize + 2) + 'px';
           }
+        } else if (monogramDisplay.classList.contains("fancy")) {
+          const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
+          setScaledPreviewSize(monogramDisplay, 62, 74.4);
+          if (isMobilePreview) {
+            monogramDisplay.style.fontSize = '18px';
+          }
         } else {
           setScaledPreviewSize(monogramDisplay, 62, 74.4);
         }
@@ -3321,7 +3327,7 @@ document.addEventListener('change', function(event) {
       const newMonogramClasses = Array.from(item.classList).filter(className => className === 'monogram-text-display-os');
       item.className = newMonogramClasses.join(' ');
       item.classList.add(font);
-      if (font === 'flourish' || font === 'memorize') {
+      if (font === 'flourish' || font === 'memorize' || font === 'fancy') {
         adjustFontSizeAndLineHeight0(item);
       }
     });

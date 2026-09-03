@@ -2909,6 +2909,10 @@ label.radios--option-label.customText h3 {
           const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
           monogramDisplay.style.fontSize = isMobilePreview ? '64px' : '62px';
           monogramDisplay.style.lineHeight = '1.2';
+        } else if (monogramDisplay.classList.contains("fancy")) {
+          const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
+          monogramDisplay.style.fontSize = isMobilePreview ? '18px' : '62px';
+          monogramDisplay.style.lineHeight = '1.2';
         } else {
           monogramDisplay.style.fontSize = '62px';
           monogramDisplay.style.lineHeight = '1.2'; // You can adjust this value as needed
@@ -4341,7 +4345,7 @@ label.radios--option-label.customText h3 {
   
       // Add the new font class
       item.classList.add(font);
-      if (font === 'flourish' || font === 'memorize') {
+      if (font === 'flourish' || font === 'memorize' || font === 'fancy') {
         adjustFontSizeAndLineHeight0(item);
       }
     });
