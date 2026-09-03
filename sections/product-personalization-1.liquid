@@ -2459,9 +2459,9 @@ document.addEventListener('change', function(event) {
           let fontSize = 0;
           let lineHeight = 0;
           if (textareaDisplay.classList.contains("flourish")) {
-            fontSize = textLength > 24 ? 24 : 24;
+            fontSize = textLength > 28 ? 24 : 24;
 
-            lineHeight = textLength > 28 ? 48 : 65;
+            lineHeight = textLength > 28 ? 48 : 45;
           } else if (textareaDisplay.classList.contains("signature")) {
             fontSize = textLength > 28 ? 45 : 72;
             lineHeight = textLength > 28 ? 42 : 60;
