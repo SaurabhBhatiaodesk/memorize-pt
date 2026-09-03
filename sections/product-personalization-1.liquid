@@ -2460,6 +2460,7 @@ document.addEventListener('change', function(event) {
           let lineHeight = 0;
           if (textareaDisplay.classList.contains("flourish")) {
             fontSize = textLength > 28 ? 24 : 28;
+
             lineHeight = textLength > 28 ? 48 : 65;
           } else if (textareaDisplay.classList.contains("signature")) {
             fontSize = textLength > 28 ? 45 : 72;
@@ -2504,7 +2505,8 @@ document.addEventListener('change', function(event) {
           }
       });
 
-      document.querySelectorAll('.monogram-text-display-os').forEach((display) => {
+               setScaledPreviewSize(largeTextSpan, 62, 64.4);
+ach((display) => {
           if (display.textContent.trim()) {
               adjustFontSizeAndLineHeight0(display);
           }
