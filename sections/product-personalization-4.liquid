@@ -3140,6 +3140,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
       const newMonogramClasses = Array.from(item.classList).filter(className => className === 'monogram-text-display-os');
       item.className = newMonogramClasses.join(' ');
       item.classList.add(font);
+      adjustFontSizeAndLineHeight0(item);
     });
   }
 
