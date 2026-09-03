@@ -2923,7 +2923,8 @@ label.radios--option-label.customText h3 {
         if (largeTextSpan) {
           // Set font size for B
           largeTextSpan.style.fontFamily = 'inherit';
-          largeTextSpan.style.fontSize = 'inherit';
+          const baseMonogramFontSize = parseFloat(monogramDisplay.style.fontSize) || 22;
+          largeTextSpan.style.fontSize = (baseMonogramFontSize * 1.5) + 'px';
           largeTextSpan.style.lineHeight = 'inherit';
         }
       }

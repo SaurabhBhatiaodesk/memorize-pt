@@ -2929,7 +2929,8 @@ $(document).on("click", ".sdev_radios_btn", function () {
         const largeTextSpan = monogramDisplay.querySelector('.monogram-large-text-os');
         if (largeTextSpan) {
           largeTextSpan.style.fontFamily = 'inherit';
-          largeTextSpan.style.fontSize = 'inherit';
+          const baseMonogramFontSize = parseFloat(monogramDisplay.style.fontSize) || 22;
+          largeTextSpan.style.fontSize = (baseMonogramFontSize * 1.5) + 'px';
           largeTextSpan.style.lineHeight = 'inherit';
         }
       }
