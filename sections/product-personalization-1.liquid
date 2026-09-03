@@ -2451,8 +2451,15 @@ document.addEventListener('change', function(event) {
       if (monogramDisplay) {
         if (monogramDisplay.classList.contains("flourish")) {
           const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
-          monogramDisplay.style.fontSize = isMobilePreview ? '19px' : '22px';
+          monogramDisplay.style.fontSize = isMobilePreview ? '16px' : '22px';
           monogramDisplay.style.lineHeight = '30px';
+        } else if (monogramDisplay.classList.contains("memorize")) {
+          const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
+          setScaledPreviewSize(monogramDisplay, 62, 74.4);
+          if (isMobilePreview) {
+            const currentFontSize = parseFloat(monogramDisplay.style.fontSize);
+            monogramDisplay.style.fontSize = (currentFontSize + 2) + 'px';
+          }
         } else {
           setScaledPreviewSize(monogramDisplay, 62, 74.4);
         }
@@ -3314,7 +3321,7 @@ document.addEventListener('change', function(event) {
       const newMonogramClasses = Array.from(item.classList).filter(className => className === 'monogram-text-display-os');
       item.className = newMonogramClasses.join(' ');
       item.classList.add(font);
-      if (font === 'flourish') {
+      if (font === 'flourish' || font === 'memorize') {
         adjustFontSizeAndLineHeight0(item);
       }
     });

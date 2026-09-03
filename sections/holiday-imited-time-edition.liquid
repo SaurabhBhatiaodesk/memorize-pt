@@ -2903,8 +2903,12 @@ label.radios--option-label.customText h3 {
       if (monogramDisplay) {
         if (monogramDisplay.classList.contains("flourish")) {
           const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
-          monogramDisplay.style.fontSize = isMobilePreview ? '19px' : '22px';
+          monogramDisplay.style.fontSize = isMobilePreview ? '16px' : '22px';
           monogramDisplay.style.lineHeight = '30px';
+        } else if (monogramDisplay.classList.contains("memorize")) {
+          const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
+          monogramDisplay.style.fontSize = isMobilePreview ? '64px' : '62px';
+          monogramDisplay.style.lineHeight = '1.2';
         } else {
           monogramDisplay.style.fontSize = '62px';
           monogramDisplay.style.lineHeight = '1.2'; // You can adjust this value as needed
@@ -4337,7 +4341,7 @@ label.radios--option-label.customText h3 {
   
       // Add the new font class
       item.classList.add(font);
-      if (font === 'flourish') {
+      if (font === 'flourish' || font === 'memorize') {
         adjustFontSizeAndLineHeight0(item);
       }
     });
