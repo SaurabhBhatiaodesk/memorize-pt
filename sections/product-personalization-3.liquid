@@ -2904,53 +2904,124 @@ $(document).on("click", ".sdev_radios_btn", function () {
   }
 
   function adjustFontSizeAndLineHeight0(monogramDisplay, textareaDisplay, textLength) {
-      if (monogramDisplay) {
-        setScaledPreviewSize(monogramDisplay, 62, 74.4);
-        const largeTextSpan = monogramDisplay.querySelector('.monogram-large-text-os');
+
+    if (monogramDisplay) {
+
+      const largeTextSpan = monogramDisplay.querySelector('.monogram-large-text-os');
+
+
+      if (monogramDisplay.classList.contains("flourish")) {
+
+        if (window.matchMedia('(max-width: 767px)').matches) {
+
+          // Mobile Flourish size (reduced further)
+          setScaledPreviewSize(monogramDisplay, 22, 26);
+
+          if (largeTextSpan) {
+            setScaledPreviewSize(largeTextSpan, 33, 42);
+          }
+
+        } else {
+
+          // Desktop Flourish size (Client approved)
+          setScaledPreviewSize(monogramDisplay, 28, 32.9);
+
+          if (largeTextSpan) {
+            setScaledPreviewSize(largeTextSpan, 42, 53);
+          }
+
+        }
+
+
+      } else {
+
+        // Other fonts remain same
+        setScaledPreviewSize(monogramDisplay, 62, 64.4);
+
         if (largeTextSpan) {
           setScaledPreviewSize(largeTextSpan, 102, 122.4);
         }
+
+      }
+    }
+
+    if (textareaDisplay && textLength) {
+
+      let fontSize = 0;
+      let lineHeight = 0;
+
+
+      if (textareaDisplay.classList.contains("flourish")) {
+
+        fontSize = textLength > 28 ? 24 : 24;
+        lineHeight = textLength > 28 ? 48 : 45;
+
+
+      } else if (textareaDisplay.classList.contains("signature")) {
+
+        fontSize = textLength > 28 ? 45 : 72;
+        lineHeight = textLength > 28 ? 42 : 60;
+
+
+      } else if (textareaDisplay.classList.contains("fancy")) {
+
+        fontSize = textLength > 28 ? 48 : 62;
+        lineHeight = textLength > 28 ? 44 : 54;
+
+
+      } else if (textareaDisplay.classList.contains("amalfi")) {
+
+        fontSize = textLength > 28 ? 38 : 54;
+        lineHeight = textLength > 28 ? 38 : 48;
+
+
+      } else if (textareaDisplay.classList.contains("fondly-yours")) {
+
+        fontSize = textLength > 28 ? 38 : 58;
+        lineHeight = textLength > 28 ? 38 : 54;
+
+
+      } else if (textareaDisplay.classList.contains("casually-cool")) {
+
+        fontSize = textLength > 28 ? 42 : 62;
+        lineHeight = textLength > 28 ? 42 : 48;
+
+
+      } else if (textareaDisplay.classList.contains("memorize")) {
+
+        fontSize = textLength > 28 ? 42 : 51.3333333;
+        lineHeight = textLength > 28 ? 45 : 62;
+
+
+      } else if (textareaDisplay.classList.contains("headliner")) {
+
+        fontSize = textLength > 28 ? 28 : 45;
+        lineHeight = textLength > 28 ? 34 : 48;
+
+
+      } else if (textareaDisplay.classList.contains("letter-jacket")) {
+
+        fontSize = textLength > 28 ? 32 : 48;
+        lineHeight = textLength > 28 ? 38 : 56;
+
+
+      } else if (textareaDisplay.classList.contains("vintage")) {
+
+        fontSize = textLength > 28 ? 28 : 45;
+        lineHeight = textLength > 28 ? 32 : 48;
+
+
+      } else {
+
+        fontSize = textLength > 28 ? 32 : 48;
+        lineHeight = textLength > 28 ? 38 : 52;
+
       }
 
-      if (textareaDisplay && textLength) {
-          let fontSize = 0;
-          let lineHeight = 0;
-          if (textareaDisplay.classList.contains("flourish")) {
-            fontSize = textLength > 28 ? 24 : 28;
-            lineHeight = textLength > 28 ? 48 : 65;
-          } else if (textareaDisplay.classList.contains("signature")) {
-            fontSize = textLength > 28 ? 45 : 72;
-            lineHeight = textLength > 28 ? 42 : 60;
-          } else if (textareaDisplay.classList.contains("fancy")) {
-            fontSize = textLength > 28 ? 48 : 62;
-            lineHeight = textLength > 28 ? 44 : 54;
-          } else if (textareaDisplay.classList.contains("amalfi")) {
-            fontSize = textLength > 28 ? 38 : 54;
-            lineHeight = textLength > 28 ? 38 : 48;
-          } else if (textareaDisplay.classList.contains("fondly-yours")) {
-            fontSize = textLength > 28 ? 38 : 58;
-            lineHeight = textLength > 28 ? 38 : 54;
-          } else if (textareaDisplay.classList.contains("casually-cool")) {
-            fontSize = textLength > 28 ? 42 : 62;
-            lineHeight = textLength > 28 ? 42 : 48;
-          } else if (textareaDisplay.classList.contains("memorize")) {
-            fontSize = textLength > 28 ? 42 : 51.3333333;
-            lineHeight = textLength > 28 ? 45 : 62;
-          } else if (textareaDisplay.classList.contains("headliner")) {
-            fontSize = textLength > 28 ? 28 : 45;
-            lineHeight = textLength > 28 ? 34 : 48;
-          } else if (textareaDisplay.classList.contains("letter-jacket")) {
-            fontSize = textLength > 28 ? 32 : 48;
-            lineHeight = textLength > 28 ? 38 : 56;
-          } else if (textareaDisplay.classList.contains("vintage")) {
-            fontSize = textLength > 28 ? 28 : 45;
-            lineHeight = textLength > 28 ? 32 : 48;
-          } else {
-            fontSize = textLength > 28 ? 32 : 48;
-            lineHeight = textLength > 28 ? 38 : 52;
-          }
-          setScaledPreviewSize(textareaDisplay, fontSize, lineHeight);
-      }
+
+      setScaledPreviewSize(textareaDisplay, fontSize, lineHeight);
+
+    }
   }
 
   function rescaleAllPersonalizationPreviews() {
@@ -4260,6 +4331,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
   
       // Add the new font class
       item.classList.add(font);
+      adjustFontSizeAndLineHeight0(item);
     });
   }
 
