@@ -2446,7 +2446,7 @@ document.addEventListener('change', function(event) {
       element.style.lineHeight = `${lineHeight * scale * embroideryTextScale}px`;
   }
 
- function adjustFontSizeAndLineHeight0(monogramDisplay, textareaDisplay, textLength) {
+  function adjustFontSizeAndLineHeight0(monogramDisplay, textareaDisplay, textLength) {
 
   if (monogramDisplay) {
 
@@ -2455,13 +2455,11 @@ document.addEventListener('change', function(event) {
 
     if (monogramDisplay.classList.contains("flourish")) {
 
-      // Only Flourish main monogram size reduced
-      setScaledPreviewSize(monogramDisplay, 52, 62.4);
+      // Only Flourish font size reduced
+      setScaledPreviewSize(monogramDisplay, 42, 52.4);
 
-
-      // Only Flourish large letter size reduced
       if (largeTextSpan) {
-        setScaledPreviewSize(largeTextSpan, 97, 116.4);
+        setScaledPreviewSize(largeTextSpan, 65, 70);
       }
 
 
@@ -2469,7 +2467,6 @@ document.addEventListener('change', function(event) {
 
       // Other fonts remain same
       setScaledPreviewSize(monogramDisplay, 62, 64.4);
-
 
       if (largeTextSpan) {
         setScaledPreviewSize(largeTextSpan, 102, 122.4);
