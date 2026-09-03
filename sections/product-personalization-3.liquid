@@ -2906,10 +2906,18 @@ $(document).on("click", ".sdev_radios_btn", function () {
 
   function adjustFontSizeAndLineHeight0(monogramDisplay, textareaDisplay, textLength) {
       if (monogramDisplay) {
-        setScaledPreviewSize(monogramDisplay, 62, 74.4);
+        if (monogramDisplay.classList.contains("flourish")) {
+          const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
+          monogramDisplay.style.fontSize = isMobilePreview ? '14px' : '18px';
+          monogramDisplay.style.lineHeight = isMobilePreview ? '24px' : '28px';
+        } else {
+          setScaledPreviewSize(monogramDisplay, 62, 74.4);
+        }
         const largeTextSpan = monogramDisplay.querySelector('.monogram-large-text-os');
         if (largeTextSpan) {
-          setScaledPreviewSize(largeTextSpan, 62, 74.4);
+          largeTextSpan.style.fontFamily = 'inherit';
+          largeTextSpan.style.fontSize = 'inherit';
+          largeTextSpan.style.lineHeight = 'inherit';
         }
       }
 

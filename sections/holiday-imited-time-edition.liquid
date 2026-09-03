@@ -2901,17 +2901,22 @@ label.radios--option-label.customText h3 {
       {% comment %} console.log("adjustFontSizeAndLineHeight0 monogramDisplay ------------------------", monogramDisplay); {% endcomment %}
       // Monogram text on the product image
       if (monogramDisplay) {
-        // Set font size for A and C
-        monogramDisplay.style.fontSize = '62px';
-        monogramDisplay.style.lineHeight = '1.2'; // You can adjust this value as needed
+        if (monogramDisplay.classList.contains("flourish")) {
+          const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
+          monogramDisplay.style.fontSize = isMobilePreview ? '14px' : '18px';
+          monogramDisplay.style.lineHeight = isMobilePreview ? '24px' : '28px';
+        } else {
+          monogramDisplay.style.fontSize = '62px';
+          monogramDisplay.style.lineHeight = '1.2'; // You can adjust this value as needed
+        }
         
         // Find the span with class "monogram-large-text-os" (which contains B)
         const largeTextSpan = monogramDisplay.querySelector('.monogram-large-text-os');
         if (largeTextSpan) {
           // Set font size for B
           largeTextSpan.style.fontFamily = 'inherit';
-          largeTextSpan.style.fontSize = '62px';
-          largeTextSpan.style.lineHeight = '1.2';
+          largeTextSpan.style.fontSize = 'inherit';
+          largeTextSpan.style.lineHeight = 'inherit';
         }
       }
       
