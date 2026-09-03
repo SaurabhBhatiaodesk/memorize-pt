@@ -2459,11 +2459,10 @@ document.addEventListener('change', function(event) {
 
     if (largeTextSpan) {
 
-      // Only Flourish large letter size reduce
-      if (textareaDisplay && textareaDisplay.classList.contains("flourish")) {
+      // Only Flourish font large letter reduce
+      if (monogramDisplay.classList.contains("flourish")) {
 
-        largeTextSpan.style.fontSize = "66.5px";
-        largeTextSpan.style.lineHeight = "79.8px";
+        setScaledPreviewSize(largeTextSpan, 75, 90);
 
       } else {
 
