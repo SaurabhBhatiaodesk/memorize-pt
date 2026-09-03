@@ -2448,10 +2448,10 @@ document.addEventListener('change', function(event) {
 
   function adjustFontSizeAndLineHeight0(monogramDisplay, textareaDisplay, textLength) {
       if (monogramDisplay) {
-        setScaledPreviewSize(monogramDisplay, 62, 74.4);
+        setScaledPreviewSize(monogramDisplay, 52, 62.4);
         const largeTextSpan = monogramDisplay.querySelector('.monogram-large-text-os');
         if (largeTextSpan) {
-          setScaledPreviewSize(largeTextSpan, 102, 122.4);
+          setScaledPreviewSize(largeTextSpan, 92, 110.4);
         }
       }
 
@@ -2460,6 +2460,7 @@ document.addEventListener('change', function(event) {
           let lineHeight = 0;
           if (textareaDisplay.classList.contains("flourish")) {
             fontSize = textLength > 28 ? 24 : 28;
+
             lineHeight = textLength > 28 ? 48 : 65;
           } else if (textareaDisplay.classList.contains("signature")) {
             fontSize = textLength > 28 ? 45 : 72;
@@ -2504,7 +2505,8 @@ document.addEventListener('change', function(event) {
           }
       });
 
-      document.querySelectorAll('.monogram-text-display-os').forEach((display) => {
+               setScaledPreviewSize(largeTextSpan, 62, 74.4);
+ach((display) => {
           if (display.textContent.trim()) {
               adjustFontSizeAndLineHeight0(display);
           }
