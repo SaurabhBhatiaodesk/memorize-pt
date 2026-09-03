@@ -2903,7 +2903,7 @@ label.radios--option-label.customText h3 {
       if (monogramDisplay) {
         if (monogramDisplay.classList.contains("flourish")) {
           const isMobilePreview = window.matchMedia('(max-width: 767px)').matches;
-          monogramDisplay.style.fontSize = '22px';
+          monogramDisplay.style.fontSize = isMobilePreview ? '19px' : '22px';
           monogramDisplay.style.lineHeight = '30px';
         } else {
           monogramDisplay.style.fontSize = '62px';
@@ -4337,11 +4337,14 @@ label.radios--option-label.customText h3 {
   
       // Add the new font class
       item.classList.add(font);
+      if (font === 'flourish') {
+        adjustFontSizeAndLineHeight0(item);
+      }
     });
   }
 
 
-  
+
   // Function to select a color div
   function selectMobileColor(color, colorDiv, hexColor) {
       const colorDivs = document.querySelectorAll('.mobile-custom-thread-color-list-os .mobile-swatch-os');
