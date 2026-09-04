@@ -1400,6 +1400,11 @@
 
 
 <script>
+  // This snippet is rendered twice per page (desktop + mobile views), which
+  // duplicates this whole script block. Guard so the popup logic below
+  // (and its click listener) only initializes once instead of twice.
+  if (!window.__cartPreviewPopupScriptInitialized) {
+  window.__cartPreviewPopupScriptInitialized = true;
   function showPopup(element) {
     // Find the parent list item and the associated popup
     const popupListItem = element.closest('.preview-image-popup-list-os');
@@ -1438,6 +1443,7 @@
       hidePopup({ currentTarget: openPopup });
     });
   });
+  }
 </script>
 
 
@@ -1445,6 +1451,18 @@
 
 
 <script>
+  // This snippet is rendered twice per page (desktop + mobile views), which
+  // duplicates this whole script block verbatim. Top-level `let`/`const`
+  // declared in one classic script tag share the page's single script
+  // scope with every other classic script tag, so the second copy of this
+  // block threw "Identifier 'cartLineItemsData' has already been declared"
+  // and its entire body silently never ran. Guard so it only runs once;
+  // functions declared inside (handleAdditionQuantity, etc.) are still
+  // reachable from onclick="..." attributes in the markup because function
+  // declarations inside a block are hoisted to the global scope in classic
+  // (non-strict, non-module) scripts.
+  if (!window.__cartMainScriptInitialized) {
+  window.__cartMainScriptInitialized = true;
   // Parse cart items data from Liquid
   let cartLineItemsData = {{ cart.items | json }};
   const final_items_array = {{ final_items_array | json }};
@@ -2193,6 +2211,7 @@
       validateCartAfterPageLoad();
     }
   });
+  }
 </script>
 
 <!-- Automatic back-navigation reload removed to prevent refresh loop. -->
