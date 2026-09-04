@@ -1338,10 +1338,23 @@ setTimeout(function() {
     $('#6983591854153-template--25867909005385__main-size-medium').trigger('change');
 }, 1000);
 $(document).on('change','.radios--input', function (){
-    var url_string = location.href;
-    var url = new URL(url_string);
-    var variant = url.searchParams.get("variant");
-    $('.properties-cstm-id').val(variant);
+    // The URL's ?variant= param may not be updated yet when this fires --
+    // another script syncs it on the same 'change' event with no
+    // guaranteed order. Retry briefly instead of wiping the hidden id
+    // field with an empty value, which silently broke Add to Cart
+    // downstream (customformSubmission saw an empty productId).
+    function syncVariantId() {
+        var url = new URL(location.href);
+        var variant = url.searchParams.get("variant");
+        if (variant) {
+            $('.properties-cstm-id').val(variant);
+            return true;
+        }
+        return false;
+    }
+    if (!syncVariantId()) {
+        setTimeout(syncVariantId, 150);
+    }
 });
 
 $(document).on("click", ".sdev_radios_btn", function () {
@@ -1641,6 +1654,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
 
   // Toogle button state starts
   function toggleButtonState(button, isDisabled, buttonText) {
+      if (!button) return;
       button.disabled = isDisabled;
       button.textContent = buttonText;
   }
@@ -2326,14 +2340,40 @@ $(document).on("click", ".sdev_radios_btn", function () {
                 personalizeItVariantIdInput.value = "";
                 const shopifyForm = document.querySelector('.main-product-os .product-page--form');
                 if (shopifyForm) {
-                  shopifyForm.submit();
-                  setTimeout(()=>{
-                    toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+                  // Submit via AJAX and only redirect once the add-to-cart request
+                  // is confirmed. A native shopifyForm.submit() races against a
+                  // fixed-delay redirect: on slower networks the redirect fires
+                  // before the POST lands, aborting the in-flight request and
+                  // leaving the customer on an empty cart.
+                  const formData = new FormData(shopifyForm);
+                  // properties[image] (the customer-visible preview) lives in the
+                  // separate #mobile-desktop-product popup form, not this one --
+                  // add it explicitly so the personalization image isn't lost.
+                  if (imageUrl) {
+                    formData.set('properties[image]', imageUrl);
+                  }
+                  fetch(window.Shopify.routes.root + 'cart/add.js', {
+                    method: 'POST',
+                    body: formData
+                  })
+                  .then(async response => {
+                    if (!response.ok) {
+                      throw new Error(await response.text() || 'Add to cart failed.');
+                    }
+                    return response.json();
+                  })
+                  .then(() => {
                     localStorage.setItem('pageRefreshed', 'true');
-                    window.location.href ="/cart";
-                  },1000);
+                    window.location.href = "/cart";
+                  })
+                  .catch((error) => {
+                    console.error('Error:', error);
+                    toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+                    alert('We could not add this item to cart. Please try again.');
+                  });
                 } else {
                   console.error("shopifyForm not found.");
+                  toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
                 }
               }
             } else {
@@ -3516,7 +3556,8 @@ $(document).on("click", ".sdev_radios_btn", function () {
   }
 
   // Function to handle addToCartButton
-  addToCartButton.addEventListener('click', async () => {
+  if (addToCartButton) {
+    addToCartButton.addEventListener('click', async () => {
       const validationResult = validateFields();
       console.log("validationResult ::", validationResult);
       if (!validationResult.isValid) {
@@ -3530,16 +3571,19 @@ $(document).on("click", ".sdev_radios_btn", function () {
       await desktopAddLoaderAndDisableFields();
       createImageCanvas('desktop');
       console.log("Desktop createImageCanvas");
-  });
+    });
+  }
 
  // Function to handle addToCartButton for mobile
-  mobileAddToCartButton.addEventListener('click', async (e) => {
+  if (mobileAddToCartButton) {
+    mobileAddToCartButton.addEventListener('click', async (e) => {
       console.log("Mobile createImageCanvas");
       mobileAddToCartButton.disabled = true;
       mobileAddToCartButton.textContent = "Adding To Cart";
       await mobileAddLoaderAndDisableFields();
       createImageCanvas('mobile'); 
-  });
+    });
+  }
 
   // clearInputValuesByName to empty the values
   function clearInputValuesByName(names) {
@@ -3573,7 +3617,8 @@ $(document).on("click", ".sdev_radios_btn", function () {
 
 
   // Default ADD TO CART CART Button functionality starts
-  MainAddToCartButton.addEventListener('click', () => {
+  if (MainAddToCartButton) {
+    MainAddToCartButton.addEventListener('click', () => {
     if (MainAddToCartButton) {
       console.log("If Default createImageCanvas :::::::::::::::");
       
@@ -3626,8 +3671,13 @@ $(document).on("click", ".sdev_radios_btn", function () {
   
         // Get the selected variant ID from the select element
         const selectElement = document.querySelector('.product-buy-buttons--select');
-        const selectedVariantId = selectElement.value;
+        const selectedVariantId = selectElement?.value;
         console.log("Selected variant ID:", selectedVariantId);
+        if (!selectedVariantId) {
+          toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+          alert('Please select product options before adding to cart.');
+          return;
+        }
   
         // Add the item to the cart
         defaultAddToCart(selectedVariantId);
@@ -3636,11 +3686,17 @@ $(document).on("click", ".sdev_radios_btn", function () {
     } else {
       console.log("Else MainAddToCartButton is not found");
     }
-  });
+    });
+  }
   
   // Function to add the product to the cart using the variant ID
   function defaultAddToCart(variantId) {
     console.log("Add to cart variantId ::", variantId);
+    if (!variantId) {
+      toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+      alert('Please select product options before adding to cart.');
+      return;
+    }
   
     fetch('/cart/add.js', {
       method: 'POST',
@@ -3811,7 +3867,14 @@ $(document).on("click", ".sdev_radios_btn", function () {
     formData.items[0].properties = orderedProperties;
 
     if (!productId) {
-      toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+      // Reset every Add to Cart button, not just MainAddToCartButton --
+      // customformSubmission is also reached from the desktop/mobile wizard
+      // (addToCartButton/mobileAddToCartButton), and resetting only
+      // MainAddToCartButton left those two stuck disabled on "Adding To
+      // Cart" forever, so the customer's real button never worked again.
+      if (addToCartButton) toggleButtonState(addToCartButton, false, 'ADD TO CART');
+      if (mobileAddToCartButton) toggleButtonState(mobileAddToCartButton, false, 'ADD TO CART');
+      if (MainAddToCartButton) toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
       alert('Please select product options before adding to cart.');
       return;
     }
@@ -3826,7 +3889,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
     }
 
     console.log("customformSubmission formData ::", formData);
-      
+
     fetch(window.Shopify.routes.root + 'cart/add.js', {
       method: 'POST',
       headers: {
@@ -3846,7 +3909,11 @@ $(document).on("click", ".sdev_radios_btn", function () {
     })
     .catch((error) => {
         console.error('Error:', error);
-        toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+        // Same fix as above: restore whichever button actually triggered
+        // this submission, not just MainAddToCartButton.
+        if (addToCartButton) toggleButtonState(addToCartButton, false, 'ADD TO CART');
+        if (mobileAddToCartButton) toggleButtonState(mobileAddToCartButton, false, 'ADD TO CART');
+        if (MainAddToCartButton) toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
         alert('We could not add this item to cart. Please try again.');
     });
   }

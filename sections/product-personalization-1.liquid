@@ -1115,10 +1115,23 @@ setTimeout(function() {
     }
 }, 1000);
 $(document).on('change','.radios--input', function (){
-    var url_string = location.href;
-    var url = new URL(url_string);
-    var variant = url.searchParams.get("variant");
-    $('.properties-cstm-id').val(variant);
+    // The URL's ?variant= param may not be updated yet when this fires --
+    // another script syncs it on the same 'change' event with no
+    // guaranteed order. Retry briefly instead of wiping the hidden id
+    // field with an empty value, which silently broke Add to Cart
+    // downstream (customformSubmission saw an empty productId).
+    function syncVariantId() {
+        var url = new URL(location.href);
+        var variant = url.searchParams.get("variant");
+        if (variant) {
+            $('.properties-cstm-id').val(variant);
+            return true;
+        }
+        return false;
+    }
+    if (!syncVariantId()) {
+        setTimeout(syncVariantId, 150);
+    }
 });
 
 $(document).on("click", ".sdev_radios_btn", function () {
@@ -1428,6 +1441,7 @@ document.addEventListener('change', function(event) {
   // ============================================================
 
   function toggleButtonState(button, isDisabled, buttonText) {
+      if (!button) return;
       button.disabled = isDisabled;
       button.textContent = buttonText;
   }
@@ -2026,14 +2040,40 @@ document.addEventListener('change', function(event) {
                 personalizeItVariantIdInput.value = "";
                 const shopifyForm = document.querySelector('.main-product-os .product-page--form');
                 if (shopifyForm) {
-                  shopifyForm.submit();
-                  setTimeout(() => {
-                    toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+                  // Submit via AJAX and only redirect once the add-to-cart request
+                  // is confirmed. A native shopifyForm.submit() races against a
+                  // fixed-delay redirect: on slower networks the redirect fires
+                  // before the POST lands, aborting the in-flight request and
+                  // leaving the customer on an empty cart.
+                  const formData = new FormData(shopifyForm);
+                  // properties[image] (the customer-visible preview) lives in the
+                  // separate #mobile-desktop-product popup form, not this one --
+                  // add it explicitly so the personalization image isn't lost.
+                  if (imageUrl) {
+                    formData.set('properties[image]', imageUrl);
+                  }
+                  fetch(window.Shopify.routes.root + 'cart/add.js', {
+                    method: 'POST',
+                    body: formData
+                  })
+                  .then(async response => {
+                    if (!response.ok) {
+                      throw new Error(await response.text() || 'Add to cart failed.');
+                    }
+                    return response.json();
+                  })
+                  .then(() => {
                     localStorage.setItem('pageRefreshed', 'true');
                     window.location.href = "/cart";
-                  }, 1000);
+                  })
+                  .catch((error) => {
+                    console.error('Error:', error);
+                    toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+                    alert('We could not add this item to cart. Please try again.');
+                  });
                 } else {
                   console.error("shopifyForm not found.");
+                  toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
                 }
               }
             } else {
@@ -2893,7 +2933,12 @@ document.addEventListener('change', function(event) {
       } else {
         toggleButtonState(MainAddToCartButton, true, 'LOADING...');
         const selectElement = document.querySelector('.product-buy-buttons--select');
-        const selectedVariantId = selectElement.value;
+        const selectedVariantId = selectElement?.value;
+        if (!selectedVariantId) {
+          toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+          alert('Please select product options before adding to cart.');
+          return;
+        }
         defaultAddToCart(selectedVariantId);
       }
     } else {
@@ -2904,6 +2949,11 @@ document.addEventListener('change', function(event) {
   function defaultAddToCart(variantId) {
     console.log("Add to cart button is working --------");
     console.log("Add to cart variantId ::", variantId);
+    if (!variantId) {
+      toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+      alert('Please select product options before adding to cart.');
+      return;
+    }
     fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -3073,7 +3123,12 @@ document.addEventListener('change', function(event) {
     formData.items[0].properties = orderedProperties;
 
     if (!productId) {
-      if (MainAddToCartButton) toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+      // Reset every Add to Cart button, not just MainAddToCartButton --
+      // customformSubmission is also reached from the desktop/mobile wizard
+      // (addToCartButton/mobileAddToCartButton), and resetting only
+      // MainAddToCartButton left those two stuck disabled on "Adding To
+      // Cart" forever, so the customer's real button never worked again.
+      restorePersonalizationButtons();
       alert('Please select product options before adding to cart.');
       return;
     }
@@ -3098,7 +3153,9 @@ document.addEventListener('change', function(event) {
     .then(data => { window.location.href = '/checkout'; })
     .catch((error) => {
       console.error('Error:', error);
-      if (MainAddToCartButton) toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
+      // Same fix as above: restore whichever button actually triggered this
+      // submission, not just MainAddToCartButton.
+      restorePersonalizationButtons();
       alert('We could not add this item to cart. Please try again.');
     });
   }</script>
