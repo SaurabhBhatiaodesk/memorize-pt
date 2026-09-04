@@ -2211,6 +2211,19 @@
       validateCartAfterPageLoad();
     }
   });
+
+  // handleSubtractQuantity/handleAdditionQuantity/handleRemoveProduct/
+  // handleQuantityInputChange are declared above as `const ... = () => {}`,
+  // not `function` declarations, so they do NOT get hoisted to the global
+  // scope the way showPopup/hidePopup do -- they stay scoped to this guard
+  // block. quantity-selector.liquid calls them from onclick="..."/
+  // onchange="..." attributes, which resolve names against the global
+  // scope only, so without this they throw "not defined" and every +/-
+  // and Remove click on a personalized cart line silently does nothing.
+  window.handleSubtractQuantity = handleSubtractQuantity;
+  window.handleAdditionQuantity = handleAdditionQuantity;
+  window.handleRemoveProduct = handleRemoveProduct;
+  window.handleQuantityInputChange = handleQuantityInputChange;
   }
 </script>
 
