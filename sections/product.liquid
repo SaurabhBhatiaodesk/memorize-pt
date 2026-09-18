@@ -1760,9 +1760,85 @@ label.radios--option-label.customText h3 {
 
   // Canvas code starts
   const createImageCanvas = (type) => {
+      // ------------------------------------------------------------
+      // 15-second preview-image failsafe. Preview generation/upload must
+      // never block Add to Cart indefinitely (slow connection, ad blocker,
+      // a blocked/hung trunk or fabric image, a hung upload request) --
+      // personalization text + fabric details alone are enough to fulfil
+      // the order, so after 15s (or on any earlier explicit failure) we
+      // submit without an image instead of leaving the customer stuck.
+      // ------------------------------------------------------------
+      let previewSettled = false;
+      const resetAddToCartButtons = () => {
+        if (addToCartButton) { addToCartButton.disabled = false; addToCartButton.textContent = 'ADD TO CART'; }
+        if (mobileAddToCartButton) { mobileAddToCartButton.disabled = false; mobileAddToCartButton.textContent = 'ADD TO CART'; }
+        if (MainAddToCartButton) { MainAddToCartButton.disabled = false; MainAddToCartButton.textContent = 'ADD TO CART'; }
+      };
+      const submitWithoutImage = (reason) => {
+        if (previewSettled) return;
+        previewSettled = true;
+        clearTimeout(previewFailSafeTimer);
+        controlLoaderOverlay('no');
+        console.warn('Proceeding to cart without a preview image:', reason);
+        if (type === 'desktop' || type === 'mobile') {
+          let personalizeItVariantId;
+          const personalizeItVariantIdInput = document.querySelector('.personalize-it-variant-id-os');
+          const selectedEmbroideryTypeElement = document.querySelector('[name="properties[Embroidery Type]"]:checked');
+          const selectedEmbroideryType = selectedEmbroideryTypeElement ? selectedEmbroideryTypeElement.value : null;
+          if (selectedEmbroideryType === "Words/Numbers") {
+            const textAreaSelector = type === 'desktop' ? '.printing-textarea-os' : '.mobile-wordNumber-os textarea';
+            const textAreaElement = document.querySelector(textAreaSelector);
+            const inputValue = (textAreaElement?.value || '').trim();
+            if (inputValue) {
+              const length = inputValue.length;
+              if (length <= 18) personalizeItVariantId = 42002574966857;
+              else if (length <= 28) personalizeItVariantId = 42002574999625;
+              else if (length <= 40) personalizeItVariantId = 42002575032393;
+            }
+          } else {
+            personalizeItVariantId = 42002574966857;
+          }
+          if (personalizeItVariantIdInput) personalizeItVariantIdInput.value = personalizeItVariantId || '';
+          customformSubmission(personalizeItVariantId);
+        } else {
+          const shopifyForm = document.querySelector('.main-product-os .product-page--form');
+          if (!shopifyForm) {
+            console.error('shopifyForm not found.');
+            resetAddToCartButtons();
+            return;
+          }
+          const formData = new FormData(shopifyForm);
+          fetch(window.Shopify.routes.root + 'cart/add.js', { method: 'POST', body: formData })
+            .then(async response => {
+              if (!response.ok) throw new Error(await response.text() || 'Add to cart failed.');
+              return response.json();
+            })
+            .then(() => {
+              localStorage.setItem('pageRefreshed', 'true');
+              window.location.href = '/checkout';
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+              resetAddToCartButtons();
+              alert('We could not add this item to cart. Please try again.');
+            });
+        }
+      };
+      const previewFailSafeTimer = setTimeout(() => submitWithoutImage('15s timeout'), 15000);
+
       // console.log("type ::", type);
       var canvas = document.querySelector('.personalize-product-canvas-os canvas');
+      if (!canvas) {
+        console.error('Personalization canvas not found.');
+        submitWithoutImage('canvas element not found');
+        return;
+      }
       var ctx = canvas.getContext('2d');
+      if (!ctx) {
+        console.error('Canvas 2D context is not available.');
+        submitWithoutImage('canvas 2D context unavailable');
+        return;
+      }
   
       // Get the device pixel ratio, defaulting to 1 if it's not available
       const pixelRatio = window.devicePixelRatio || 1;
@@ -1787,10 +1863,16 @@ label.radios--option-label.customText h3 {
       var imageHeight = 450;
   
       // Get images and text from the HTML structure
-      var trunkImgSrc = document.querySelector('.main-trunk-image-os').src;
-      var fabricImgSrc = document.querySelector('.main-fabric-image-os').src;
-      var textareaText = document.querySelector('.textarea-text-display-os').textContent.trim();
-      var monogramText = document.querySelector('.monogram-text-display-os').textContent.trim();
+      var trunkImgSrc = document.querySelector('.main-trunk-image-os')?.src || '';
+      var fabricImgSrc = document.querySelector('.main-fabric-image-os')?.src || '';
+      var textareaText = document.querySelector('.textarea-text-display-os')?.textContent.trim() || '';
+      var monogramText = document.querySelector('.monogram-text-display-os')?.textContent.trim() || '';
+
+      if (!trunkImgSrc || !fabricImgSrc) {
+        console.error('Trunk or fabric image source is empty.', { trunkImgSrc, fabricImgSrc });
+        submitWithoutImage('trunk/fabric image source missing');
+        return;
+      }
 
       console.log("createImageCanvas textareaText ::", textareaText);
       console.log("createImageCanvas monogramText ::", monogramText);
@@ -1827,10 +1909,12 @@ label.radios--option-label.customText h3 {
   
       // Error handlers for images
       trunkImg.onerror = () => {
-          console.error("Trunk image failed to load due to CORS or other issues.");
+          console.error("Trunk image failed to load due to CORS, a blocked request, or other issues.");
+          submitWithoutImage('trunk image failed to load');
       };
       fabricImg.onerror = () => {
-          console.error("Fabric image failed to load due to CORS or other issues.");
+          console.error("Fabric image failed to load due to CORS, a blocked request, or other issues.");
+          submitWithoutImage('fabric image failed to load');
       };
   
       // Assign source last to avoid race conditions
@@ -2013,8 +2097,17 @@ label.radios--option-label.customText h3 {
           
           async function handleImagePostAndSubmit() {
             const imageUrl = await postImage();  // Wait for the image to be uploaded and get the URL
-            
+
+            if (imageUrl && previewSettled) {
+              // The 15s failsafe already submitted the cart without an image
+              // while this (slow) upload was still in flight -- the order is
+              // already placed, so do not submit a second time.
+              return;
+            }
+
             if (imageUrl) {
+              previewSettled = true;
+              clearTimeout(previewFailSafeTimer);
               // Set the image source and handle form submission
               document.querySelector('.personalize-product-canvas-os img').src = imageUrl;
               document.querySelector('.properties-cstm-image').value = imageUrl;
@@ -2128,25 +2221,13 @@ label.radios--option-label.customText h3 {
                 }
               }
             } else {
-              console.error("Image upload failed. Process cannot proceed.");
-              // Reset every Add to Cart button, not just MainAddToCartButton --
-              // this branch also runs for the desktop/mobile wizard, and
-              // resetting only MainAddToCartButton left addToCartButton /
-              // mobileAddToCartButton stuck disabled on "Adding To Cart"
-              // forever, so the customer's real button never worked again.
-              if (addToCartButton) {
-                addToCartButton.disabled = false;
-                addToCartButton.textContent = 'ADD TO CART';
-              }
-              if (mobileAddToCartButton) {
-                mobileAddToCartButton.disabled = false;
-                mobileAddToCartButton.textContent = 'ADD TO CART';
-              }
-              if (MainAddToCartButton) {
-                MainAddToCartButton.disabled = false;
-                MainAddToCartButton.textContent = 'ADD TO CART';
-              }
-              alert("Something went wrong while preparing your preview image. Please try again in a moment.");
+              // Preview upload failed after retrying both storage products --
+              // personalization text + fabric details are enough to fulfil
+              // the order, so proceed to cart without an image instead of
+              // blocking the customer (a failed order is worse than a
+              // missing thumbnail).
+              console.error("Image upload failed after retries.");
+              submitWithoutImage('upload failed after retries');
             }
           }
           
