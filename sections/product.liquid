@@ -1424,6 +1424,11 @@ label.radios--option-label.customText h3 {
 
 <!-- All custom pdp js starts-->
 <script>
+  // Gift cards have nothing to personalize (no trunk color, fabric, or
+  // embroidery), so the preview-image generation/upload below is skipped
+  // entirely for them -- see the isGiftCardProduct check in the main Add to
+  // Cart handler.
+  const isGiftCardProduct = {{ product.gift_card | json }};
   // Get all tab divs and tab contents
   const tabs = document.querySelectorAll('.main-product-tabs-os .embroidery-tab-os');
   const contents = document.querySelectorAll('.main-product-tab-contents-os > div');
