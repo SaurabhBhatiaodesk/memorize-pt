@@ -2929,10 +2929,24 @@ $(document).on("click", ".sdev_radios_btn", function () {
       alert('Please select product options before adding to cart.');
       return;
     }
+    // Same fix as the createImageCanvas('default') path above: carry over
+    // any personalization the customer entered in the popup and closed
+    // without submitting, instead of adding a plain item.
+    const cartItem = { id: variantId, quantity: 1 };
+    const persistedWordsNumbers = getPropertyValue('WordsNumbers');
+    const persistedMonogram = getPropertyValue('Monogram');
+    if (persistedWordsNumbers || persistedMonogram) {
+      const properties = {};
+      ['Thread Color', 'Embroidery Type', 'WordsNumbers', 'Monogram', 'Font'].forEach((propertyName) => {
+        const value = getPropertyValue(propertyName);
+        if (value) properties[propertyName] = value;
+      });
+      cartItem.properties = properties;
+    }
     fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] }),
+      body: JSON.stringify({ items: [cartItem] }),
     })
     .then(res => {
       if (!res.ok) throw new Error('Network response was not ok');
