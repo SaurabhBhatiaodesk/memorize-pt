@@ -3586,7 +3586,8 @@ label.radios--option-label.customText h3 {
         const shopifyForm = document.querySelector('.main-product-os .product-page--form');
         if (!shopifyForm) {
           console.error('shopifyForm not found.');
-          resetAddToCartButtons();
+          MainAddToCartButton.disabled = false;
+          MainAddToCartButton.textContent = 'ADD TO CART';
           return;
         }
         const formData = new FormData(shopifyForm);
@@ -3601,7 +3602,8 @@ label.radios--option-label.customText h3 {
           })
           .catch((error) => {
             console.error('Error:', error);
-            resetAddToCartButtons();
+            MainAddToCartButton.disabled = false;
+            MainAddToCartButton.textContent = 'ADD TO CART';
             alert('We could not add this item to cart. Please try again.');
           });
         return;
