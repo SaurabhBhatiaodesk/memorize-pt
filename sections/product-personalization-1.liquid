@@ -2975,12 +2975,15 @@ document.addEventListener('change', function(event) {
   if (MainAddToCartButton) MainAddToCartButton.addEventListener('click', () => {
     if (MainAddToCartButton) {
       console.log("If Default createImageCanvas :::::::::::::::");
-      clearInputValuesByName(['properties[Thread Color]', 'properties[Embroidery Type]', 'properties[WordsNumbers]', 'properties[Monogram]', 'properties[Font]']);
-
-      const textareaDisplay = document.querySelectorAll('.textarea-text-display-os');
-      const monogramDisplay = document.querySelectorAll('.monogram-text-display-os');
-      textareaDisplay.forEach(texts => { texts.textContent = ""; });
-      monogramDisplay.forEach(texts => { texts.textContent = ""; });
+      // Fixed: this used to unconditionally wipe the personalization fields
+      // (clearInputValuesByName + blanking the text/monogram displays) before
+      // every on-page Add to Cart click. If the customer had already typed
+      // embroidery text or a monogram in the "PERSONALIZE IT" popup and then
+      // closed it instead of using the popup's own Add to Cart button, this
+      // silently discarded that input and added a plain, non-personalized
+      // trunk -- the root cause of the "got a plain trunk instead of
+      // embroidered" complaints from May/July. The entered values are left
+      // in place here; getPropertyValue() below picks them up when present.
 
       const fabricRadios = document.querySelectorAll('input[name="properties[Fabric]"]');
       let isFabricChecked = false;
