@@ -1428,7 +1428,7 @@ label.radios--option-label.customText h3 {
   // embroidery), so the preview-image generation/upload below is skipped
   // entirely for them -- see the isGiftCardProduct check in the main Add to
   // Cart handler.
-  const isGiftCardProduct = {{ product.gift_card | json }};
+  const isGiftCardProduct = {% if product.type == "Gift cards" %}true{% else %}false{% endif %};
   // Get all tab divs and tab contents
   const tabs = document.querySelectorAll('.main-product-tabs-os .embroidery-tab-os');
   const contents = document.querySelectorAll('.main-product-tab-contents-os > div');
