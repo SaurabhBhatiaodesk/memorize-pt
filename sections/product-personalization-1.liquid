@@ -2121,6 +2121,22 @@ document.addEventListener('change', function(event) {
                   if (imageUrl) {
                     formData.set('properties[image]', imageUrl);
                   }
+                  // Same reason: if the customer typed embroidery text or a
+                  // monogram in the popup and then closed it instead of using
+                  // the popup's own Add to Cart button, that data also lives
+                  // only in the popup's form -- copy it in here too so the
+                  // order is personalized instead of a plain trunk. Gated on
+                  // WordsNumbers/Monogram actually having text so a stray
+                  // default (e.g. a pre-selected thread colour) never tags an
+                  // order the customer never personalized at all.
+                  const persistedWordsNumbers = getPropertyValue('WordsNumbers');
+                  const persistedMonogram = getPropertyValue('Monogram');
+                  if (persistedWordsNumbers || persistedMonogram) {
+                    ['Thread Color', 'Embroidery Type', 'WordsNumbers', 'Monogram', 'Font'].forEach((propertyName) => {
+                      const value = getPropertyValue(propertyName);
+                      if (value) formData.set(`properties[${propertyName}]`, value);
+                    });
+                  }
                   fetch(window.Shopify.routes.root + 'cart/add.js', {
                     method: 'POST',
                     body: formData
@@ -3023,10 +3039,24 @@ document.addEventListener('change', function(event) {
       alert('Please select product options before adding to cart.');
       return;
     }
+    // Same fix as the createImageCanvas('default') path above: carry over
+    // any personalization the customer entered in the popup and closed
+    // without submitting, instead of adding a plain item.
+    const cartItem = { id: variantId, quantity: 1 };
+    const persistedWordsNumbers = getPropertyValue('WordsNumbers');
+    const persistedMonogram = getPropertyValue('Monogram');
+    if (persistedWordsNumbers || persistedMonogram) {
+      const properties = {};
+      ['Thread Color', 'Embroidery Type', 'WordsNumbers', 'Monogram', 'Font'].forEach((propertyName) => {
+        const value = getPropertyValue(propertyName);
+        if (value) properties[propertyName] = value;
+      });
+      cartItem.properties = properties;
+    }
     fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] }),
+      body: JSON.stringify({ items: [cartItem] }),
     })
     .then(res => {
       if (!res.ok) throw new Error('Network response was not ok');
