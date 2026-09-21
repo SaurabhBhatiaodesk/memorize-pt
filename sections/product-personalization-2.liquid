@@ -2799,15 +2799,16 @@ $(document).on("click", ".sdev_radios_btn", function () {
 <!-- Script to show/hide the popup starts -->
 <script>
   function openPopup() {
-      const exteriorTrunkColor = document.querySelector('input[name="properties[Exterior Trunk Color]"]:checked');
-      const fabricColor = document.querySelector('input[name="properties[Fabric]"]:checked');
-      if (exteriorTrunkColor && fabricColor) {
-          document.body.classList.add('popup-visible');
-          document.body.style.overflow = 'hidden';
-          requestAnimationFrame(rescaleAllPersonalizationPreviews);
-      } else {
-          alert('Please select both Exterior Trunk Color and Fabric.');
-      }
+      // Fixed: this used to block opening the personalizer entirely with an
+      // alert() until the customer had already picked a trunk color and
+      // fabric on the page. The trunk/fabric preview images already have
+      // sensible defaults baked into the markup, so the popup renders fine
+      // without a prior selection -- always open it. The customer still has
+      // to pick a real trunk color and fabric to complete checkout; that is
+      // enforced separately by Shopify's own variant selection, not here.
+      document.body.classList.add('popup-visible');
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(rescaleAllPersonalizationPreviews);
   }
 
   function closePopup() {
