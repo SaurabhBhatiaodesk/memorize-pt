@@ -3290,11 +3290,19 @@ document.addEventListener('change', function(event) {
   function openPopup() {
       // Fixed: this used to block opening the personalizer entirely with an
       // alert() until the customer had already picked a trunk color and
-      // fabric on the page. The trunk/fabric preview images already have
-      // sensible defaults baked into the markup, so the popup renders fine
-      // without a prior selection -- always open it. The customer still has
-      // to pick a real trunk color and fabric to complete checkout; that is
-      // enforced separately by Shopify's own variant selection, not here.
+      // fabric on the page. Now it always opens -- but the popup's preview
+      // image is blank until a trunk color/fabric is selected (their src is
+      // only set by the same click handlers used here), so default to the
+      // first option in each row, exactly as if the customer had clicked it
+      // themselves, so the preview renders instead of showing a blank image.
+      // The customer can still change either before submitting.
+      if (!document.querySelector('input[name="properties[Exterior Trunk Color]"]:checked')) {
+        document.querySelector('.main-product-variant-images-row-os .main-product-variant-images-col-os')?.click();
+      }
+      if (!document.querySelector('input[name="properties[Fabric]"]:checked')) {
+        document.querySelector('.main-product-fabric-images-row-os .main-product-variant-images-col-os')?.click();
+      }
+
       document.body.classList.add('popup-visible');
       document.body.style.overflow = 'hidden';
 
