@@ -1524,6 +1524,20 @@ $(document).on("click", ".sdev_radios_btn", function () {
             return;
           }
           const formData = new FormData(shopifyForm);
+          // Same reason as the success path below: if the customer typed
+          // embroidery text or a monogram in the popup and then closed it
+          // instead of using the popup's own Add to Cart button, that data
+          // lives only in the popup's form -- copy it in here too, otherwise
+          // this failsafe path (hit when the preview image failed/hung)
+          // would silently drop it and add a plain, non-personalized trunk.
+          const persistedWordsNumbers = getPropertyValue('WordsNumbers');
+          const persistedMonogram = getPropertyValue('Monogram');
+          if (persistedWordsNumbers || persistedMonogram) {
+            ['Thread Color', 'Embroidery Type', 'WordsNumbers', 'Monogram', 'Font'].forEach((propertyName) => {
+              const value = getPropertyValue(propertyName);
+              if (value) formData.set(`properties[${propertyName}]`, value);
+            });
+          }
           fetch(window.Shopify.routes.root + 'cart/add.js', { method: 'POST', body: formData })
             .then(async response => {
               if (!response.ok) throw new Error(await response.text() || 'Add to cart failed.');
