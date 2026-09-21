@@ -693,6 +693,92 @@ label.radios--option-label.customText h3 {
 {% comment %}{% endcomment %}{% render 'personalize-it-popup-os', product:product %}
 <!-- Popup for PERSONALIZE ends -->
 
+<!-- Custom validation popup shown instead of a native alert() when PERSONALIZE IT is clicked without a trunk color/fabric selected -->
+<div class="selection-required-popup-os">
+  <div class="selection-required-popup-os__overlay" onclick="closeSelectionRequiredPopup()"></div>
+  <div class="selection-required-popup-os__box">
+    <div class="selection-required-popup-os__close" onclick="closeSelectionRequiredPopup()">&times;</div>
+    <p class="selection-required-popup-os__message">Please select both Exterior Trunk Color and Fabric.</p>
+    <button type="button" class="selection-required-popup-os__ok" onclick="closeSelectionRequiredPopup()">OK</button>
+  </div>
+</div>
+
+<style>
+  .selection-required-popup-os {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .selection-required-popup-os.visible {
+    visibility: visible;
+    opacity: 1;
+  }
+  .selection-required-popup-os__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  .selection-required-popup-os__box {
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
+    padding: 30px 30px 25px;
+    max-width: 400px;
+    width: calc(100% - 40px);
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+  .selection-required-popup-os__close {
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    color: #274864;
+    min-width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+  .selection-required-popup-os__message {
+    color: #274864;
+    font-size: 16px;
+    margin: 10px 0 20px;
+    line-height: 1.5;
+  }
+  .selection-required-popup-os__ok {
+    background: #274864;
+    color: #fff;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .selection-required-popup-os__ok:hover {
+    opacity: 0.9;
+  }
+</style>
+
 
 {% schema %}
 {
