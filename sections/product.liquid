@@ -1424,6 +1424,11 @@ label.radios--option-label.customText h3 {
 
 <!-- All custom pdp js starts-->
 <script>
+  // Gift cards have nothing to personalize (no trunk color, fabric, or
+  // embroidery), so the preview-image generation/upload below is skipped
+  // entirely for them -- see the isGiftCardProduct check in the main Add to
+  // Cart handler.
+  const isGiftCardProduct = {% if product.type == "Gift cards" %}true{% else %}false{% endif %};
   // Get all tab divs and tab contents
   const tabs = document.querySelectorAll('.main-product-tabs-os .embroidery-tab-os');
   const contents = document.querySelectorAll('.main-product-tab-contents-os > div');
@@ -3559,28 +3564,51 @@ label.radios--option-label.customText h3 {
 
       // Show loading text
       MainAddToCartButton.textContent = 'Loading...';
-      
-      // Clear the values first
-      clearInputValuesByName(['properties[Thread Color]', 'properties[Embroidery Type]', 'properties[WordsNumbers]', 'properties[Monogram]', 'properties[Font]']);
 
-      const textareaDisplay = document.querySelectorAll('.textarea-text-display-os');
-      const monogramDisplay = document.querySelectorAll('.monogram-text-display-os');
+      // Fixed: this used to unconditionally wipe the personalization fields
+      // (clearInputValuesByName + blanking the text/monogram displays) before
+      // every on-page Add to Cart click. If the customer had already typed
+      // embroidery text or a monogram in the "PERSONALIZE IT" popup and then
+      // closed it instead of using the popup's own Add to Cart button, this
+      // silently discarded that input and added a plain, non-personalized
+      // trunk -- the root cause of the "got a plain trunk instead of
+      // embroidered" complaints from May/July. The entered values are left
+      // in place here; getPropertyValue() (used inside createImageCanvas)
+      // picks them up when present.
 
-      // Clear textContent for all elements in textareaDisplay and monogramDisplay
-      textareaDisplay.forEach(texts => {
-        texts.textContent = "";
-        console.log("MainAddToCartButton textareaDisplay texts ::", texts);
-      });
-      
-      monogramDisplay.forEach(texts => {
-        texts.textContent = "";
-        console.log("MainAddToCartButton monogramDisplay texts ::", texts);
-      });
-
-      
       // Disable the button
       MainAddToCartButton.disabled = true;
-      
+
+      if (isGiftCardProduct) {
+        // Gift cards have no trunk color, fabric, or embroidery -- there is
+        // nothing to personalize, so skip preview image generation/upload
+        // entirely and just add to cart normally.
+        const shopifyForm = document.querySelector('.main-product-os .product-page--form');
+        if (!shopifyForm) {
+          console.error('shopifyForm not found.');
+          MainAddToCartButton.disabled = false;
+          MainAddToCartButton.textContent = 'ADD TO CART';
+          return;
+        }
+        const formData = new FormData(shopifyForm);
+        fetch(window.Shopify.routes.root + 'cart/add.js', { method: 'POST', body: formData })
+          .then(async response => {
+            if (!response.ok) throw new Error(await response.text() || 'Add to cart failed.');
+            return response.json();
+          })
+          .then(() => {
+            localStorage.setItem('pageRefreshed', 'true');
+            window.location.href = '/checkout';
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            MainAddToCartButton.disabled = false;
+            MainAddToCartButton.textContent = 'ADD TO CART';
+            alert('We could not add this item to cart. Please try again.');
+          });
+        return;
+      }
+
       // Call the function to create the image canvas
       createImageCanvas('default');
     } else {
