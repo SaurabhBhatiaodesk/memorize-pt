@@ -2190,6 +2190,22 @@ label.radios--option-label.customText h3 {
                   if (imageUrl) {
                     formData.set('properties[image]', imageUrl);
                   }
+                  // Same reason: if the customer typed embroidery text or a
+                  // monogram in the popup and then closed it instead of using
+                  // the popup's own Add to Cart button, that data also lives
+                  // only in the popup's form -- copy it in here too so the
+                  // order is personalized instead of a plain trunk. Gated on
+                  // WordsNumbers/Monogram actually having text so a stray
+                  // default (e.g. a pre-selected thread colour) never tags an
+                  // order the customer never personalized at all.
+                  const persistedWordsNumbers = getPropertyValue('WordsNumbers');
+                  const persistedMonogram = getPropertyValue('Monogram');
+                  if (persistedWordsNumbers || persistedMonogram) {
+                    ['Thread Color', 'Embroidery Type', 'WordsNumbers', 'Monogram', 'Font'].forEach((propertyName) => {
+                      const value = getPropertyValue(propertyName);
+                      if (value) formData.set(`properties[${propertyName}]`, value);
+                    });
+                  }
                   fetch(window.Shopify.routes.root + 'cart/add.js', {
                     method: 'POST',
                     body: formData
@@ -3373,6 +3389,32 @@ label.radios--option-label.customText h3 {
   //   });
   // }
 
+  // Reads a properties[NAME] value from wherever it currently lives in the
+  // DOM (the personalizer popup's own form, not the main product form) --
+  // used to carry personalization forward when the customer closes the
+  // popup and uses the on-page Add to Cart button instead of the popup's own.
+  function getPropertyValue(propertyName) {
+    const selector = `[name="properties[${propertyName}]"]`;
+    const fields = Array.from(document.querySelectorAll(selector));
+    if (!fields.length) return '';
+
+    const checkedField = fields.find(field =>
+      (field.type === 'radio' || field.type === 'checkbox') && field.checked
+    );
+    if (checkedField) return String(checkedField.value || '').trim();
+
+    const visibleField = fields.find(field => {
+      if (field.disabled) return false;
+      const value = String(field.value || '').trim();
+      if (!value) return false;
+      return field.offsetParent !== null;
+    });
+    if (visibleField) return String(visibleField.value || '').trim();
+
+    const populatedField = fields.find(field => String(field.value || '').trim() !== '');
+    return populatedField ? String(populatedField.value || '').trim() : '';
+  }
+
   function clearInputValuesByName(names) {
     // Loop through each name provided in the 'names' array
     names.forEach(name => {
@@ -3417,25 +3459,17 @@ label.radios--option-label.customText h3 {
 
       // Show loading text
       MainAddToCartButton.textContent = 'Loading...';
-      
-      // Clear the values first
-      clearInputValuesByName(['properties[Thread Color]', 'properties[Embroidery Type]', 'properties[WordsNumbers]', 'properties[Monogram]', 'properties[Font]']);
 
-      const textareaDisplay = document.querySelectorAll('.textarea-text-display-os');
-      const monogramDisplay = document.querySelectorAll('.monogram-text-display-os');
+      // Fixed: this used to unconditionally wipe the personalization fields
+      // (clearInputValuesByName + blanking the text/monogram displays) before
+      // every on-page Add to Cart click. If the customer had already typed
+      // embroidery text or a monogram in the "PERSONALIZE IT" popup and then
+      // closed it instead of using the popup's own Add to Cart button, this
+      // silently discarded that input and added a plain, non-personalized
+      // trunk -- the root cause of the "got a plain trunk instead of
+      // embroidered" complaints from May/July. The entered values are left
+      // in place here; getPropertyValue() below picks them up when present.
 
-      // Clear textContent for all elements in textareaDisplay and monogramDisplay
-      textareaDisplay.forEach(texts => {
-        texts.textContent = "";
-        console.log("MainAddToCartButton textareaDisplay texts ::", texts);
-      });
-      
-      monogramDisplay.forEach(texts => {
-        texts.textContent = "";
-        console.log("MainAddToCartButton monogramDisplay texts ::", texts);
-      });
-
-      
       // Disable the button
       MainAddToCartButton.disabled = true;
       

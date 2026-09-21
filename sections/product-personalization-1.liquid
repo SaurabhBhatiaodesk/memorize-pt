@@ -2121,6 +2121,22 @@ document.addEventListener('change', function(event) {
                   if (imageUrl) {
                     formData.set('properties[image]', imageUrl);
                   }
+                  // Same reason: if the customer typed embroidery text or a
+                  // monogram in the popup and then closed it instead of using
+                  // the popup's own Add to Cart button, that data also lives
+                  // only in the popup's form -- copy it in here too so the
+                  // order is personalized instead of a plain trunk. Gated on
+                  // WordsNumbers/Monogram actually having text so a stray
+                  // default (e.g. a pre-selected thread colour) never tags an
+                  // order the customer never personalized at all.
+                  const persistedWordsNumbers = getPropertyValue('WordsNumbers');
+                  const persistedMonogram = getPropertyValue('Monogram');
+                  if (persistedWordsNumbers || persistedMonogram) {
+                    ['Thread Color', 'Embroidery Type', 'WordsNumbers', 'Monogram', 'Font'].forEach((propertyName) => {
+                      const value = getPropertyValue(propertyName);
+                      if (value) formData.set(`properties[${propertyName}]`, value);
+                    });
+                  }
                   fetch(window.Shopify.routes.root + 'cart/add.js', {
                     method: 'POST',
                     body: formData
@@ -2975,12 +2991,15 @@ document.addEventListener('change', function(event) {
   if (MainAddToCartButton) MainAddToCartButton.addEventListener('click', () => {
     if (MainAddToCartButton) {
       console.log("If Default createImageCanvas :::::::::::::::");
-      clearInputValuesByName(['properties[Thread Color]', 'properties[Embroidery Type]', 'properties[WordsNumbers]', 'properties[Monogram]', 'properties[Font]']);
-
-      const textareaDisplay = document.querySelectorAll('.textarea-text-display-os');
-      const monogramDisplay = document.querySelectorAll('.monogram-text-display-os');
-      textareaDisplay.forEach(texts => { texts.textContent = ""; });
-      monogramDisplay.forEach(texts => { texts.textContent = ""; });
+      // Fixed: this used to unconditionally wipe the personalization fields
+      // (clearInputValuesByName + blanking the text/monogram displays) before
+      // every on-page Add to Cart click. If the customer had already typed
+      // embroidery text or a monogram in the "PERSONALIZE IT" popup and then
+      // closed it instead of using the popup's own Add to Cart button, this
+      // silently discarded that input and added a plain, non-personalized
+      // trunk -- the root cause of the "got a plain trunk instead of
+      // embroidered" complaints from May/July. The entered values are left
+      // in place here; getPropertyValue() below picks them up when present.
 
       const fabricRadios = document.querySelectorAll('input[name="properties[Fabric]"]');
       let isFabricChecked = false;
@@ -3020,10 +3039,24 @@ document.addEventListener('change', function(event) {
       alert('Please select product options before adding to cart.');
       return;
     }
+    // Same fix as the createImageCanvas('default') path above: carry over
+    // any personalization the customer entered in the popup and closed
+    // without submitting, instead of adding a plain item.
+    const cartItem = { id: variantId, quantity: 1 };
+    const persistedWordsNumbers = getPropertyValue('WordsNumbers');
+    const persistedMonogram = getPropertyValue('Monogram');
+    if (persistedWordsNumbers || persistedMonogram) {
+      const properties = {};
+      ['Thread Color', 'Embroidery Type', 'WordsNumbers', 'Monogram', 'Font'].forEach((propertyName) => {
+        const value = getPropertyValue(propertyName);
+        if (value) properties[propertyName] = value;
+      });
+      cartItem.properties = properties;
+    }
     fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] }),
+      body: JSON.stringify({ items: [cartItem] }),
     })
     .then(res => {
       if (!res.ok) throw new Error('Network response was not ok');
