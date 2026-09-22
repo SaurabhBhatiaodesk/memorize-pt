@@ -1024,12 +1024,12 @@ $(document).on("click", ".sdev_radios_btn", function () {
     $('.main-product-variant-images-col-os').removeAttr('data-sold-out');
     $('.product-buy-buttons--select option').each(function () {
         var optionText = $(this).text().trim();
-        var quantity   = Number($(this).data('quantity'));
+        var available = $(this).attr('data-available') === 'true';
         if (!optionText.includes("/")) return;
         let parts = optionText.split('/');
         let size  = $.trim(parts[0]);
         let color = $.trim(parts[1]);
-        if (size === selectedSize && quantity === 0) {
+        if (size === selectedSize && !available) {
             $('.main-product-variant-images-col-os input[value="'+color+'"]')
                 .closest('.main-product-variant-images-col-os')
                 .attr('data-sold-out', 'true');
