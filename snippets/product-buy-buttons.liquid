@@ -69,6 +69,7 @@
         data-management="{{ variant.inventory_management }}"
         data-policy="{{ variant.inventory_policy }}"
         data-quantity="{{ variant.inventory_quantity | default: 0 }}"
+        data-available="{{ variant.available }}"
         {%- if variant == current_variant -%}
           selected
         {%- endif -%}
