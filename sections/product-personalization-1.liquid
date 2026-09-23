@@ -1286,59 +1286,59 @@ document.addEventListener('change', function(event) {
   // ============================================================
 
   const fabricsWithAllThreadColorOptions = {
-      "Sentimental Squares": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Peace Love and Memories": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "World Gone Plaid": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Green with Envy": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Uptown Girl": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Memory Garden": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Camo Cool": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Tartan Treasures": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "True Blue Treasure Chest": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Silver Linings": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Love You to the Moon & Back": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Sunny Days": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Blush Crush": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Forever in Blue Jeans!": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Checkered Past": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Heavenly Bliss": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "The Eyes Have It": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Orange You Glad it's Pinstripes": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Fly Me to the Moon": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Rosy Outlook": ["Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Wink, wink!": ["Blush Pink", "Peachy Pink", "Berry", "Silver Steel", "Champagne", "Dark Sienna", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Golden Yellow"],
-      "Lavender Haze (MV)": ["Dark Lavender", "White", "Champagne", "Dark Sienna", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "Silver Steel", "Golden Yellow"],
-      "Holy Guacamole": ["Peachy Pink", "Navy", "Sage Green", "Silver Steel", "White", "Champagne", "Blush Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "French Rose", "Celery Green", "Forest Green", "Golden Yellow", "Dark Sienna"],
-      "Fill Me Up Buttercup": ["Blush Pink", "Denim Blue", "Sage Green", "White", "Dark Sienna", "Golden Yellow", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Forest Green", "Silver Steel", "Champagne"],
-      "Lovingly Yours": ["Christmas Red", "Navy", "French Blue", "Denim Blue", "Golden Yellow", "French Rose", "Blush Pink", "Peachy Pink", "Berry", "Dark Lavender", "Baby Blue", "Sage Green", "Forest Green", "White", "Silver Steel", "Celery Green", "Champagne", "Dark Sienna"],
-      "Mod Moments (Pink Flowers)": ["Peachy Pink", "Berry", "Denim Blue", "Sage Green", "Silver Steel", "French Rose", "Blush Pink", "Christmas Red", "Dark Lavender", "Baby Blue", "French Blue", "Navy", "Celery Green", "Forest Green", "White", "Golden Yellow", "Champagne", "Dark Sienna"],
-      "Scottie's Garden": ["Peachy Pink", "Blush Pink", "Berry", "French Rose", "Golden Yellow", "Sage Green", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "Celery Green", "Forest Green", "White", "Silver Steel", "Champagne", "Dark Sienna"],
-      "Tiny Bow Tableau": ["Peachy Pink", "White", "Berry", "French Rose", "Sage Green", "Denim Blue", "Blush Pink", "Christmas Red", "Dark Lavender", "Baby Blue", "French Blue", "Navy", "Celery Green", "Forest Green", "Silver Steel", "Golden Yellow", "Champagne", "Dark Sienna"],
-      "Buttercream Bows": ["Blush Pink", "White", "Dark Sienna", "Golden Yellow", "Sage Green", "Forest Green", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Silver Steel", "Champagne"],
-      "Noble Knots": ["Dark Lavender", "White", "Golden Yellow", "Dark Sienna", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "Silver Steel", "Champagne"],
-      "Chambray Dreams": ["White", "Denim Blue", "Golden Yellow", "Celery Green", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Blue", "Navy", "French Rose", "Sage Green", "Forest Green", "Silver Steel", "Champagne", "Dark Sienna"],
-      "Americana Archive": ["Christmas Red", "Denim Blue", "French Blue", "Navy", "Golden Yellow", "Blush Pink", "Peachy Pink", "Berry", "Dark Lavender", "Baby Blue", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Dark Sienna"],
-      "Hydrangea Haven": ["Denim Blue", "Baby Blue", "Celery Green", "Golden Yellow", "Dark Sienna", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "French Blue", "Navy", "French Rose", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne"],
-      "Coastal Treasures": ["French Rose", "Denim Blue", "French Blue", "Sage Green", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Navy", "Celery Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Pinky Promise": ["Berry", "Baby Blue", "Denim Blue", "Sage Green", "Dark Sienna", "Celery Green", "Blush Pink", "Peachy Pink", "Christmas Red", "Dark Lavender", "French Blue", "Navy", "French Rose", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow"],
-      "Prep School Blues": ["French Blue", "Navy", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Prep School Greens": ["Forest Green", "Navy", "Sage Green", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "French Rose", "Celery Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Hidden in a Chateau": ["Berry", "French Blue", "Denim Blue", "Sage Green", "Dark Sienna", "Blush Pink", "Peachy Pink", "Christmas Red", "Dark Lavender", "Baby Blue", "Navy", "French Rose", "Celery Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow"],
-      "Blue Blood": ["Christmas Red", "Navy", "White", "Golden Yellow", "Blush Pink", "Peachy Pink", "Berry", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "French Rose", "Celery Green", "Sage Green", "Forest Green", "Silver Steel", "Champagne", "Dark Sienna"],
-      "Satin Stories": ["French Blue", "Denim Blue", "Navy", "Dark Sienna", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow"],
-      "Olive You Truly": ["French Blue", "Sage Green", "Navy", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Rose", "Celery Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Pink Lemonade Picnic": ["Denim Blue", "Golden Yellow", "Dark Sienna", "Celery Green", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Blue", "Navy", "French Rose", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne"],
-      "Petal Pusher": ["Dark Lavender", "Forest Green", "Denim Blue", "Sage Green", "Celery Green", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Baby Blue", "French Blue", "Navy", "French Rose", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Sisters in Bloom": ["Peachy Pink", "Sage Green", "Golden Yellow", "Celery Green", "Blush Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Forest Green", "White", "Silver Steel", "Champagne", "Dark Sienna"],
-      "Linen Love Letters": ["Christmas Red", "Denim Blue", "French Blue", "Celery Green", "Sage Green", "Champagne", "Blush Pink", "Peachy Pink", "Berry", "Dark Lavender", "Baby Blue", "Navy", "French Rose", "Forest Green", "White", "Silver Steel", "Golden Yellow", "Dark Sienna"],
-      "Purple Promise": ["Dark Lavender", "Champagne", "Golden Yellow", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Dark Sienna"],
-      "True Green Treasure Chest": ["Denim Blue", "French Blue", "Navy", "Sage Green", "Forest Green", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Rose", "Celery Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Gilded Vows": ["Denim Blue", "French Blue", "Navy", "White", "Golden Yellow", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Rose", "Celery Green", "Sage Green", "Forest Green", "Silver Steel", "Champagne", "Dark Sienna"],
-      "Veranda Vines": ["Denim Blue", "French Blue", "Navy", "Sage Green", "Forest Green", "Golden Yellow", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Rose", "Celery Green", "White", "Silver Steel", "Champagne", "Dark Sienna"],
-      "Reunion Weekend": ["Christmas Red", "French Blue", "Navy", "Forest Green", "White", "Blush Pink", "Peachy Pink", "Berry", "Dark Lavender", "Baby Blue", "Denim Blue", "French Rose", "Celery Green", "Sage Green", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Seaside Chateau": ["Denim Blue", "French Blue", "Navy", "Sage Green", "Champagne", "Golden Yellow", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Rose", "Celery Green", "Forest Green", "White", "Silver Steel", "Dark Sienna"],
-      "Garden Party": ["Blush Pink", "Peachy Pink", "Celery Green", "Sage Green", "Forest Green", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
-      "Garden Darty (blue version of Garden Party)": ["Celery Green", "Sage Green", "Denim Blue", "French Blue", "Blush Pink", "Peachy Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Navy", "French Rose", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Sentimental Squares": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Peace Love and Memories": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "World Gone Plaid": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Green with Envy": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Uptown Girl": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Memory Garden": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Camo Cool": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Tartan Treasures": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "True Blue Treasure Chest": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Silver Linings": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Love You to the Moon & Back": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Sunny Days": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Blush Crush": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Forever in Blue Jeans!": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Checkered Past": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Heavenly Bliss": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "The Eyes Have It": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Orange You Glad it's Pinstripes": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Fly Me to the Moon": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Rosy Outlook": ["Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Wink, wink!": ["Blush Pink", "Pale Pink", "Berry", "Silver Steel", "Champagne", "Dark Sienna", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Golden Yellow"],
+      "Lavender Haze (MV)": ["Dark Lavender", "White", "Champagne", "Dark Sienna", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "Silver Steel", "Golden Yellow"],
+      "Holy Guacamole": ["Pale Pink", "Navy", "Sage Green", "Silver Steel", "White", "Champagne", "Blush Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "French Rose", "Celery Green", "Forest Green", "Golden Yellow", "Dark Sienna"],
+      "Fill Me Up Buttercup": ["Blush Pink", "Denim Blue", "Sage Green", "White", "Dark Sienna", "Golden Yellow", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Forest Green", "Silver Steel", "Champagne"],
+      "Lovingly Yours": ["Christmas Red", "Navy", "French Blue", "Denim Blue", "Golden Yellow", "French Rose", "Blush Pink", "Pale Pink", "Berry", "Dark Lavender", "Baby Blue", "Sage Green", "Forest Green", "White", "Silver Steel", "Celery Green", "Champagne", "Dark Sienna"],
+      "Mod Moments (Pink Flowers)": ["Pale Pink", "Berry", "Denim Blue", "Sage Green", "Silver Steel", "French Rose", "Blush Pink", "Christmas Red", "Dark Lavender", "Baby Blue", "French Blue", "Navy", "Celery Green", "Forest Green", "White", "Golden Yellow", "Champagne", "Dark Sienna"],
+      "Scottie's Garden": ["Pale Pink", "Blush Pink", "Berry", "French Rose", "Golden Yellow", "Sage Green", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "Celery Green", "Forest Green", "White", "Silver Steel", "Champagne", "Dark Sienna"],
+      "Tiny Bow Tableau": ["Pale Pink", "White", "Berry", "French Rose", "Sage Green", "Denim Blue", "Blush Pink", "Christmas Red", "Dark Lavender", "Baby Blue", "French Blue", "Navy", "Celery Green", "Forest Green", "Silver Steel", "Golden Yellow", "Champagne", "Dark Sienna"],
+      "Buttercream Bows": ["Blush Pink", "White", "Dark Sienna", "Golden Yellow", "Sage Green", "Forest Green", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Silver Steel", "Champagne"],
+      "Noble Knots": ["Dark Lavender", "White", "Golden Yellow", "Dark Sienna", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "Silver Steel", "Champagne"],
+      "Chambray Dreams": ["White", "Denim Blue", "Golden Yellow", "Celery Green", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Blue", "Navy", "French Rose", "Sage Green", "Forest Green", "Silver Steel", "Champagne", "Dark Sienna"],
+      "Americana Archive": ["Christmas Red", "Denim Blue", "French Blue", "Navy", "Golden Yellow", "Blush Pink", "Pale Pink", "Berry", "Dark Lavender", "Baby Blue", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Dark Sienna"],
+      "Hydrangea Haven": ["Denim Blue", "Baby Blue", "Celery Green", "Golden Yellow", "Dark Sienna", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "French Blue", "Navy", "French Rose", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne"],
+      "Coastal Treasures": ["French Rose", "Denim Blue", "French Blue", "Sage Green", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Navy", "Celery Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Pinky Promise": ["Berry", "Baby Blue", "Denim Blue", "Sage Green", "Dark Sienna", "Celery Green", "Blush Pink", "Pale Pink", "Christmas Red", "Dark Lavender", "French Blue", "Navy", "French Rose", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow"],
+      "Prep School Blues": ["French Blue", "Navy", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Prep School Greens": ["Forest Green", "Navy", "Sage Green", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "French Rose", "Celery Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Hidden in a Chateau": ["Berry", "French Blue", "Denim Blue", "Sage Green", "Dark Sienna", "Blush Pink", "Pale Pink", "Christmas Red", "Dark Lavender", "Baby Blue", "Navy", "French Rose", "Celery Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow"],
+      "Blue Blood": ["Christmas Red", "Navy", "White", "Golden Yellow", "Blush Pink", "Pale Pink", "Berry", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "French Rose", "Celery Green", "Sage Green", "Forest Green", "Silver Steel", "Champagne", "Dark Sienna"],
+      "Satin Stories": ["French Blue", "Denim Blue", "Navy", "Dark Sienna", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow"],
+      "Olive You Truly": ["French Blue", "Sage Green", "Navy", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Rose", "Celery Green", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Pink Lemonade Picnic": ["Denim Blue", "Golden Yellow", "Dark Sienna", "Celery Green", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Blue", "Navy", "French Rose", "Sage Green", "Forest Green", "White", "Silver Steel", "Champagne"],
+      "Petal Pusher": ["Dark Lavender", "Forest Green", "Denim Blue", "Sage Green", "Celery Green", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Baby Blue", "French Blue", "Navy", "French Rose", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Sisters in Bloom": ["Pale Pink", "Sage Green", "Golden Yellow", "Celery Green", "Blush Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Forest Green", "White", "Silver Steel", "Champagne", "Dark Sienna"],
+      "Linen Love Letters": ["Christmas Red", "Denim Blue", "French Blue", "Celery Green", "Sage Green", "Champagne", "Blush Pink", "Pale Pink", "Berry", "Dark Lavender", "Baby Blue", "Navy", "French Rose", "Forest Green", "White", "Silver Steel", "Golden Yellow", "Dark Sienna"],
+      "Purple Promise": ["Dark Lavender", "Champagne", "Golden Yellow", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "Celery Green", "Sage Green", "Forest Green", "White", "Silver Steel", "Dark Sienna"],
+      "True Green Treasure Chest": ["Denim Blue", "French Blue", "Navy", "Sage Green", "Forest Green", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Rose", "Celery Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Gilded Vows": ["Denim Blue", "French Blue", "Navy", "White", "Golden Yellow", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Rose", "Celery Green", "Sage Green", "Forest Green", "Silver Steel", "Champagne", "Dark Sienna"],
+      "Veranda Vines": ["Denim Blue", "French Blue", "Navy", "Sage Green", "Forest Green", "Golden Yellow", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Rose", "Celery Green", "White", "Silver Steel", "Champagne", "Dark Sienna"],
+      "Reunion Weekend": ["Christmas Red", "French Blue", "Navy", "Forest Green", "White", "Blush Pink", "Pale Pink", "Berry", "Dark Lavender", "Baby Blue", "Denim Blue", "French Rose", "Celery Green", "Sage Green", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Seaside Chateau": ["Denim Blue", "French Blue", "Navy", "Sage Green", "Champagne", "Golden Yellow", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "French Rose", "Celery Green", "Forest Green", "White", "Silver Steel", "Dark Sienna"],
+      "Garden Party": ["Blush Pink", "Pale Pink", "Celery Green", "Sage Green", "Forest Green", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Denim Blue", "French Blue", "Navy", "French Rose", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
+      "Garden Darty (blue version of Garden Party)": ["Celery Green", "Sage Green", "Denim Blue", "French Blue", "Blush Pink", "Pale Pink", "Berry", "Christmas Red", "Dark Lavender", "Baby Blue", "Navy", "French Rose", "Forest Green", "White", "Silver Steel", "Champagne", "Golden Yellow", "Dark Sienna"],
       "Margot's Garden": ["Celery Green", "Sage Green", "Denim Blue", "Blush Pink"],
       "Nest Egg": ["Sage Green", "Forest Green", "Navy"],
       "Garden Club": ["Celery Green", "Sage Green", "Berry"],
@@ -1349,34 +1349,34 @@ document.addEventListener('change', function(event) {
 
   const recommendedFabricsWithThreadColorOptions = {
       "Sentimental Squares": ["Christmas Red", "Navy", "Denim Blue", "Silver Steel", "Champagne", "Golden Yellow"],
-      "Peace Love and Memories": ["Peachy Pink", "Berry", "French Blue", "Forest Green", "Celery Green", "Dark Sienna"],
-      "World Gone Plaid": ["Peachy Pink", "Berry", "Navy", "Sage Green", "Champagne", "Golden Yellow"],
+      "Peace Love and Memories": ["Pale Pink", "Berry", "French Blue", "Forest Green", "Celery Green", "Dark Sienna"],
+      "World Gone Plaid": ["Pale Pink", "Berry", "Navy", "Sage Green", "Champagne", "Golden Yellow"],
       "Green with Envy": ["Navy", "Forest Green", "Silver Steel", "White", "Champagne", "Dark Sienna"],
-      "Uptown Girl": ["Peachy Pink", "Berry", "Silver Steel", "Champagne", "Dark Sienna", "Golden Yellow"],
+      "Uptown Girl": ["Pale Pink", "Berry", "Silver Steel", "Champagne", "Dark Sienna", "Golden Yellow"],
       "Memory Garden": ["Navy", "French Blue", "Denim Blue", "Forest Green", "Golden Yellow", "French Rose"],
       "Camo Cool": ["Navy", "Denim Blue", "Silver Steel", "White", "Celery Green", "Golden Yellow"],
       "Tartan Treasures": ["Navy", "Forest Green", "Silver Steel", "Champagne"],
       "True Blue Treasure Chest": ["Berry", "Dark Lavender", "Christmas Red", "Navy", "French Blue", "Denim Blue", "Sage Green", "Forest Green", "Silver Steel", "White", "Celery Green", "Golden Yellow", "French Rose"],
       "Silver Linings": ["Blush Pink", "Baby Blue", "Navy", "Silver Steel", "French Rose"],
       "Love You to the Moon & Back": ["Blush Pink", "Sage Green", "Silver Steel", "Champagne", "Golden Yellow", "French Rose"],
-      "Sunny Days": ["Peachy Pink", "Berry", "Navy", "Sage Green", "Golden Yellow"],
-      "Blush Crush": ["Peachy Pink", "Berry", "Christmas Red", "Denim Blue", "Silver Steel", "White", "French Rose"],
+      "Sunny Days": ["Pale Pink", "Berry", "Navy", "Sage Green", "Golden Yellow"],
+      "Blush Crush": ["Pale Pink", "Berry", "Christmas Red", "Denim Blue", "Silver Steel", "White", "French Rose"],
       "Forever in Blue Jeans!": ["Blush Pink", "Baby Blue", "Navy", "Denim Blue", "Dark Sienna", "Golden Yellow"],
       "Checkered Past": ["Navy", "Sage Green", "Silver Steel", "Champagne"],
       "Heavenly Bliss": [],
       "The Eyes Have It": [],
-      "Orange You Glad it's Pinstripes": ["Peachy Pink", "French Blue", "Denim Blue", "Sage Green", "White", "Celery Green"],
+      "Orange You Glad it's Pinstripes": ["Pale Pink", "French Blue", "Denim Blue", "Sage Green", "White", "Celery Green"],
       "Fly Me to the Moon": ["Christmas Red", "Denim Blue", "Forest Green", "Silver Steel", "Dark Sienna", "Golden Yellow"],
       "Rosy Outlook": ["Blush Pink", "Berry", "Christmas Red", "Navy", "Denim Blue", "Champagne"],
-      "Wink, wink!": ["Blush Pink", "Peachy Pink", "Berry", "Silver Steel", "Champagne", "Dark Sienna"],
+      "Wink, wink!": ["Blush Pink", "Pale Pink", "Berry", "Silver Steel", "Champagne", "Dark Sienna"],
       "Lavender Haze (MV)": ["Dark Lavender", "White", "Champagne", "Dark Sienna"],
-      "Holy Guacamole": ["Peachy Pink", "Navy", "Sage Green", "Silver Steel", "White", "Champagne"],
+      "Holy Guacamole": ["Pale Pink", "Navy", "Sage Green", "Silver Steel", "White", "Champagne"],
       "Fill Me Up Buttercup": ["Blush Pink", "Denim Blue", "Sage Green", "White", "Dark Sienna", "Golden Yellow"],
       "Lovingly Yours": ["Christmas Red", "Navy", "French Blue", "Denim Blue", "Golden Yellow", "French Rose"],
-      "Mod Moments (Pink Flowers)": ["Peachy Pink", "Berry", "Denim Blue", "Sage Green", "Silver Steel", "French Rose"],
-      "Scottie's Garden": ["Peachy Pink", "Blush Pink", "Berry", "French Rose", "Golden Yellow", "Sage Green"],
+      "Mod Moments (Pink Flowers)": ["Pale Pink", "Berry", "Denim Blue", "Sage Green", "Silver Steel", "French Rose"],
+      "Scottie's Garden": ["Pale Pink", "Blush Pink", "Berry", "French Rose", "Golden Yellow", "Sage Green"],
       "Buttercream Bows": ["Blush Pink", "White", "Dark Sienna", "Golden Yellow", "Sage Green", "Forest Green"],
-      "Tiny Bow Tableau": ["Peachy Pink", "White", "Berry", "French Rose", "Sage Green", "Denim Blue"],
+      "Tiny Bow Tableau": ["Pale Pink", "White", "Berry", "French Rose", "Sage Green", "Denim Blue"],
       "Noble Knots": ["Dark Lavender", "White", "Golden Yellow", "Dark Sienna"],
       "Chambray Dreams": ["White", "Denim Blue", "Golden Yellow", "Celery Green"],
       "Americana Archive": ["Christmas Red", "Denim Blue", "French Blue", "Navy", "Golden Yellow"],
@@ -1391,7 +1391,7 @@ document.addEventListener('change', function(event) {
       "Olive You Truly": ["French Blue", "Sage Green", "Navy"],
       "Pink Lemonade Picnic": ["Denim Blue", "Golden Yellow", "Dark Sienna", "Denim Blue", "Celery Green"],
       "Petal Pusher": ["Dark Lavender", "Forest Green", "Denim Blue", "Sage Green", "Celery Green"],
-      "Sisters in Bloom": ["Peachy Pink", "Sage Green", "Golden Yellow", "Celery Green"],
+      "Sisters in Bloom": ["Pale Pink", "Sage Green", "Golden Yellow", "Celery Green"],
       "Linen Love Letters": ["Christmas Red", "Denim Blue", "French Blue", "Celery Green", "Sage Green", "Champagne"],
       "Purple Promise": ["Dark Lavender", "Champagne", "Golden Yellow"],
       "True Green Treasure Chest": ["Denim Blue", "French Blue", "Navy", "Sage Green", "Forest Green"],
@@ -1399,7 +1399,7 @@ document.addEventListener('change', function(event) {
       "Veranda Vines": ["Denim Blue", "French Blue", "Navy", "Sage Green", "Forest Green", "Golden Yellow"],
       "Reunion Weekend": ["Christmas Red", "French Blue", "Navy", "Forest Green", "White"],
       "Seaside Chateau": ["Denim Blue", "French Blue", "Navy", "Sage Green", "Champagne", "Golden Yellow"],
-      "Garden Party": ["Blush Pink", "Peachy Pink", "Celery Green", "Sage Green", "Forest Green"],
+      "Garden Party": ["Blush Pink", "Pale Pink", "Celery Green", "Sage Green", "Forest Green"],
       "Garden Darty (blue version of Garden Party)": ["Celery Green", "Sage Green", "Denim Blue", "French Blue"],
   };
 
@@ -1427,14 +1427,14 @@ document.addEventListener('change', function(event) {
       "Orange You Glad it's Pinstripes": "White",
       "Fly Me to the Moon": "Silver Steel",
       "Rosy Outlook": "French Blue",
-      "Wink, wink!": "Peachy Pink",
+      "Wink, wink!": "Pale Pink",
       "Lavender Haze (MV)": "Dark Lavender",
       "Holy Guacamole": "Celery Green",
       "Fill Me Up Buttercup": "Golden Yellow",
       "Lovingly Yours": "French Blue",
       "Mod Moments (Pink Flowers)": "Berry",
       "Scottie's Garden": "Sage Green",
-      "Tiny Bow Tableau": "Peachy Pink",
+      "Tiny Bow Tableau": "Pale Pink",
       "Buttercream Bows": "Dark Sienna",
       "Noble Knots": "Dark Lavender",
       "Chambray Dreams": "White",
@@ -1469,7 +1469,7 @@ document.addEventListener('change', function(event) {
   };
 
   const threadColors = {
-      "Peachy Pink": '#E6BAA8',
+      "Pale Pink": '#F6DFE0',
       "Berry": '#ae2573',
       "Christmas Red": '#ba0c2f',
       "Dark Lavender": '#8866bc',
@@ -1477,11 +1477,9 @@ document.addEventListener('change', function(event) {
       "French Blue": '#1A4A7D',
       "Navy": '#1f2a44',
       "Sage Green": '#546223',
-      "French Rose": '#FF5FA2',
       "Forest Green": '#36573B',
       "White": "#FFFFFF",
       "Golden Yellow": '#e0a526',
-      "Silver Steel": '#75787b',
       "Celery Green": '#789D4A',
       "Blush Pink": '#FF8DA1',
       "Baby Blue": '#9BB8D3',
@@ -1492,7 +1490,7 @@ document.addEventListener('change', function(event) {
   };
 
   const threadColorHexCode = {
-      "Peachy Pink": '1653',
+      "Pale Pink": '1818',
       "Berry": '1787',
       "Christmas Red": '1839',
       "Dark Lavender": '1832',
@@ -1500,11 +1498,9 @@ document.addEventListener('change', function(event) {
       "French Blue": '1775',
       "Navy": '1643',
       "Sage Green": '1769',
-      "French Rose": '2166',
       "Forest Green": '1904',
       "White": "#ffffff",
       "Golden Yellow": '1673',
-      "Silver Steel": '1689',
       "Celery Green": '1648',
       "Baby Blue": '1562',
       "Blush Pink": '1620',
@@ -2328,8 +2324,8 @@ document.addEventListener('change', function(event) {
       }
 
       if (fabricsWithAllThreadColorOptions[fabric]) {
-          const recommended = recommendedFabricsWithThreadColorOptions[fabric] || [];
-          const allColors = fabricsWithAllThreadColorOptions[fabric] || [];
+          const recommended = (recommendedFabricsWithThreadColorOptions[fabric] || []).filter(color => threadColors[color]);
+          const allColors = (fabricsWithAllThreadColorOptions[fabric] || []).filter(color => threadColors[color]);
           const orderedColors = [...recommended];
 
           orderedColors.forEach(color => {
@@ -2408,9 +2404,13 @@ document.addEventListener('change', function(event) {
   }
 
   function selectThreadColor(fabric) {
-      const colorName = defaultThreadColors[fabric];
-      handleThreadColorCode(colorName);
       const colorRadiosButtons = document.querySelectorAll('.desktop-custom-thread-color-list-os input[name="properties[Thread Color]"]');
+      const defaultColorName = defaultThreadColors[fabric];
+      const colorName = threadColors[defaultColorName] && [...colorRadiosButtons].some(radio => radio.value === defaultColorName)
+        ? defaultColorName
+        : colorRadiosButtons[0]?.value;
+      if (!colorName) return;
+      handleThreadColorCode(colorName);
       colorRadiosButtons.forEach(radio => {
           if (radio.value === colorName) {
               const swatchContainers = document.querySelectorAll('.swatch-container-os');
@@ -3365,7 +3365,7 @@ document.addEventListener('change', function(event) {
       }
       return response.json();
     })
-    .then(data => { window.location.href = '/checkout'; })
+    .then(data => { window.location.href = '/cart'; })
     .catch((error) => {
       console.error('Error:', error);
       // Same fix as above: restore whichever button actually triggered this
