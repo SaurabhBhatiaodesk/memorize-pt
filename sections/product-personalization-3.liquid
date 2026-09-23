@@ -2685,10 +2685,11 @@ $(document).on("click", ".sdev_radios_btn", function () {
 
   
       // Add all thread colors for the selected fabric
-      if (fabricsWithAllThreadColorOptions[fabric]) {
+      const recommended = recommendedFabricsWithThreadColorOptions[fabric] || [];
+      const allColors = fabricsWithAllThreadColorOptions[fabric] || recommended;
+
+      if (allColors.length) {
           // First, filter out the recommended colors from allColors
-          const recommended = recommendedFabricsWithThreadColorOptions[fabric] || [];
-          const allColors = fabricsWithAllThreadColorOptions[fabric] || [];
   
           // Create the color swatches in the exact order as recommended
           const orderedColors = [...recommended];

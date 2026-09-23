@@ -1991,9 +1991,10 @@ $(document).on("click", ".sdev_radios_btn", function () {
           });
       }
 
-      if (fabricsWithAllThreadColorOptions[fabric]) {
-          const recommended = recommendedFabricsWithThreadColorOptions[fabric] || [];
-          const allColors = fabricsWithAllThreadColorOptions[fabric] || [];
+      const recommended = recommendedFabricsWithThreadColorOptions[fabric] || [];
+      const allColors = fabricsWithAllThreadColorOptions[fabric] || recommended;
+
+      if (allColors.length) {
           const orderedColors = [...recommended];
           orderedColors.forEach(color => {
               const container = document.createElement("div");
