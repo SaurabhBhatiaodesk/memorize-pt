@@ -1553,7 +1553,7 @@ label.radios--option-label.customText h3 {
       "Forest Green": '#115740',
       "White": "#FFFFFF",
       "Golden Yellow": '#e0a526',
-      "Silver Steel": '#75787b',
+      "Pale Pink": '#F6DFE0',
       "Celery Green": '#789D4A',
       "Blush Pink": '#FF8DA1',
       "Coral Pink": '#FFB1BB',
@@ -1575,7 +1575,7 @@ label.radios--option-label.customText h3 {
       "Forest Green": '1902',
       "White": "#ffffff",
       "Golden Yellow": '1673',
-      "Silver Steel": '1689',
+      "Pale Pink": '1818',
       "Celery Green": '1648',
       "Blush Pink": '1620',
       "Baby Blue": '1562',
@@ -2402,7 +2402,7 @@ label.radios--option-label.customText h3 {
 
       // Add recommended thread colors to each tooltip content
       if (recommendedFabricsWithThreadColorOptions[fabric]) {
-          recommendedFabricsWithThreadColorOptions[fabric].forEach(color => {
+          recommendedFabricsWithThreadColorOptions[fabric].filter(color => threadColors[color]).forEach(color => {
               tooltipContents.forEach(tooltipContent => {
                   // Create the wrapper div for each row
                   const swatchRow = document.createElement("div");
@@ -2432,8 +2432,8 @@ label.radios--option-label.customText h3 {
       // Add all thread colors for the selected fabric
       if (fabricsWithAllThreadColorOptions[fabric]) {
           // First, filter out the recommended colors from allColors
-          const recommended = recommendedFabricsWithThreadColorOptions[fabric] || [];
-          const allColors = fabricsWithAllThreadColorOptions[fabric] || [];
+          const recommended = (recommendedFabricsWithThreadColorOptions[fabric] || []).filter(color => threadColors[color]);
+          const allColors = (fabricsWithAllThreadColorOptions[fabric] || []).filter(color => threadColors[color]);
           // console.log("recommended ::", recommended);
           // console.log("allColors ::", allColors);
   
@@ -2565,14 +2565,18 @@ label.radios--option-label.customText h3 {
 
   // Handle thread color selection
   function selectThreadColor(fabric) {  
-      // Get the thread color name from defaultThreadColors
-      const colorName = defaultThreadColors[fabric];
+      const colorRadiosButtons = document.querySelectorAll('.desktop-custom-thread-color-list-os input[name="properties[Thread Color]"]');
+      const defaultColorName = defaultThreadColors[fabric];
+      const colorName = threadColors[defaultColorName] && [...colorRadiosButtons].some(radio => radio.value === defaultColorName)
+          ? defaultColorName
+          : colorRadiosButtons[0]?.value;
+
+      if (!colorName) return;
       // const colorCodeName = threadColorHexCode[colorName];
       // console.log("selectThreadColor fabric ::", fabric);
   
       handleThreadColorCode(colorName)
     
-      const colorRadiosButtons = document.querySelectorAll('.desktop-custom-thread-color-list-os input[name="properties[Thread Color]"]');
       colorRadiosButtons.forEach(radio => {
           if (radio.value === colorName) {
               // Add the active class to the swatch container of the selected color starts
@@ -3891,7 +3895,7 @@ label.radios--option-label.customText h3 {
     .then(data => {
         // Redirect to the cart page after successfully adding the item
         // window.location.href = '/cart';
-        window.location.href = '/checkout';
+        window.location.href = '/cart';
     })
     .catch((error) => {
         console.error('Error:', error);
