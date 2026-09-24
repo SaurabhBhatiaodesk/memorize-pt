@@ -3716,12 +3716,12 @@ img {
 .main-product-fabrics-os {
     margin: 0;
 }
-.main-product-fabric-images-row-os.slick-initialized.slick-slider {
+.main-product-fabric-images-row-os.slick-initialized.slick-slider, .main-product-variant-images-row-os.slick-initialized.slick-slider {
     margin-bottom: 1rem;
     position: relative;
     z-index: 4;
 }
-.main-product-fabric-images-row-os .slick-list {
+.main-product-fabric-images-row-os .slick-list, .main-product-variant-images-row-os .slick-list {
     overflow-x: hidden;
     overflow-y: hidden;
     /* height: 90px; */
