@@ -4405,6 +4405,10 @@ body.template--product .slick-dots li button:before {
 .main-product-fabric-images-row-os .slick-next, .main-product-variant-images-row-os .slick-next {
     right: -16px;
 }
+.main-product-fabric-images-row-os .slick-prev, .main-product-variant-images-row-os .slick-prev {
+    left: -16px;
+    z-index: 5;
+}
 .cart-page-os .cart--item--image a {
     display: flex;
 }
