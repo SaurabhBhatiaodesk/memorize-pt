@@ -4134,7 +4134,7 @@ img {
     transform: translate(-50%, -50%);
     opacity: 1;
 }
-.main-product-fabric-images-row-os .slick-next:before, .mobile-product-thumbnails-os .slick-next:before {
+.main-product-fabric-images-row-os .slick-next:before, .main-product-variant-images-row-os .slick-next:before, .mobile-product-thumbnails-os .slick-next:before {
     content: '';
     background-image: url("https://cdn.shopify.com/s/files/1/0588/5834/0425/files/arrow-right.svg?v=1729166707");
     background-size: contain;
@@ -4402,7 +4402,7 @@ body.template--product .slick-dots li button:before {
     background: var(--color--body);
     color: var(--color--alternative);
 }
-.main-product-fabric-images-row-os .slick-next {
+.main-product-fabric-images-row-os .slick-next, .main-product-variant-images-row-os .slick-next {
     right: -16px;
 }
 .cart-page-os .cart--item--image a {
@@ -4833,14 +4833,14 @@ div#klaviyo-reviews-carousel-wrapper .kl_reviews__carousel__author {
       gap: 3px;
   }
   
-  .main-product-fabric-images-row-os.slick-initialized.slick-slider {
+  .main-product-fabric-images-row-os.slick-initialized.slick-slider, .main-product-variant-images-row-os.slick-initialized.slick-slider {
     padding: 0 12px;
     margin-bottom: 12px;
   }
-  .main-product-fabric-images-row-os .slick-next {
+  .main-product-fabric-images-row-os .slick-next, .main-product-variant-images-row-os .slick-next {
       right: -12px;
   }
-  .main-product-fabric-images-row-os .slick-prev {
+  .main-product-fabric-images-row-os .slick-prev, .main-product-variant-images-row-os .slick-prev {
       left: -8px;
       top: 50%;
   }
