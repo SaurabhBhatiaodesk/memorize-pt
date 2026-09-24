@@ -1452,34 +1452,34 @@ label.radios--option-label.customText h3 {
   // let currentFontColor = 'black';
 
 
-  const fabricsWithAllThreadColorOptions = { 
-      "Sentimental Squares": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"], 
-      "Peace Love and Memories": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "World Gone Plaid": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Green with Envy": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green" ],
-      "Uptown Girl": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Memory Garden": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Camo Cool": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Tartan Treasures": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "True Blue Treasure Chest": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Silver Linings": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Love You to the Moon & Back": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Sunny Days": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Blush Crush": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Forever in Blue Jeans!": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Checkered Past": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Heavenly Bliss": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "The Eyes Have It": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Orange You Glad it's Pinstripes": [ "Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Fly Me to the Moon": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Rosy Outlook": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Wink, wink!": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Lavender Haze (MV)": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Holy Guacamole": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Fill Me Up, Buttercup!": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Lovingly Yours": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Mod Moments (Pink Flowers)": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
-      "Scottie's Garden": ["Neon Hot Pink", "Berry", "Dark Lavender", "Brick Red", "Navy", "Royal Blue", "Denim Blue", "Turquoise", "Forest Green", "White", "True Orange", "Golden Yellow", "Spring Green", "Baby Blue", "Pale Pink", "Champagne", "Copper Bronze"],
+  const fabricsWithAllThreadColorOptions = {
+      "Sentimental Squares": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Peace Love and Memories": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "World Gone Plaid": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Green with Envy": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Uptown Girl": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Memory Garden": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Camo Cool": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Tartan Treasures": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "True Blue Treasure Chest": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Silver Linings": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Love You to the Moon & Back": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Sunny Days": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Blush Crush": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Forever in Blue Jeans!": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Checkered Past": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Heavenly Bliss": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "The Eyes Have It": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Orange You Glad it's Pinstripes": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Fly Me to the Moon": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Rosy Outlook": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Wink, wink!": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Lavender Haze (MV)": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Holy Guacamole": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Fill Me Up, Buttercup!": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Lovingly Yours": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Mod Moments (Pink Flowers)": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
+      "Scottie's Garden": ["Neon Hot Pink", "Berry", "Brick Red", "Dark Lavender", "Denim Blue", "Royal Blue", "Navy", "Turquoise", "Spring Green", "Forest Green", "White", "Golden Yellow", "True Orange", "Pale Pink", "Baby Blue", "Champagne", "Copper Bronze", "Chocolate", "Maroon"],
   };
 
   const recommendedFabricsWithThreadColorOptions = {
@@ -3775,10 +3775,55 @@ label.radios--option-label.customText h3 {
             },
           ]
       });
+      $('.main-product-variant-images-row-os').slick({
+          slidesToShow: 6,
+          slidesToScroll: 6,
+          dots: false,
+          arrows: true,
+          infinite: true,
+          speed: 300,
+          responsive: [
+            {
+              breakpoint: 1028,
+              settings: {
+                slidesToShow: 5,
+                slidesToScroll: 5
+              }
+            },
+            {
+              breakpoint: 991,
+              settings: {
+                slidesToShow: 4,
+                slidesToScroll: 4
+              }
+            },
+            {
+              breakpoint: 767,
+              settings: {
+                slidesToShow: 6,
+                slidesToScroll: 6
+              }
+            },
+            {
+              breakpoint: 400,
+              settings: {
+                slidesToShow: 5,
+                slidesToScroll: 5
+              }
+            },
+            {
+              breakpoint: 350,
+              settings: {
+                slidesToShow: 4,
+                slidesToScroll: 4
+              }
+            },
+          ]
+      });
   });
 
 
-  
+
 </script>
 <!-- Slick slider js ends -->
 
