@@ -137,6 +137,14 @@
             "trunk-swatch-image": "shopify://shop_images/Green_Trunk_Swatch.png"
           }
         },
+        "custom_trunks_rBAi8G": {
+          "type": "custom-trunks",
+          "settings": {
+            "trunk-label": "Red",
+            "trunk-image": "shopify://shop_images/RedTrunk.png",
+            "trunk-swatch-image": "shopify://shop_images/red-trunk-swatch.png"
+          }
+        },
         "custom_trunks_4Dznz8": {
           "type": "custom-trunks",
           "settings": {
@@ -145,47 +153,36 @@
             "trunk-swatch-image": "shopify://shop_images/White_Trunk_Swatch.png"
           }
         },
-        "custom_trunks_nwMYeA": {
-          "type": "custom-trunks",
-          "settings": {
-            "trunk-label": "Gray",
-            "trunk-image": "shopify://shop_images/Grey-Trunk1.jpg",
-            "trunk-swatch-image": "shopify://shop_images/Gray_Trunk_Swatch.png"
-          }
-        },
-        "custom_trunks_nfMRw3": {
-          "type": "custom-trunks",
-          "disabled": true,
-          "settings": {
-            "trunk-label": "Navy",
-            "trunk-image": "shopify://shop_images/Navy-Trunk1.jpg",
-            "trunk-swatch-image": "shopify://shop_images/navy-trunk-swatch.png"
-          }
-        },
-        "custom_trunks_V6xVYG": {
-          "type": "custom-trunks",
-          "disabled": true,
-          "settings": {
-            "trunk-label": "Light Blue",
-            "trunk-image": "shopify://shop_images/Light_Blue_Trunk_f04c0743-17c6-42c2-920a-db866ac5923d.png",
-            "trunk-swatch-image": "shopify://shop_images/light-blue-trunk-swatch.png"
-          }
-        },
         "custom_trunks_zTCdyq": {
           "type": "custom-trunks",
-          "disabled": true,
           "settings": {
             "trunk-label": "Pink",
             "trunk-image": "shopify://shop_images/Pink_Trunk_cd36099b-080f-4a62-8a51-b626b566c8f7.png",
             "trunk-swatch-image": "shopify://shop_images/Pink_Trunk_Swatch.png"
           }
         },
-        "custom_trunks_rBAi8G": {
+        "custom_trunks_V6xVYG": {
           "type": "custom-trunks",
           "settings": {
-            "trunk-label": "Red",
-            "trunk-image": "shopify://shop_images/RedTrunk.png",
-            "trunk-swatch-image": "shopify://shop_images/red-trunk-swatch.png"
+            "trunk-label": "Light Blue",
+            "trunk-image": "shopify://shop_images/Light_Blue_Trunk_f04c0743-17c6-42c2-920a-db866ac5923d.png",
+            "trunk-swatch-image": "shopify://shop_images/light-blue-trunk-swatch.png"
+          }
+        },
+        "custom_trunks_nfMRw3": {
+          "type": "custom-trunks",
+          "settings": {
+            "trunk-label": "Navy",
+            "trunk-image": "shopify://shop_images/Navy-Trunk1.jpg",
+            "trunk-swatch-image": "shopify://shop_images/navy-trunk-swatch.png"
+          }
+        },
+        "custom_trunks_nwMYeA": {
+          "type": "custom-trunks",
+          "settings": {
+            "trunk-label": "Gray",
+            "trunk-image": "shopify://shop_images/Grey-Trunk1.jpg",
+            "trunk-swatch-image": "shopify://shop_images/Gray_Trunk_Swatch.png"
           }
         },
         "custom_fabric_qMxMmf": {
@@ -488,12 +485,12 @@
         "complementary-products",
         "social-sharing",
         "custom_trunks_rKeJpG",
-        "custom_trunks_4Dznz8",
-        "custom_trunks_nwMYeA",
-        "custom_trunks_nfMRw3",
-        "custom_trunks_V6xVYG",
-        "custom_trunks_zTCdyq",
         "custom_trunks_rBAi8G",
+        "custom_trunks_4Dznz8",
+        "custom_trunks_zTCdyq",
+        "custom_trunks_V6xVYG",
+        "custom_trunks_nfMRw3",
+        "custom_trunks_nwMYeA",
         "custom_fabric_qMxMmf",
         "custom_fabric_7xdxA3",
         "custom_fabric_gingerbread_cheer",
