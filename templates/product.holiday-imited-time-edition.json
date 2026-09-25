@@ -365,6 +365,7 @@
         },
         "custom_fabric_qJ4FDh": {
           "type": "custom-fabric",
+          "disabled": true,
           "settings": {
             "fabric-label": "Prep School Greens",
             "fabric-image": "shopify://shop_images/Prep_School_Greens.png",
@@ -382,6 +383,7 @@
         },
         "custom_fabric_ayYm7d": {
           "type": "custom-fabric",
+          "disabled": true,
           "settings": {
             "fabric-label": "Heavenly Bliss",
             "fabric-image": "shopify://shop_images/Heavenly_Bliss.png",
@@ -417,6 +419,7 @@
         },
         "custom_fabric_RwGXEc": {
           "type": "custom-fabric",
+          "disabled": true,
           "settings": {
             "fabric-label": "The Eyes Have It",
             "fabric-image": "shopify://shop_images/The_Eyes_Have_It.png",
