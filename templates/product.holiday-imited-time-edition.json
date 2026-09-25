@@ -196,6 +196,31 @@
             "fabric-swatch-image": "shopify://shop_images/QbyE_CzR1egN7bJ50O8SyPTPSGrKlFnACA.png"
           }
         },
+        "custom_fabric_7xdxA3": {
+          "type": "custom-fabric",
+          "disabled": true,
+          "settings": {
+            "fabric-label": "Mod Moments (Pink Flowers)",
+            "fabric-image": "shopify://shop_images/Mod_Moments.png",
+            "fabric-swatch-image": "shopify://shop_images/Mod-Moments_81aec687-79d6-4517-b30b-22123d282179.png"
+          }
+        },
+        "custom_fabric_gingerbread_cheer": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Gingerbread Cheer",
+            "fabric-image": "shopify://shop_images/gingerbread-cheer.png",
+            "fabric-swatch-image": "shopify://shop_images/gingerbread-cheer_39741830-5c0d-4b54-b739-32855092bcd6.png"
+          }
+        },
+        "custom_fabric_hanukkah_glow": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Hanukkah Glow",
+            "fabric-image": "shopify://shop_images/hanukkah-glow.png",
+            "fabric-swatch-image": "shopify://shop_images/hanukkah-glow_da24ea5c-c53a-473a-99a4-8ca0477ac452.png"
+          }
+        },
         "custom_fabric_y3ccKX": {
           "type": "custom-fabric",
           "disabled": true,
@@ -442,31 +467,6 @@
             "fabric-image": "shopify://shop_images/Lovingly_Yours.png",
             "fabric-swatch-image": "shopify://shop_images/Fondly-Yours_3bbacdaf-6628-4d87-9b5d-99264702b48e.png"
           }
-        },
-        "custom_fabric_7xdxA3": {
-          "type": "custom-fabric",
-          "disabled": true,
-          "settings": {
-            "fabric-label": "Mod Moments (Pink Flowers)",
-            "fabric-image": "shopify://shop_images/Mod_Moments.png",
-            "fabric-swatch-image": "shopify://shop_images/Mod-Moments_81aec687-79d6-4517-b30b-22123d282179.png"
-          }
-        },
-        "custom_fabric_gingerbread_cheer": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Gingerbread Cheer",
-            "fabric-image": "shopify://shop_images/gingerbread-cheer.png",
-            "fabric-swatch-image": "shopify://shop_images/gingerbread-cheer.png"
-          }
-        },
-        "custom_fabric_hanukkah_glow": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Hanukkah Glow",
-            "fabric-image": "shopify://shop_images/hanukkah-glow.png",
-            "fabric-swatch-image": "shopify://shop_images/hanukkah-glow.png"
-          }
         }
       },
       "block_order": [
@@ -492,6 +492,9 @@
         "custom_trunks_zTCdyq",
         "custom_trunks_rBAi8G",
         "custom_fabric_qMxMmf",
+        "custom_fabric_7xdxA3",
+        "custom_fabric_gingerbread_cheer",
+        "custom_fabric_hanukkah_glow",
         "custom_fabric_y3ccKX",
         "custom_fabric_TK7gWn",
         "custom_fabric_8pTA6H",
@@ -519,10 +522,7 @@
         "custom_fabric_HRa8rR",
         "custom_fabric_qJB37Q",
         "custom_fabric_Gca7af",
-        "custom_fabric_dhhmtc",
-        "custom_fabric_7xdxA3",
-        "custom_fabric_gingerbread_cheer",
-        "custom_fabric_hanukkah_glow"
+        "custom_fabric_dhhmtc"
       ],
       "custom_css": [
         ".rte > :not(blockquote),[data-item=\"rte-content\"] > :not(blockquote) {padding-bottom: 0px; margin-top: 0px !important;}",
