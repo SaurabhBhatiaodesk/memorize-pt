@@ -180,6 +180,14 @@
             "trunk-swatch-image": "shopify://shop_images/Pink_Trunk_Swatch.png"
           }
         },
+        "custom_trunks_rBAi8G": {
+          "type": "custom-trunks",
+          "settings": {
+            "trunk-label": "Red",
+            "trunk-image": "shopify://shop_images/RedTrunk.png",
+            "trunk-swatch-image": "shopify://shop_images/red-trunk-swatch.png"
+          }
+        },
         "custom_fabric_qMxMmf": {
           "type": "custom-fabric",
           "settings": {
@@ -482,6 +490,7 @@
         "custom_trunks_nfMRw3",
         "custom_trunks_V6xVYG",
         "custom_trunks_zTCdyq",
+        "custom_trunks_rBAi8G",
         "custom_fabric_qMxMmf",
         "custom_fabric_y3ccKX",
         "custom_fabric_TK7gWn",
