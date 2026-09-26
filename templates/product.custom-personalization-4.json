@@ -388,6 +388,14 @@
             "fabric-swatch-image": "shopify://shop_images/scotties-garden.png"
           }
         },
+        "custom_fabric_garden_club": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Garden Club",
+            "fabric-image": "shopify://shop_images/garden-club.png",
+            "fabric-swatch-image": "shopify://shop_images/garden-club-swatch.png"
+          }
+        },
         "custom_fabric_yc73dP": {
           "type": "custom-fabric",
           "disabled": true,
@@ -471,14 +479,6 @@
             "fabric-image": "shopify://shop_images/margots-garden.png",
             "fabric-swatch-image": "shopify://shop_images/margots-garden-swatch.png"
           }
-        },
-        "custom_fabric_garden_club": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Garden Club",
-            "fabric-image": "shopify://shop_images/garden-club.png",
-            "fabric-swatch-image": "shopify://shop_images/garden-club-swatch.png"
-          }
         }
       },
       "block_order": [
@@ -528,6 +528,7 @@
         "custom_fabric_NhLKaT",
         "custom_fabric_qMxMmf",
         "custom_fabric_p6c938",
+        "custom_fabric_garden_club",
         "custom_fabric_yc73dP",
         "custom_fabric_RwGXEc",
         "custom_fabric_ndC3fX",
@@ -537,8 +538,7 @@
         "custom_fabric_dhhmtc",
         "custom_fabric_7xdxA3",
         "custom_fabric_wheels_up",
-        "custom_fabric_margots_garden",
-        "custom_fabric_garden_club"
+        "custom_fabric_margots_garden"
       ],
       "custom_css": [
         ".rte > :not(blockquote),[data-item=\"rte-content\"] > :not(blockquote) {padding-bottom: 0px; margin-top: 0px !important;}",
