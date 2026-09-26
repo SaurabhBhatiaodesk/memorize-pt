@@ -226,20 +226,20 @@
             "fabric-swatch-image": "shopify://shop_images/once-upon-a-time-swatch.png"
           }
         },
-        "custom_fabric_MJBkUL": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "True Blue Treasure Chest",
-            "fabric-image": "shopify://shop_images/Ticking_Treasure_Chest_3eca92b5-7c21-49e1-bd3a-4cc43d5ad177.png",
-            "fabric-swatch-image": "shopify://shop_images/Ticking_Treasure_Chest_62aed957-73a6-4d13-9c8d-745e72352bd6.png"
-          }
-        },
         "custom_fabric_n7rQ6j": {
           "type": "custom-fabric",
           "settings": {
             "fabric-label": "Americana Archive",
             "fabric-image": "shopify://shop_images/Americana_Archive_b6a429bf-a798-4767-906b-30669a9a05dc.png",
             "fabric-swatch-image": "shopify://shop_images/Americana_Archive.png"
+          }
+        },
+        "custom_fabric_MJBkUL": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "True Blue Treasure Chest",
+            "fabric-image": "shopify://shop_images/Ticking_Treasure_Chest_3eca92b5-7c21-49e1-bd3a-4cc43d5ad177.png",
+            "fabric-swatch-image": "shopify://shop_images/Ticking_Treasure_Chest_62aed957-73a6-4d13-9c8d-745e72352bd6.png"
           }
         },
         "custom_fabric_true_americana_treasure_chest": {
@@ -508,8 +508,8 @@
         "custom_fabric_F9AV4p",
         "custom_fabric_Xh87r8",
         "custom_fabric_once_upon_a_time",
-        "custom_fabric_MJBkUL",
         "custom_fabric_n7rQ6j",
+        "custom_fabric_MJBkUL",
         "custom_fabric_true_americana_treasure_chest",
         "custom_fabric_ayYm7d",
         "custom_fabric_R9btJr",
