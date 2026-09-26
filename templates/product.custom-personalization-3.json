@@ -422,7 +422,6 @@
         },
         "custom_fabric_8CrRzA": {
           "type": "custom-fabric",
-          "disabled": true,
           "settings": {
             "fabric-label": "Orange You Glad it's Pinstripes",
             "fabric-image": "shopify://shop_images/Orange-You-Glad-It_s-Pinstripes_a0cfdaf7-34ff-460a-8ba8-f2978d6aabdc.png",
@@ -439,7 +438,6 @@
         },
         "custom_fabric_HRa8rR": {
           "type": "custom-fabric",
-          "disabled": true,
           "settings": {
             "fabric-label": "Wink, wink!",
             "fabric-image": "shopify://shop_images/Wink_wink.png",
