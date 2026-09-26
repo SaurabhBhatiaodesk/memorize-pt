@@ -340,6 +340,14 @@
             "fabric-swatch-image": "shopify://shop_images/Love-You-to-the-Moon-_-Back_6f0aef2f-3cce-40d1-89c4-0040e40a413d.png"
           }
         },
+        "custom_fabric_wheels_up": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Wheels Up",
+            "fabric-image": "shopify://shop_images/wheels-up.png",
+            "fabric-swatch-image": "shopify://shop_images/wheels-up-swatch.png"
+          }
+        },
         "custom_fabric_qJ4FDh": {
           "type": "custom-fabric",
           "settings": {
@@ -463,14 +471,6 @@
             "fabric-swatch-image": "shopify://shop_images/Mod-Moments_81aec687-79d6-4517-b30b-22123d282179.png"
           }
         },
-        "custom_fabric_wheels_up": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Wheels Up",
-            "fabric-image": "shopify://shop_images/wheels-up.png",
-            "fabric-swatch-image": "shopify://shop_images/wheels-up-swatch.png"
-          }
-        },
         "custom_fabric_margots_garden": {
           "type": "custom-fabric",
           "disabled": true,
@@ -522,6 +522,7 @@
         "custom_fabric_6RV7zX",
         "custom_fabric_QaCwgt",
         "custom_fabric_Hb9dFA",
+        "custom_fabric_wheels_up",
         "custom_fabric_qJ4FDh",
         "custom_fabric_6bgrc6",
         "custom_fabric_KrLiFm",
@@ -537,7 +538,6 @@
         "custom_fabric_Gca7af",
         "custom_fabric_dhhmtc",
         "custom_fabric_7xdxA3",
-        "custom_fabric_wheels_up",
         "custom_fabric_margots_garden"
       ],
       "custom_css": [
