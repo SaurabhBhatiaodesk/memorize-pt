@@ -193,6 +193,14 @@
             "fabric-swatch-image": "shopify://shop_images/Americana_Archive.png"
           }
         },
+        "custom_fabric_sunday_stitch": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Sunday Stitch",
+            "fabric-image": "shopify://shop_images/sunday-stitch.png",
+            "fabric-swatch-image": "shopify://shop_images/sunday-stitch-swatch.png"
+          }
+        },
         "custom_fabric_MMkiMi": {
           "type": "custom-fabric",
           "settings": {
@@ -211,7 +219,6 @@
         },
         "custom_fabric_zh3XiP": {
           "type": "custom-fabric",
-          "disabled": true,
           "settings": {
             "fabric-label": "Coastal Treasures",
             "fabric-image": "shopify://shop_images/Coastal_Treasures_3dcd2493-7821-49ac-b3a8-b58e8da46709.png",
@@ -252,7 +259,6 @@
         },
         "custom_fabric_HnLQiN": {
           "type": "custom-fabric",
-          "disabled": true,
           "settings": {
             "fabric-label": "Blue Blood",
             "fabric-image": "shopify://shop_images/Blue_Blood.png",
@@ -281,6 +287,14 @@
             "fabric-label": "Hidden in a Chateau",
             "fabric-image": "shopify://shop_images/Hidden_in_a_Chateau-2.png",
             "fabric-swatch-image": "shopify://shop_images/Hidden_in_a_Chateau.png"
+          }
+        },
+        "custom_fabric_bordeaux_chateau": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Bordeaux Chateau",
+            "fabric-image": "shopify://shop_images/bordeaux-chateau.png",
+            "fabric-swatch-image": "shopify://shop_images/bordeaux-chateau-swatch.png"
           }
         },
         "custom_fabric_A4R6aM": {
@@ -355,6 +369,14 @@
             "fabric-label": "True Blue Treasure Chest",
             "fabric-image": "shopify://shop_images/Ticking_Treasure_Chest_3eca92b5-7c21-49e1-bd3a-4cc43d5ad177.png",
             "fabric-swatch-image": "shopify://shop_images/Ticking_Treasure_Chest_62aed957-73a6-4d13-9c8d-745e72352bd6.png"
+          }
+        },
+        "custom_fabric_true_americana_treasure_chest": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "True Americana Treasure Chest",
+            "fabric-image": "shopify://shop_images/true-americana-treasure-chest.png",
+            "fabric-swatch-image": "shopify://shop_images/true-americana-treasure-chest-swatch.png"
           }
         },
         "custom_fabric_GFxteA": {
@@ -442,7 +464,6 @@
         },
         "custom_fabric_HRa8rR": {
           "type": "custom-fabric",
-          "disabled": true,
           "settings": {
             "fabric-label": "Wink, wink!",
             "fabric-image": "shopify://shop_images/Wink_wink.png",
@@ -472,30 +493,6 @@
             "fabric-image": "shopify://shop_images/wheels-up.png",
             "fabric-swatch-image": "shopify://shop_images/wheels-up-swatch.png"
           }
-        },
-        "custom_fabric_true_americana_treasure_chest": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "True Americana Treasure Chest",
-            "fabric-image": "shopify://shop_images/true-americana-treasure-chest.png",
-            "fabric-swatch-image": "shopify://shop_images/true-americana-treasure-chest-swatch.png"
-          }
-        },
-        "custom_fabric_sunday_stitch": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Sunday Stitch",
-            "fabric-image": "shopify://shop_images/sunday-stitch.png",
-            "fabric-swatch-image": "shopify://shop_images/sunday-stitch-swatch.png"
-          }
-        },
-        "custom_fabric_bordeaux_chateau": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Bordeaux Chateau",
-            "fabric-image": "shopify://shop_images/bordeaux-chateau.png",
-            "fabric-swatch-image": "shopify://shop_images/bordeaux-chateau-swatch.png"
-          }
         }
       },
       "block_order": [
@@ -521,6 +518,7 @@
         "custom_trunks_red",
         "custom_trunks_nwMYeA",
         "custom_fabric_3eLENY",
+        "custom_fabric_sunday_stitch",
         "custom_fabric_MMkiMi",
         "custom_fabric_rdzBVe",
         "custom_fabric_zh3XiP",
@@ -532,6 +530,7 @@
         "custom_fabric_mfiPQB",
         "custom_fabric_Ja4MMX",
         "custom_fabric_XgRfYy",
+        "custom_fabric_bordeaux_chateau",
         "custom_fabric_A4R6aM",
         "custom_fabric_XLE3in",
         "custom_fabric_hrKiND",
@@ -541,6 +540,7 @@
         "custom_fabric_xD9qnx",
         "custom_fabric_FtLWCr",
         "custom_fabric_MJBkUL",
+        "custom_fabric_true_americana_treasure_chest",
         "custom_fabric_GFxteA",
         "custom_fabric_LtwFqE",
         "custom_fabric_wEM6LX",
@@ -554,10 +554,7 @@
         "custom_fabric_HRa8rR",
         "custom_fabric_qJB37Q",
         "custom_fabric_gGPBhQ",
-        "custom_fabric_wheels_up",
-        "custom_fabric_true_americana_treasure_chest",
-        "custom_fabric_sunday_stitch",
-        "custom_fabric_bordeaux_chateau"
+        "custom_fabric_wheels_up"
       ],
       "custom_css": [
         ".rte > :not(blockquote),[data-item=\"rte-content\"] > :not(blockquote) {padding-bottom: 0px; margin-top: 0px !important;}",
