@@ -185,6 +185,22 @@
             "trunk-swatch-image": "shopify://shop_images/Gray_Trunk_Swatch.png"
           }
         },
+        "custom_fabric_bordeaux_chateau": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Bordeaux Chateau",
+            "fabric-image": "shopify://shop_images/bordeaux-chateau.png",
+            "fabric-swatch-image": "shopify://shop_images/bordeaux-chateau-swatch.png"
+          }
+        },
+        "custom_fabric_nest_egg": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Nest Egg",
+            "fabric-image": "shopify://shop_images/nest-egg.png",
+            "fabric-swatch-image": "shopify://shop_images/nest-egg-swatch.png"
+          }
+        },
         "custom_fabric_y3ccKX": {
           "type": "custom-fabric",
           "settings": {
@@ -223,6 +239,22 @@
             "fabric-label": "True Green Treasure Chest",
             "fabric-image": "shopify://shop_images/True_Green_Treasure_Chest_-_Final.png",
             "fabric-swatch-image": "shopify://shop_images/True_Green_Treasure_Chest_Swatch_1.png"
+          }
+        },
+        "custom_fabric_true_americana_treasure_chest": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "True Americana Treasure Chest",
+            "fabric-image": "shopify://shop_images/true-americana-treasure-chest.png",
+            "fabric-swatch-image": "shopify://shop_images/true-americana-treasure-chest-swatch.png"
+          }
+        },
+        "custom_fabric_sunday_stitch": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Sunday Stitch",
+            "fabric-image": "shopify://shop_images/sunday-stitch.png",
+            "fabric-swatch-image": "shopify://shop_images/sunday-stitch-swatch.png"
           }
         },
         "custom_fabric_7xdxA3": {
@@ -431,38 +463,6 @@
             "fabric-swatch-image": "shopify://shop_images/Fondly-Yours_3bbacdaf-6628-4d87-9b5d-99264702b48e.png"
           }
         },
-        "custom_fabric_nest_egg": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Nest Egg",
-            "fabric-image": "shopify://shop_images/nest-egg.png",
-            "fabric-swatch-image": "shopify://shop_images/nest-egg-swatch.png"
-          }
-        },
-        "custom_fabric_true_americana_treasure_chest": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "True Americana Treasure Chest",
-            "fabric-image": "shopify://shop_images/true-americana-treasure-chest.png",
-            "fabric-swatch-image": "shopify://shop_images/true-americana-treasure-chest-swatch.png"
-          }
-        },
-        "custom_fabric_sunday_stitch": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Sunday Stitch",
-            "fabric-image": "shopify://shop_images/sunday-stitch.png",
-            "fabric-swatch-image": "shopify://shop_images/sunday-stitch-swatch.png"
-          }
-        },
-        "custom_fabric_bordeaux_chateau": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Bordeaux Chateau",
-            "fabric-image": "shopify://shop_images/bordeaux-chateau.png",
-            "fabric-swatch-image": "shopify://shop_images/bordeaux-chateau-swatch.png"
-          }
-        },
         "custom_fabric_silver_linings": {
           "type": "custom-fabric",
           "settings": {
@@ -494,11 +494,15 @@
         "custom_trunks_kyn9XP",
         "custom_trunks_red",
         "custom_trunks_nwMYeA",
+        "custom_fabric_bordeaux_chateau",
+        "custom_fabric_nest_egg",
         "custom_fabric_y3ccKX",
         "custom_fabric_8pTA6H",
         "custom_fabric_F9AV4p",
         "custom_fabric_MJBkUL",
         "custom_fabric_NAkBDL",
+        "custom_fabric_true_americana_treasure_chest",
+        "custom_fabric_sunday_stitch",
         "custom_fabric_7xdxA3",
         "custom_fabric_QaCwgt",
         "custom_fabric_wBg7bC",
@@ -524,10 +528,6 @@
         "custom_fabric_HRa8rR",
         "custom_fabric_qJB37Q",
         "custom_fabric_dhhmtc",
-        "custom_fabric_nest_egg",
-        "custom_fabric_true_americana_treasure_chest",
-        "custom_fabric_sunday_stitch",
-        "custom_fabric_bordeaux_chateau",
         "custom_fabric_silver_linings"
       ],
       "custom_css": [
