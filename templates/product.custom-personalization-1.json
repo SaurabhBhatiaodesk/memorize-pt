@@ -195,6 +195,14 @@
             "trunk-swatch-image": "shopify://shop_images/Gray_Trunk_Swatch.png"
           }
         },
+        "custom_fabric_countryside_club": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Countryside Club",
+            "fabric-image": "shopify://shop_images/countryside-club.png",
+            "fabric-swatch-image": "shopify://shop_images/countryside-club-swatch.png"
+          }
+        },
         "custom_fabric_y3ccKX": {
           "type": "custom-fabric",
           "settings": {
@@ -267,6 +275,14 @@
             "fabric-swatch-image": "shopify://shop_images/Hidden_in_a_Chateau.png"
           }
         },
+        "custom_fabric_bordeaux_chateau": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Bordeaux Chateau",
+            "fabric-image": "shopify://shop_images/bordeaux-chateau.png",
+            "fabric-swatch-image": "shopify://shop_images/bordeaux-chateau-swatch.png"
+          }
+        },
         "custom_fabric_rb7z3E": {
           "type": "custom-fabric",
           "settings": {
@@ -283,9 +299,16 @@
             "fabric-swatch-image": "shopify://shop_images/Petal_Pusher-2.png"
           }
         },
+        "custom_fabric_once_upon_a_time": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Once Upon a Time",
+            "fabric-image": "shopify://shop_images/once-upon-a-time.png",
+            "fabric-swatch-image": "shopify://shop_images/once-upon-a-time-swatch.png"
+          }
+        },
         "custom_fabric_Uc7JJy": {
           "type": "custom-fabric",
-          "disabled": true,
           "settings": {
             "fabric-label": "Linen Love Letters",
             "fabric-image": "shopify://shop_images/Linen_Love_Letters.png",
@@ -332,6 +355,22 @@
             "fabric-label": "Blush Crush",
             "fabric-image": "shopify://shop_images/Blush_Crush_V2.png",
             "fabric-swatch-image": "shopify://shop_images/Blush-Crush2_2a56ed56-5b10-4c2a-8224-8746cac0159a.png"
+          }
+        },
+        "custom_fabric_garden_club": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Garden Club",
+            "fabric-image": "shopify://shop_images/garden-club.png",
+            "fabric-swatch-image": "shopify://shop_images/garden-club-swatch.png"
+          }
+        },
+        "custom_fabric_nest_egg": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Nest Egg",
+            "fabric-image": "shopify://shop_images/nest-egg.png",
+            "fabric-swatch-image": "shopify://shop_images/nest-egg-swatch.png"
           }
         },
         "custom_fabric_HRa8rR": {
@@ -435,50 +474,11 @@
         },
         "custom_fabric_margots_garden": {
           "type": "custom-fabric",
+          "disabled": true,
           "settings": {
             "fabric-label": "Margot's Garden",
             "fabric-image": "shopify://shop_images/margots-garden.png",
             "fabric-swatch-image": "shopify://shop_images/margots-garden-swatch.png"
-          }
-        },
-        "custom_fabric_nest_egg": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Nest Egg",
-            "fabric-image": "shopify://shop_images/nest-egg.png",
-            "fabric-swatch-image": "shopify://shop_images/nest-egg-swatch.png"
-          }
-        },
-        "custom_fabric_garden_club": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Garden Club",
-            "fabric-image": "shopify://shop_images/garden-club.png",
-            "fabric-swatch-image": "shopify://shop_images/garden-club-swatch.png"
-          }
-        },
-        "custom_fabric_countryside_club": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Countryside Club",
-            "fabric-image": "shopify://shop_images/countryside-club.png",
-            "fabric-swatch-image": "shopify://shop_images/countryside-club-swatch.png"
-          }
-        },
-        "custom_fabric_once_upon_a_time": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Once Upon a Time",
-            "fabric-image": "shopify://shop_images/once-upon-a-time.png",
-            "fabric-swatch-image": "shopify://shop_images/once-upon-a-time-swatch.png"
-          }
-        },
-        "custom_fabric_bordeaux_chateau": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Bordeaux Chateau",
-            "fabric-image": "shopify://shop_images/bordeaux-chateau.png",
-            "fabric-swatch-image": "shopify://shop_images/bordeaux-chateau-swatch.png"
           }
         }
       },
@@ -505,6 +505,7 @@
         "custom_trunks_7t7tPj",
         "custom_trunks_red",
         "custom_trunks_nwMYeA",
+        "custom_fabric_countryside_club",
         "custom_fabric_y3ccKX",
         "custom_fabric_Gca7af",
         "custom_fabric_GbUNRG",
@@ -514,14 +515,18 @@
         "custom_fabric_JFTRJD",
         "custom_fabric_GNhhDK",
         "custom_fabric_hp8Xem",
+        "custom_fabric_bordeaux_chateau",
         "custom_fabric_rb7z3E",
         "custom_fabric_cKM6ib",
+        "custom_fabric_once_upon_a_time",
         "custom_fabric_Uc7JJy",
         "custom_fabric_GFxteA",
         "custom_fabric_Hgt9MN",
         "custom_fabric_MJBkUL",
         "custom_fabric_ayYm7d",
         "custom_fabric_wEM6LX",
+        "custom_fabric_garden_club",
+        "custom_fabric_nest_egg",
         "custom_fabric_HRa8rR",
         "custom_fabric_qJB37Q",
         "custom_fabric_9jVrtL",
@@ -534,12 +539,7 @@
         "custom_fabric_CNGVJJ",
         "custom_fabric_j6zhAf",
         "custom_fabric_yc73dP",
-        "custom_fabric_margots_garden",
-        "custom_fabric_nest_egg",
-        "custom_fabric_garden_club",
-        "custom_fabric_countryside_club",
-        "custom_fabric_once_upon_a_time",
-        "custom_fabric_bordeaux_chateau"
+        "custom_fabric_margots_garden"
       ],
       "custom_css": [
         ".rte > :not(blockquote),[data-item=\"rte-content\"] > :not(blockquote) {padding-bottom: 0px; margin-top: 0px !important;}",
