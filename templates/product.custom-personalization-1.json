@@ -439,7 +439,6 @@
         },
         "custom_fabric_NhLKaT": {
           "type": "custom-fabric",
-          "disabled": true,
           "settings": {
             "fabric-label": "Checkered Past",
             "fabric-image": "shopify://shop_images/Checkered_Past_-_New.png",
