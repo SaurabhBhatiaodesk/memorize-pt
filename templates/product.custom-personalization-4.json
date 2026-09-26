@@ -290,6 +290,14 @@
             "fabric-swatch-image": "shopify://shop_images/Purple_Promise_Swatch.png"
           }
         },
+        "custom_fabric_wheels_up": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Wheels Up",
+            "fabric-image": "shopify://shop_images/wheels-up.png",
+            "fabric-swatch-image": "shopify://shop_images/wheels-up-swatch.png"
+          }
+        },
         "custom_fabric_NqBDXm": {
           "type": "custom-fabric",
           "settings": {
@@ -338,14 +346,6 @@
             "fabric-label": "Love You to the Moon & Back",
             "fabric-image": "shopify://shop_images/Love_You_to_the_Moon_Back.png",
             "fabric-swatch-image": "shopify://shop_images/Love-You-to-the-Moon-_-Back_6f0aef2f-3cce-40d1-89c4-0040e40a413d.png"
-          }
-        },
-        "custom_fabric_wheels_up": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Wheels Up",
-            "fabric-image": "shopify://shop_images/wheels-up.png",
-            "fabric-swatch-image": "shopify://shop_images/wheels-up-swatch.png"
           }
         },
         "custom_fabric_qJ4FDh": {
@@ -516,13 +516,13 @@
         "custom_fabric_R9btJr",
         "custom_fabric_DRDmYw",
         "custom_fabric_PwgFPh",
+        "custom_fabric_wheels_up",
         "custom_fabric_NqBDXm",
         "custom_fabric_gR4Nhj",
         "custom_fabric_TK7gWn",
         "custom_fabric_6RV7zX",
         "custom_fabric_QaCwgt",
         "custom_fabric_Hb9dFA",
-        "custom_fabric_wheels_up",
         "custom_fabric_qJ4FDh",
         "custom_fabric_6bgrc6",
         "custom_fabric_KrLiFm",
