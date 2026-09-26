@@ -185,6 +185,14 @@
             "trunk-swatch-image": "shopify://shop_images/Gray_Trunk_Swatch.png"
           }
         },
+        "custom_fabric_countryside_club": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Countryside Club",
+            "fabric-image": "shopify://shop_images/countryside-club.png",
+            "fabric-swatch-image": "shopify://shop_images/countryside-club-swatch.png"
+          }
+        },
         "custom_fabric_y3ccKX": {
           "type": "custom-fabric",
           "settings": {
@@ -471,14 +479,6 @@
             "fabric-image": "shopify://shop_images/garden-club.png",
             "fabric-swatch-image": "shopify://shop_images/garden-club-swatch.png"
           }
-        },
-        "custom_fabric_countryside_club": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Countryside Club",
-            "fabric-image": "shopify://shop_images/countryside-club.png",
-            "fabric-swatch-image": "shopify://shop_images/countryside-club-swatch.png"
-          }
         }
       },
       "block_order": [
@@ -503,6 +503,7 @@
         "custom_trunks_rKeJpG",
         "custom_trunks_red",
         "custom_trunks_nwMYeA",
+        "custom_fabric_countryside_club",
         "custom_fabric_y3ccKX",
         "custom_fabric_8pTA6H",
         "custom_fabric_F9AV4p",
@@ -537,8 +538,7 @@
         "custom_fabric_7xdxA3",
         "custom_fabric_wheels_up",
         "custom_fabric_margots_garden",
-        "custom_fabric_garden_club",
-        "custom_fabric_countryside_club"
+        "custom_fabric_garden_club"
       ],
       "custom_css": [
         ".rte > :not(blockquote),[data-item=\"rte-content\"] > :not(blockquote) {padding-bottom: 0px; margin-top: 0px !important;}",
