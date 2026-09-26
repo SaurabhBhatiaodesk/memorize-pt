@@ -286,8 +286,8 @@
           "type": "custom-fabric",
           "settings": {
             "fabric-label": "Purple Promise",
-            "fabric-image": "shopify://shop_images/Purple_Promise.png",
-            "fabric-swatch-image": "shopify://shop_images/Purple_Promise_Swatch.png"
+            "fabric-image": "shopify://shop_images/2026_Purple_Promise.png",
+            "fabric-swatch-image": "shopify://shop_images/2026_Swatch_Purple_Promise.png"
           }
         },
         "custom_fabric_wheels_up": {
