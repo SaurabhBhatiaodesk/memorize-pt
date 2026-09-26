@@ -353,8 +353,8 @@
           "type": "custom-fabric",
           "settings": {
             "fabric-label": "Blush Crush",
-            "fabric-image": "shopify://shop_images/Blush_Crush_V2.png",
-            "fabric-swatch-image": "shopify://shop_images/Blush-Crush2_2a56ed56-5b10-4c2a-8224-8746cac0159a.png"
+            "fabric-image": "shopify://shop_images/2026_Blush_Crush.png",
+            "fabric-swatch-image": "shopify://shop_images/2026_Swatch_Blush_Crush.png"
           }
         },
         "custom_fabric_garden_club": {
