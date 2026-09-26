@@ -234,6 +234,22 @@
             "fabric-swatch-image": "shopify://shop_images/Americana_Archive.png"
           }
         },
+        "custom_fabric_true_americana_treasure_chest": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "True Americana Treasure Chest",
+            "fabric-image": "shopify://shop_images/true-americana-treasure-chest.png",
+            "fabric-swatch-image": "shopify://shop_images/true-americana-treasure-chest-swatch.png"
+          }
+        },
+        "custom_fabric_ayYm7d": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "True Green Treasure Chest",
+            "fabric-image": "shopify://shop_images/True_Green_Treasure_Chest_-_Final.png",
+            "fabric-swatch-image": "shopify://shop_images/True_Green_Treasure_Chest_Swatch_1.png"
+          }
+        },
         "custom_fabric_R9btJr": {
           "type": "custom-fabric",
           "settings": {
@@ -306,14 +322,6 @@
             "fabric-label": "Love You to the Moon & Back",
             "fabric-image": "shopify://shop_images/Love_You_to_the_Moon_Back.png",
             "fabric-swatch-image": "shopify://shop_images/Love-You-to-the-Moon-_-Back_6f0aef2f-3cce-40d1-89c4-0040e40a413d.png"
-          }
-        },
-        "custom_fabric_ayYm7d": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "True Green Treasure Chest",
-            "fabric-image": "shopify://shop_images/True_Green_Treasure_Chest_-_Final.png",
-            "fabric-swatch-image": "shopify://shop_images/True_Green_Treasure_Chest_Swatch_1.png"
           }
         },
         "custom_fabric_qJ4FDh": {
@@ -463,14 +471,6 @@
             "fabric-swatch-image": "shopify://shop_images/countryside-club-swatch.png"
           }
         },
-        "custom_fabric_true_americana_treasure_chest": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "True Americana Treasure Chest",
-            "fabric-image": "shopify://shop_images/true-americana-treasure-chest.png",
-            "fabric-swatch-image": "shopify://shop_images/true-americana-treasure-chest-swatch.png"
-          }
-        },
         "custom_fabric_once_upon_a_time": {
           "type": "custom-fabric",
           "settings": {
@@ -508,6 +508,8 @@
         "custom_fabric_Xh87r8",
         "custom_fabric_MJBkUL",
         "custom_fabric_n7rQ6j",
+        "custom_fabric_true_americana_treasure_chest",
+        "custom_fabric_ayYm7d",
         "custom_fabric_R9btJr",
         "custom_fabric_DRDmYw",
         "custom_fabric_PwgFPh",
@@ -517,7 +519,6 @@
         "custom_fabric_6RV7zX",
         "custom_fabric_QaCwgt",
         "custom_fabric_Hb9dFA",
-        "custom_fabric_ayYm7d",
         "custom_fabric_qJ4FDh",
         "custom_fabric_6bgrc6",
         "custom_fabric_KrLiFm",
@@ -536,7 +537,6 @@
         "custom_fabric_margots_garden",
         "custom_fabric_garden_club",
         "custom_fabric_countryside_club",
-        "custom_fabric_true_americana_treasure_chest",
         "custom_fabric_once_upon_a_time"
       ],
       "custom_css": [
