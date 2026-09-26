@@ -218,6 +218,14 @@
             "fabric-swatch-image": "shopify://shop_images/Buttercream_Bows_f017b1c9-67bc-4c8b-9819-148339113527.png"
           }
         },
+        "custom_fabric_once_upon_a_time": {
+          "type": "custom-fabric",
+          "settings": {
+            "fabric-label": "Once Upon a Time",
+            "fabric-image": "shopify://shop_images/once-upon-a-time.png",
+            "fabric-swatch-image": "shopify://shop_images/once-upon-a-time-swatch.png"
+          }
+        },
         "custom_fabric_MJBkUL": {
           "type": "custom-fabric",
           "settings": {
@@ -449,6 +457,7 @@
         },
         "custom_fabric_margots_garden": {
           "type": "custom-fabric",
+          "disabled": true,
           "settings": {
             "fabric-label": "Margot's Garden",
             "fabric-image": "shopify://shop_images/margots-garden.png",
@@ -469,14 +478,6 @@
             "fabric-label": "Countryside Club",
             "fabric-image": "shopify://shop_images/countryside-club.png",
             "fabric-swatch-image": "shopify://shop_images/countryside-club-swatch.png"
-          }
-        },
-        "custom_fabric_once_upon_a_time": {
-          "type": "custom-fabric",
-          "settings": {
-            "fabric-label": "Once Upon a Time",
-            "fabric-image": "shopify://shop_images/once-upon-a-time.png",
-            "fabric-swatch-image": "shopify://shop_images/once-upon-a-time-swatch.png"
           }
         }
       },
@@ -506,6 +507,7 @@
         "custom_fabric_8pTA6H",
         "custom_fabric_F9AV4p",
         "custom_fabric_Xh87r8",
+        "custom_fabric_once_upon_a_time",
         "custom_fabric_MJBkUL",
         "custom_fabric_n7rQ6j",
         "custom_fabric_true_americana_treasure_chest",
@@ -536,8 +538,7 @@
         "custom_fabric_wheels_up",
         "custom_fabric_margots_garden",
         "custom_fabric_garden_club",
-        "custom_fabric_countryside_club",
-        "custom_fabric_once_upon_a_time"
+        "custom_fabric_countryside_club"
       ],
       "custom_css": [
         ".rte > :not(blockquote),[data-item=\"rte-content\"] > :not(blockquote) {padding-bottom: 0px; margin-top: 0px !important;}",
