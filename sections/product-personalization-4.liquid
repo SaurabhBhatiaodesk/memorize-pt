@@ -2543,11 +2543,12 @@ $(document).on("click", ".sdev_radios_btn", function () {
 
         if (window.matchMedia('(max-width: 767px)').matches) {
 
-          // Mobile Flourish size (reduced further)
-          setScaledPreviewSize(monogramDisplay, 22, 26);
+          // Mobile Flourish size: 22/33 rendered only ~9px/14px (x0.55 x0.75),
+          // far smaller than the other fonts (~26px/42px). Now ~23px/36px.
+          setScaledPreviewSize(monogramDisplay, 56, 66);
 
           if (largeTextSpan) {
-            setScaledPreviewSize(largeTextSpan, 33, 42);
+            setScaledPreviewSize(largeTextSpan, 88, 110);
           }
 
         } else {
