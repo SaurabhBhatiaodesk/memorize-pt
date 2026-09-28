@@ -192,33 +192,41 @@
     margin-bottom: 16px;
   }
 
-.mobile-font-buttons-os .mobile-font-option-os {
+  .mobile-font-buttons-os .mobile-font-option-os {
     background: none;
     border: 1px solid #274864;
     color: #274864;
-    padding: 10px;
+    padding: 10px 8px;
     cursor: pointer;
     border-radius: 5px;
-    margin-right: 12px;
+    margin: 0;
     text-align: center;
-    font-size: 18px;
-    line-height: 24px;
-    min-height: 60px;
-    min-width: 100% !important;
-    max-width:100% !important;
-    flex:100% !important;
+    font-size: 20px;
+    line-height: 1.2;
+    min-height: 72px;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100%;
+    flex: 1 1 auto !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-}
-.mobile-font-buttons-os .mobile-font-option-os.flourish {
-    font-size: 14px;
-    line-height: 20px;
-}
-.mobile-font-buttons-os .mobile-font-option-os span {
-    position: relative;
-    top: 8px;
-}
+    overflow: hidden;
+  }
+  .mobile-font-buttons-os .mobile-font-option-os.letter-jacket,
+  .mobile-font-buttons-os .mobile-font-option-os.western {
+    font-size: 17px;
+  }
+  .mobile-font-buttons-os .mobile-font-option-os.fondly-yours,
+  .mobile-font-buttons-os .mobile-font-option-os.casually-cool {
+    font-size: 19px;
+  }
+  .mobile-font-buttons-os .mobile-font-option-os.flourish {
+    font-size: 18px;
+  }
+  .mobile-font-buttons-os .mobile-font-option-os span {
+    position: static;
+  }
   .mobile-font-buttons-os .slick-track, .mobile-custom-thread-color-list-os .slick-track {
     /* display: flex; */
   }
