@@ -3228,6 +3228,17 @@ label.radios--option-label.customText h3 {
       const maxCharacters = 40;
   
       
+      // Single shared font-size table for every container (removed the old
+      // else-branch table that gave index > 0 containers a different,
+      // unnormalized size — same fix already applied in files 1-3).
+      textareaDisplays.forEach((textareaDisplay) => {
+        adjustFontSizeAndLineHeight0(null, textareaDisplay, textLength);
+      });
+      if (letterCountDisplay) {
+        letterCountDisplay.textContent = String(maxCharacters - textLength);
+      }
+      return;
+
       // console.log("adjustFontSizeAndLineHeight textLength ::", textLength);
       // Loop through each textareaDisplay element and check for the class "flourish"
       textareaDisplays.forEach((textareaDisplay, index) => {
@@ -4559,97 +4570,126 @@ label.radios--option-label.customText h3 {
       const letterCountDisplay = document.querySelector('.mobile-textarea-letter-count-os'); // Get the letter count display element
   
       // console.log("textLength ::", textLength);
-  
-      // Determine the font size and line height based on the text length
-      let fontSize = '';
-      let lineHeight = '';
 
+      // Determine the font size and line height based on the text length.
+      // Fixed: fontSize/lineHeight are now computed per-element inside the
+      // loop and applied immediately - the old shared outer-scope variables
+      // meant every container was styled with whichever font the LAST
+      // container in the list happened to be (a "last write wins" bug).
+      // Values below are normalized the same way as the desktop table so
+      // all 12 fonts render at equal visual size on mobile too.
       textareaDisplays.forEach(textareaDisplay => {
+        let fontSize = '';
+        let lineHeight = '';
         if (textareaDisplay.classList.contains("flourish")) {
           if (textLength > 28) {
-            fontSize = '12px';
-            lineHeight = '32px';
+            fontSize = '12.73px';
+            lineHeight = '33.95px';
           } else {
-            fontSize = '14px';
-            lineHeight = '35px';
+            fontSize = '14.85px';
+            lineHeight = '37.13px';
           }
-        } else if (textareaDisplay.classList.contains("signature") || textareaDisplay.classList.contains("fancy")) {
+        } else if (textareaDisplay.classList.contains("signature")) {
           if (textLength > 28) {
-            fontSize = '26px';
-            lineHeight = '26px';
+            fontSize = '12.33px';
+            lineHeight = '12.33px';
           } else {
-            fontSize = '28px';
-            lineHeight = '28px';
+            fontSize = '13.27px';
+            lineHeight = '13.27px';
+          }
+        } else if (textareaDisplay.classList.contains("fancy")) {
+          if (textLength > 28) {
+            fontSize = '16.78px';
+            lineHeight = '16.78px';
+          } else {
+            fontSize = '18.07px';
+            lineHeight = '18.07px';
           }
         } else if (textareaDisplay.classList.contains("amalfi")) {
           if (textLength > 28) {
-            fontSize = '20px';
-            lineHeight = '24px';
+            fontSize = '18.94px';
+            lineHeight = '22.73px';
           } else {
-            fontSize = '24px';
-            lineHeight = '28px';
+            fontSize = '22.73px';
+            lineHeight = '26.52px';
           }
-            // console.log("textLength else ::", textLength);
         } else if (textareaDisplay.classList.contains("fondly-yours")) {
           if (textLength > 28) {
-            fontSize = '20px';
-            lineHeight = '24px';
+            fontSize = '15.06px';
+            lineHeight = '18.07px';
           } else {
-            fontSize = '24px';
-            lineHeight = '28px';
+            fontSize = '18.07px';
+            lineHeight = '21.08px';
           }
         } else if (textareaDisplay.classList.contains("casually-cool")) {
           if (textLength > 28) {
-            fontSize = '20px';
-            lineHeight = '24px';
+            fontSize = '17.12px';
+            lineHeight = '20.55px';
           } else {
-            fontSize = '24px';
-            lineHeight = '24px';
+            fontSize = '20.55px';
+            lineHeight = '20.55px';
           }
-            // console.log("textLength else ::", textLength);
         } else if (textareaDisplay.classList.contains("memorize")) {
           if (textLength > 28) {
-            fontSize = '20px';
-            lineHeight = '24px';
+            fontSize = '14.71px';
+            lineHeight = '17.65px';
           } else {
-            fontSize = '24px';
-            lineHeight = '28px';
+            fontSize = '17.65px';
+            lineHeight = '20.59px';
           }
-          // console.log("textLength else ::", textLength);
-        } else if (textareaDisplay.classList.contains("headliner") || textareaDisplay.classList.contains("letter-jacket")) {
+        } else if (textareaDisplay.classList.contains("headliner")) {
           if (textLength > 28) {
-            fontSize = '15px';
-            lineHeight = '20px';
+            fontSize = '15.20px';
+            lineHeight = '20.27px';
           } else {
-            fontSize = '20px';
-            lineHeight = '24px';
+            fontSize = '20.27px';
+            lineHeight = '24.32px';
+          }
+        } else if (textareaDisplay.classList.contains("letter-jacket")) {
+          if (textLength > 28) {
+            fontSize = '14.80px';
+            lineHeight = '19.74px';
+          } else {
+            fontSize = '19.74px';
+            lineHeight = '23.68px';
           }
         } else if (textareaDisplay.classList.contains("vintage")) {
           if (textLength > 28) {
-            fontSize = '15px';
-            lineHeight = '20px';
+            fontSize = '15.00px';
+            lineHeight = '20.00px';
           } else {
-            fontSize = '20px';
-            lineHeight = '24px';
+            fontSize = '20.00px';
+            lineHeight = '24.00px';
+          }
+        } else if (textareaDisplay.classList.contains("western")) {
+          if (textLength > 28) {
+            fontSize = '16.27px';
+            lineHeight = '21.69px';
+          } else {
+            fontSize = '18.07px';
+            lineHeight = '21.69px';
+          }
+        } else if (textareaDisplay.classList.contains("royal")) {
+          if (textLength > 28) {
+            fontSize = '19.01px';
+            lineHeight = '25.35px';
+          } else {
+            fontSize = '21.13px';
+            lineHeight = '25.35px';
           }
         } else {
-          // console.log("adjustFontSizeAndLineHeight else ------");
           if (textLength > 28) {
-            fontSize = '18px';
-            lineHeight = '24px';
+            fontSize = '15.00px';
+            lineHeight = '20.00px';
           } else {
-            fontSize = '20px';
-            lineHeight = '24px';
+            fontSize = '20.00px';
+            lineHeight = '24.00px';
           }
         }
+        textareaDisplay.style.fontSize = fontSize;
+        textareaDisplay.style.lineHeight = lineHeight;
       });
-  
-      // Apply the styles to all textarea display elements
-      textareaDisplays.forEach(display => {
-          display.style.fontSize = fontSize;
-          display.style.lineHeight = lineHeight;
-      });
-  
+
       // Update the letter count display
       const maxCharacters = 40; // Set the maximum character limit
       letterCountDisplay.textContent = maxCharacters - textLength; // Update the displayed character count
