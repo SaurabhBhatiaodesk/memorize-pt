@@ -2328,7 +2328,10 @@ $(document).on("click", ".sdev_radios_btn", function () {
       if (textareaDisplay.classList.contains("flourish")) {
 
         fontSize = textLength > 28 ? 48.20 : 48.20;
-        lineHeight = textLength > 28 ? 96.41 : 90.39;
+        // Desktop: 69.7433 x 0.75 embroidery scale = 52.3075px (client approved)
+        lineHeight = window.matchMedia('(min-width: 768px)').matches
+          ? 69.7433
+          : (textLength > 28 ? 96.41 : 90.39);
 
 
       } else if (textareaDisplay.classList.contains("signature")) {
