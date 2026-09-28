@@ -2741,10 +2741,9 @@ document.addEventListener('change', function(event) {
       if (textareaDisplay.classList.contains("flourish")) {
 
         fontSize = textLength > 28 ? 48.20 : 48.20;
-        // Desktop: 69.7433 x 0.75 embroidery scale = 52.3075px (client approved)
-        lineHeight = window.matchMedia('(min-width: 768px)').matches
-          ? 69.7433
-          : (textLength > 28 ? 96.41 : 90.39);
+        // Desktop: 69.7433 x 0.75 = 52.3075px (client approved). Mobile uses the
+        // same ratio (x 0.55 x 0.75 = 28.77px) so wrapped lines are not spaced apart.
+        lineHeight = 69.7433;
 
 
       } else if (textareaDisplay.classList.contains("signature")) {
