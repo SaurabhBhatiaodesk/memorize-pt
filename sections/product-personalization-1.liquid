@@ -2821,6 +2821,15 @@ document.addEventListener('change', function(event) {
       }
 
 
+      if (window.matchMedia('(max-width: 767px)').matches && !textareaDisplay.classList.contains('flourish')) {
+        // setScaledPreviewSize applies a 0.55 device scale and a 0.75 artwork
+        // scale on mobile. Increase the source values so the rendered text is
+        // exactly 2px larger without changing desktop or Flourish.
+        const mobileIncrease = 2 / (getPersonalizationPreviewScale(textareaDisplay) * 0.75);
+        fontSize += mobileIncrease;
+        lineHeight += mobileIncrease;
+      }
+
       setScaledPreviewSize(textareaDisplay, fontSize, lineHeight);
 
     }
