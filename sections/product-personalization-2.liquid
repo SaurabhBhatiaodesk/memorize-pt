@@ -2408,6 +2408,13 @@ $(document).on("click", ".sdev_radios_btn", function () {
       }
 
 
+      if (window.matchMedia('(max-width: 767px)').matches && !textareaDisplay.classList.contains('flourish')) {
+        // Keep the rendered mobile text 2px larger without changing desktop or Flourish.
+        const mobileIncrease = 2 / (getPersonalizationPreviewScale() * 0.75);
+        fontSize += mobileIncrease;
+        lineHeight += mobileIncrease;
+      }
+
       setScaledPreviewSize(textareaDisplay, fontSize, lineHeight);
 
     }
