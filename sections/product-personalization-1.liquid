@@ -2692,15 +2692,19 @@ document.addEventListener('change', function(event) {
       // Mobile only: every font uses the same preview size (client request),
       // and two lines are spaced apart so they never touch.
       if (window.matchMedia('(max-width: 767px)').matches) {
-        const textLen = (element.innerText || element.textContent || '').replace(/\s+/g, ' ').trim().length;
+        // Shorter text gets a bigger size; longer text steps down so it still
+        // fits inside the trunk. Same size for every font.
+        const longestLine = Math.max(0, ...(element.innerText || element.textContent || '')
+          .split('
+').map((line) => line.trim().length));
         if (element.classList.contains('textarea-text-display-os')) {
-          renderedFontSize = textLen > 28 ? 20 : 26;
+          renderedFontSize = longestLine <= 10 ? 38 : longestLine <= 16 ? 32 : longestLine <= 22 ? 28 : 22;
           renderedLineHeight = renderedFontSize * 1.3;
         } else if (element.classList.contains('monogram-large-text-os')) {
-          renderedFontSize = 52;
+          renderedFontSize = 66;
           renderedLineHeight = renderedFontSize * 1.25;
         } else if (element.classList.contains('monogram-text-display-os')) {
-          renderedFontSize = 32;
+          renderedFontSize = 40;
           renderedLineHeight = renderedFontSize * 1.25;
         }
       }
