@@ -2276,18 +2276,19 @@ $(document).on("click", ".sdev_radios_btn", function () {
       let renderedFontSize = fontSize * deviceScale * embroideryTextScale;
       let renderedLineHeight = lineHeight * deviceScale * embroideryTextScale;
 
-      // Mobile only (not Flourish): enlarge the preview text and keep two
-      // lines from touching. Fonts with a small x-height need a bigger boost
-      // so every font looks the same size.
+      // Mobile only: every font uses the same preview size (client request),
+      // and two lines are spaced apart so they never touch.
       if (window.matchMedia('(max-width: 767px)').matches) {
-        const fontHost = element.closest('.flourish, .signature, .amalfi, .fancy, .fondly-yours, .casually-cool, .memorize, .headliner, .letter-jacket, .vintage, .western, .royal') || element;
-        // Flourish keeps its original (smaller) mobile size.
-        if (!fontHost.classList.contains('flourish')) {
-          const mobileFontBoost = fontHost.classList.contains('signature') ? 1.6
-            : fontHost.classList.contains('amalfi') ? 1.45
-            : 1.25;
-          renderedFontSize *= mobileFontBoost;
-          renderedLineHeight = Math.max(renderedLineHeight * mobileFontBoost, renderedFontSize * 1.3);
+        const textLen = (element.innerText || element.textContent || '').replace(/\s+/g, ' ').trim().length;
+        if (element.classList.contains('textarea-text-display-os')) {
+          renderedFontSize = textLen > 28 ? 20 : 26;
+          renderedLineHeight = renderedFontSize * 1.3;
+        } else if (element.classList.contains('monogram-large-text-os')) {
+          renderedFontSize = 52;
+          renderedLineHeight = renderedFontSize * 1.25;
+        } else if (element.classList.contains('monogram-text-display-os')) {
+          renderedFontSize = 32;
+          renderedLineHeight = renderedFontSize * 1.25;
         }
       }
 
