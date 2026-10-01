@@ -3185,7 +3185,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
 
       // Mobile only: every font uses the same preview size (client request),
       // and two lines are spaced apart so they never touch.
-      if (window.matchMedia('(max-width: 767px)').matches) {
+      if (window.matchMedia('(max-width: 580px)').matches) {
         // Shorter text gets a bigger size; longer text steps down so it still
         // fits inside the trunk. Same size for every font.
         const textLines = (element.innerText || element.textContent || '').split('\n').map((line) => line.trim());
