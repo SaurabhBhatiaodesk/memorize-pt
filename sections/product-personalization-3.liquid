@@ -3189,8 +3189,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
         // Shorter text gets a bigger size; longer text steps down so it still
         // fits inside the trunk. Same size for every font.
         const longestLine = Math.max(0, ...(element.innerText || element.textContent || '')
-          .split('
-').map((line) => line.trim().length));
+          .split('\n').map((line) => line.trim().length));
         if (element.classList.contains('textarea-text-display-os')) {
           renderedFontSize = longestLine <= 10 ? 44 : longestLine <= 16 ? 37 : longestLine <= 22 ? 32 : 25;
           renderedLineHeight = renderedFontSize * 1.3;
