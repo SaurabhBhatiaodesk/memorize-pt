@@ -2334,6 +2334,13 @@ $(document).on("click", ".sdev_radios_btn", function () {
             }
           }
         }
+
+        // Final adjustment: every font 2px smaller on mobile.
+        if (renderedFontSize > 14) {
+          const smaller = (renderedFontSize - 2) / renderedFontSize;
+          renderedFontSize -= 2;
+          renderedLineHeight *= smaller;
+        }
       }
 
       else if (element.classList.contains('textarea-text-display-os')) {
