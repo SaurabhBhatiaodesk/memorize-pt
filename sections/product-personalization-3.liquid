@@ -3212,11 +3212,19 @@ $(document).on("click", ".sdev_radios_btn", function () {
           'casually-cool': 1.2, 'memorize': 1.2, 'headliner': 1.0, 'letter-jacket': 0.95,
           'vintage': 1.0, 'western': 0.95, 'royal': 1.0, 'flourish': 1.1
         };
+        // Monogram letters are capitals, so they are matched by capital height
+        // (measured per font) instead of the lowercase x-height used above.
+        const opticalMonogram = {
+          'signature': 1.0, 'amalfi': 1.1, 'fancy': 0.95, 'fondly-yours': 0.95,
+          'casually-cool': 1.15, 'memorize': 0.82, 'headliner': 1.0, 'letter-jacket': 0.86,
+          'vintage': 1.0, 'western': 0.91, 'royal': 1.03, 'flourish': 0.96
+        };
         const isMonogramPart = element.classList.contains('monogram-text-display-os') || element.classList.contains('monogram-large-text-os');
-        const fontKey = isMonogramPart ? null : Object.keys(opticalSize).find((name) => element.closest('.' + name));
+        const opticalTable = isMonogramPart ? opticalMonogram : opticalSize;
+        const fontKey = Object.keys(opticalTable).find((name) => element.closest('.' + name));
         if (fontKey) {
-          renderedFontSize *= opticalSize[fontKey];
-          renderedLineHeight *= opticalSize[fontKey];
+          renderedFontSize *= opticalTable[fontKey];
+          renderedLineHeight *= opticalTable[fontKey];
         }
         // Keep short text inside the trunk on narrow phones: shrink until the
         // longest line fits in about 66% of the trunk image width.
