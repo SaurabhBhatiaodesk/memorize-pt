@@ -2536,8 +2536,12 @@ $(document).on("click", ".sdev_radios_btn", function () {
       // so every font looks the same size.
       if (window.matchMedia('(max-width: 767px)').matches) {
         const fontHost = element.closest('.flourish, .signature, .amalfi, .fancy, .fondly-yours, .casually-cool, .memorize, .headliner, .letter-jacket, .vintage, .western, .royal') || element;
-        if (!fontHost.classList.contains('flourish')) {
-          const mobileFontBoost = fontHost.classList.contains('signature') ? 1.6
+        // Flourish: only the Words/Numbers preview is boosted (its monogram
+        // sizes are already set separately for mobile).
+        const isFlourishWords = fontHost.classList.contains('flourish') && element.classList.contains('textarea-text-display-os');
+        if (!fontHost.classList.contains('flourish') || isFlourishWords) {
+          const mobileFontBoost = isFlourishWords ? 1.3
+            : fontHost.classList.contains('signature') ? 1.6
             : fontHost.classList.contains('amalfi') ? 1.45
             : 1.25;
           renderedFontSize *= mobileFontBoost;
