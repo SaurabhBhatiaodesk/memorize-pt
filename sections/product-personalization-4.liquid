@@ -2570,6 +2570,13 @@ $(document).on("click", ".sdev_radios_btn", function () {
           const probe = document.createElement('canvas').getContext('2d');
           const cs = window.getComputedStyle(element);
           probe.font = cs.fontWeight + ' 100px ' + cs.fontFamily;
+          // If the font has not finished downloading, measure again once it has
+          // (slow phones otherwise keep a too-big size from the fallback font).
+          if (document.fonts && !document.fonts.check(probe.font, longestText)) {
+            document.fonts.load(probe.font, longestText).then(() => {
+              if (document.fonts.check(probe.font, longestText)) setScaledPreviewSize(element, fontSize, lineHeight);
+            }).catch(() => {});
+          }
           const widthPerPx = probe.measureText(longestText).width / 100;
           if (widthPerPx > 0) {
             const fitSize = (hostWidth * 0.6) / widthPerPx;
