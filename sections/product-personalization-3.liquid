@@ -3212,7 +3212,8 @@ $(document).on("click", ".sdev_radios_btn", function () {
           'casually-cool': 1.2, 'memorize': 1.2, 'headliner': 1.0, 'letter-jacket': 0.95,
           'vintage': 1.0, 'western': 0.95, 'royal': 1.0, 'flourish': 1.1
         };
-        const fontKey = Object.keys(opticalSize).find((name) => element.closest('.' + name));
+        const isMonogramPart = element.classList.contains('monogram-text-display-os') || element.classList.contains('monogram-large-text-os');
+        const fontKey = isMonogramPart ? null : Object.keys(opticalSize).find((name) => element.closest('.' + name));
         if (fontKey) {
           renderedFontSize *= opticalSize[fontKey];
           renderedLineHeight *= opticalSize[fontKey];
