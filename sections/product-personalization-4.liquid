@@ -2528,8 +2528,25 @@ $(document).on("click", ".sdev_radios_btn", function () {
       if (!element) return;
       const deviceScale = getPersonalizationPreviewScale();
       const embroideryTextScale = 0.75;
-      element.style.fontSize = `${fontSize * deviceScale * embroideryTextScale}px`;
-      element.style.lineHeight = `${lineHeight * deviceScale * embroideryTextScale}px`;
+      let renderedFontSize = fontSize * deviceScale * embroideryTextScale;
+      let renderedLineHeight = lineHeight * deviceScale * embroideryTextScale;
+
+      // Mobile only (not Flourish): enlarge the preview text and keep two
+      // lines from touching. Fonts with a small x-height need a bigger boost
+      // so every font looks the same size.
+      if (window.matchMedia('(max-width: 767px)').matches) {
+        const fontHost = element.closest('.flourish, .signature, .amalfi, .fancy, .fondly-yours, .casually-cool, .memorize, .headliner, .letter-jacket, .vintage, .western, .royal') || element;
+        if (!fontHost.classList.contains('flourish')) {
+          const mobileFontBoost = fontHost.classList.contains('signature') ? 1.6
+            : fontHost.classList.contains('amalfi') ? 1.45
+            : 1.25;
+          renderedFontSize *= mobileFontBoost;
+          renderedLineHeight = Math.max(renderedLineHeight * mobileFontBoost, renderedFontSize * 1.3);
+        }
+      }
+
+      element.style.fontSize = `${renderedFontSize}px`;
+      element.style.lineHeight = `${renderedLineHeight}px`;
   }
 
   function adjustFontSizeAndLineHeight0(monogramDisplay, textareaDisplay, textLength) {
