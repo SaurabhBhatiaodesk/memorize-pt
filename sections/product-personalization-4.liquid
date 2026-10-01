@@ -2534,16 +2534,34 @@ $(document).on("click", ".sdev_radios_btn", function () {
       // Mobile only: every font uses the same preview size (client request),
       // and two lines are spaced apart so they never touch.
       if (window.matchMedia('(max-width: 767px)').matches) {
-        const textLen = (element.innerText || element.textContent || '').replace(/\s+/g, ' ').trim().length;
+        // Shorter text gets a bigger size; longer text steps down so it still
+        // fits inside the trunk. Same size for every font.
+        const longestLine = Math.max(0, ...(element.innerText || element.textContent || '')
+          .split('
+').map((line) => line.trim().length));
         if (element.classList.contains('textarea-text-display-os')) {
-          renderedFontSize = textLen > 28 ? 20 : 26;
+          renderedFontSize = longestLine <= 10 ? 38 : longestLine <= 16 ? 32 : longestLine <= 22 ? 28 : 22;
           renderedLineHeight = renderedFontSize * 1.3;
         } else if (element.classList.contains('monogram-large-text-os')) {
-          renderedFontSize = 52;
+          renderedFontSize = 66;
           renderedLineHeight = renderedFontSize * 1.25;
         } else if (element.classList.contains('monogram-text-display-os')) {
-          renderedFontSize = 32;
+          renderedFontSize = 40;
           renderedLineHeight = renderedFontSize * 1.25;
+        }
+
+        // Optical size match: each font has a different letter height, so the
+        // same px size looks bigger or smaller. These multipliers (measured
+        // from each font's x-height / width) make them look equal.
+        const opticalSize = {
+          'signature': 1.35, 'amalfi': 1.25, 'fancy': 1.25, 'fondly-yours': 1.2,
+          'casually-cool': 1.2, 'memorize': 1.2, 'headliner': 1.0, 'letter-jacket': 0.95,
+          'vintage': 1.0, 'western': 0.95, 'royal': 1.0, 'flourish': 1.1
+        };
+        const fontKey = Object.keys(opticalSize).find((name) => element.closest('.' + name));
+        if (fontKey) {
+          renderedFontSize *= opticalSize[fontKey];
+          renderedLineHeight *= opticalSize[fontKey];
         }
       }
 
