@@ -2549,6 +2549,20 @@ $(document).on("click", ".sdev_radios_btn", function () {
           renderedFontSize = 40;
           renderedLineHeight = renderedFontSize * 1.25;
         }
+
+        // Optical size match: each font has a different letter height, so the
+        // same px size looks bigger or smaller. These multipliers (measured
+        // from each font's x-height / width) make them look equal.
+        const opticalSize = {
+          'signature': 1.35, 'amalfi': 1.25, 'fancy': 1.35, 'fondly-yours': 1.2,
+          'casually-cool': 1.35, 'memorize': 1.2, 'headliner': 1.0, 'letter-jacket': 0.85,
+          'vintage': 1.0, 'western': 0.82, 'royal': 1.0, 'flourish': 1.2
+        };
+        const fontKey = Object.keys(opticalSize).find((name) => element.closest('.' + name));
+        if (fontKey) {
+          renderedFontSize *= opticalSize[fontKey];
+          renderedLineHeight *= opticalSize[fontKey];
+        }
       }
 
       element.style.fontSize = `${renderedFontSize}px`;
