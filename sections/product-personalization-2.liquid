@@ -2350,6 +2350,13 @@ $(document).on("click", ".sdev_radios_btn", function () {
           renderedFontSize -= 4;
           renderedLineHeight *= smaller;
         }
+
+        // Casually Cool monogram: a further 2px smaller on mobile.
+        if (isMonogramPart && element.closest('.casually-cool') && renderedFontSize > 16) {
+          const smallerMono = (renderedFontSize - 2) / renderedFontSize;
+          renderedFontSize -= 2;
+          renderedLineHeight *= smallerMono;
+        }
       }
 
       else if (element.classList.contains('textarea-text-display-os')) {
