@@ -2351,6 +2351,27 @@ $(document).on("click", ".sdev_radios_btn", function () {
           renderedLineHeight *= smaller;
         }
 
+        // Narrow script fonts (Fancy, Memorize, Flourish...) fitted to the same
+        // width as block fonts end up much taller. Cap width x capital height
+        // so they do not look oversized next to the other fonts.
+        if (element.classList.contains('textarea-text-display-os') && longestLine > 0 && longestLine <= 22) {
+          const balanceProbe = document.createElement('canvas').getContext('2d');
+          const balanceStyle = window.getComputedStyle(element);
+          balanceProbe.font = balanceStyle.fontWeight + ' 100px ' + balanceStyle.fontFamily;
+          const lineWidthPerPx = balanceProbe.measureText(longestText).width / 100;
+          const capHeightPerPx = balanceProbe.measureText('GM').actualBoundingBoxAscent / 100;
+          if (lineWidthPerPx > 0 && capHeightPerPx > 0) {
+            const balanceHost = (element.parentElement && element.parentElement.clientWidth) || 330;
+            const combinedSize = Math.sqrt(lineWidthPerPx * capHeightPerPx) * renderedFontSize;
+            const combinedLimit = balanceHost * 0.19;
+            if (combinedSize > combinedLimit) {
+              const balanceRatio = combinedLimit / combinedSize;
+              renderedFontSize *= balanceRatio;
+              renderedLineHeight *= balanceRatio;
+            }
+          }
+        }
+
         // Casually Cool monogram: a further 2px smaller on mobile.
         if (isMonogramPart && element.closest('.casually-cool') && renderedFontSize > 16) {
           const smallerMono = (renderedFontSize - 2) / renderedFontSize;
