@@ -2425,7 +2425,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
                       const testWidth = ctx.measureText(testLine).width;
   
                       if (testWidth > maxWidth && j > 0) {
-                          ctx.fillText(lineText, (canvasWidth - ctx.measureText(lineText).width) / 2, currentYPosition); // Center the line
+                          ctx.fillText(lineText.trimEnd(), (canvasWidth - ctx.measureText(lineText.trimEnd()).width) / 2, currentYPosition); // Center the line
                           lineText = words[j] + ' '; // Start a new line with the current word
                           currentYPosition += lineHeight; // Move the Y position down for the next line
                       } else {
@@ -2433,7 +2433,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
                       }
                   }
   
-                  ctx.fillText(lineText, (canvasWidth - ctx.measureText(lineText).width) / 2, currentYPosition); // Render the remaining line
+                  ctx.fillText(lineText.trimEnd(), (canvasWidth - ctx.measureText(lineText.trimEnd()).width) / 2, currentYPosition); // Render the remaining line
                   currentYPosition += lineHeight; // Move the Y position down for the next line
               }
           } else if (monogramText.length === 3) {

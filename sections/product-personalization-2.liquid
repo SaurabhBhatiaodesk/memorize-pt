@@ -1620,7 +1620,13 @@ $(document).on("click", ".sdev_radios_btn", function () {
         );
       };
 
+      // When the personalizer popup is open, export the preview INSIDE the popup:
+      // that is the one the customer is looking at. On mobile the product page
+      // also has a second preview (a different width) that is still "on screen"
+      // behind the popup; exporting that one wrapped the text differently and
+      // scaled it differently from what the customer saw.
       const indexOnecontainer =
+        Array.from(customImagesContainers || []).find(container => isTrulyOnScreen(container) && container.closest('.personalize-product-popup-section-os')) ||
         Array.from(customImagesContainers || []).find(isTrulyOnScreen) ||
         customImagesContainers?.[3];
       let trunkImgSrc = '', fabricImgSrc = '', textareaText = '', monogramText = '';

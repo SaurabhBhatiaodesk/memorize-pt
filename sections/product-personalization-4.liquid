@@ -2019,14 +2019,14 @@ $(document).on("click", ".sdev_radios_btn", function () {
                       const testLine = lineText + words[j] + ' ';
                       const testWidth = ctx.measureText(testLine).width;
                       if (testWidth > maxWidth && j > 0) {
-                          ctx.fillText(lineText, (canvasWidth - ctx.measureText(lineText).width) / 2, currentYPosition);
+                          ctx.fillText(lineText.trimEnd(), (canvasWidth - ctx.measureText(lineText.trimEnd()).width) / 2, currentYPosition);
                           lineText = words[j] + ' ';
                           currentYPosition += lineHeight;
                       } else {
                           lineText = testLine;
                       }
                   }
-                  ctx.fillText(lineText, (canvasWidth - ctx.measureText(lineText).width) / 2, currentYPosition);
+                  ctx.fillText(lineText.trimEnd(), (canvasWidth - ctx.measureText(lineText.trimEnd()).width) / 2, currentYPosition);
                   currentYPosition += lineHeight;
               }
           } else if (monogramText.length === 3) {

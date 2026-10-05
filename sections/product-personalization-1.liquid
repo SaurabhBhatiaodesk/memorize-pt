@@ -1890,7 +1890,13 @@ document.addEventListener('change', function(event) {
         );
       };
 
+      // When the personalizer popup is open, export the preview INSIDE the popup:
+      // that is the one the customer is looking at. On mobile the product page
+      // also has a second preview (a different width) that is still "on screen"
+      // behind the popup; exporting that one wrapped the text differently and
+      // scaled it differently from what the customer saw.
       const indexOnecontainer =
+        canvasContainers.find(container => hasRequiredImages(container) && isTrulyOnScreen(container) && container.closest('.personalize-product-popup-section-os')) ||
         canvasContainers.find(container => hasRequiredImages(container) && isTrulyOnScreen(container)) ||
         canvasContainers.find(container => hasRequiredImages(container) && container.offsetParent !== null) ||
         canvasContainers.find(container => hasRequiredImages(container) && container.classList.contains(showClass)) ||
