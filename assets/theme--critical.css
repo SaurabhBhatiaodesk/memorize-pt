@@ -4801,7 +4801,8 @@ div#klaviyo-reviews-carousel-wrapper .kl_reviews__carousel__author {
   .custom-images-os h4 {
     font-size: 20px;
     line-height: 24px;
-    width: 100%;
+    width: 61%;
+    margin: 0 auto;
     max-width: 65%;
   }
   .custom-images-os.main-product-image-container .textarea-text-display-os {
