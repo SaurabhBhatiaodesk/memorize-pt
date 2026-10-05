@@ -1999,7 +1999,9 @@ label.radios--option-label.customText h3 {
       // The export trunk is always drawn at 450px wide, while the preview may be rendered smaller.
       const previewTrunkRectWidth = trunkEl?.getBoundingClientRect?.().width || 0;
       const previewTrunkCssWidth = trunkEl ? parseFloat(window.getComputedStyle(trunkEl).width) || 0 : 0;
-      const previewTrunkWidth = previewTrunkRectWidth || previewTrunkCssWidth || imageWidth;
+      // Layout width (CSS px), not the on-screen rect: a CSS-scaled popup shrinks the
+      // rect but not the font sizes.
+      const previewTrunkWidth = previewTrunkCssWidth || previewTrunkRectWidth || imageWidth;
       const previewToCanvasScale = Math.max(1, Math.min(2.5, imageWidth / previewTrunkWidth));
 
       const scaledFontValue = (styleValue) => {
