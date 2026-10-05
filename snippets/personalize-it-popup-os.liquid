@@ -212,6 +212,7 @@
     align-items: center !important;
     justify-content: center !important;
     overflow: hidden;
+    white-space: nowrap;
   }
   /* Font-size per button is normalized so each font's own label text
      renders at the same visual ink-height, instead of guessed values -
@@ -219,9 +220,14 @@
   .mobile-font-buttons-os .mobile-font-option-os.headliner {
     font-size: 27.64px;
   }
-  .mobile-font-buttons-os .mobile-font-option-os.letter-jacket,
   .mobile-font-buttons-os .mobile-font-option-os.amalfi {
     font-size: 29.14px;
+  }
+  /* "Letter Jacket" is a wide two-word label: keep it on one line so the
+     button is never taller than the others (the script below also shrinks
+     any label that is still wider than its button on narrow phones). */
+  .mobile-font-buttons-os .mobile-font-option-os.letter-jacket {
+    font-size: 20px;
   }
   .mobile-font-buttons-os .mobile-font-option-os.western {
     font-size: 25.07px;
@@ -1500,6 +1506,41 @@
                 <!-- <div class="mobile-font-option-os italianno" onclick="selectMobileFont('italianno', this)">Italianno</div> -->
                 <!-- <div class="mobile-font-option-os amsterdam" onclick="selectMobileFont('', this)">Amsterdam</div> -->
               </div>
+              <script>
+                (function () {
+                  var hosts = document.querySelectorAll('.mobile-font-buttons-os');
+                  if (!hosts.length) return;
+                  var probe = document.createElement('canvas').getContext('2d');
+                  var requested = {};
+                  function fitMobileFontLabels() {
+                    hosts.forEach(function (host) {
+                      host.querySelectorAll('.mobile-font-option-os').forEach(function (btn) {
+                        if (!btn.clientWidth) return;
+                        btn.style.fontSize = '';
+                        var cs = window.getComputedStyle(btn);
+                        var size = parseFloat(cs.fontSize);
+                        var room = btn.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) - 2;
+                        var label = btn.textContent.trim();
+                        probe.font = cs.fontWeight + ' 100px ' + cs.fontFamily;
+                        var key = probe.font + label;
+                        if (document.fonts && !requested[key] && !document.fonts.check(probe.font, label)) {
+                          requested[key] = true;
+                          document.fonts.load(probe.font, label).then(fitMobileFontLabels).catch(function () {});
+                        }
+                        var widthPerPx = probe.measureText(label).width / 100;
+                        if (widthPerPx > 0 && widthPerPx * size > room) {
+                          btn.style.fontSize = Math.max(Math.floor((room / widthPerPx) * 10) / 10, 10) + 'px';
+                        }
+                      });
+                    });
+                  }
+                  if (window.ResizeObserver) {
+                    hosts.forEach(function (host) { new ResizeObserver(fitMobileFontLabels).observe(host); });
+                  }
+                  window.addEventListener('resize', fitMobileFontLabels);
+                  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitMobileFontLabels);
+                })();
+              </script>
               <input type="hidden" class="mobile-custom-font-names-os selectedFont" value="" />
               <div class="error-message-os" id="fontError">Please select a font.</div>
             </div>
