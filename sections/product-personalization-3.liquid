@@ -2259,6 +2259,57 @@ $(document).on("click", ".sdev_radios_btn", function () {
       }
 
       // Load trunk image with crossOrigin to avoid CORS issues
+      // The cart image must break lines exactly where the preview does. Read the
+      // lines the browser actually rendered in the visible preview (typed Returns
+      // plus automatic wrapping) instead of re-wrapping at a different width,
+      // which turned a 2-line preview into 3 lines in the cart.
+      const getRenderedPreviewLines = (element, fallbackText) => {
+        const typedLines = fallbackText.split('\n');
+        try {
+          const node = element && element.firstChild;
+          if (!node || node.nodeType !== Node.TEXT_NODE || !node.textContent.trim()) return { lines: typedLines, rendered: false };
+          const text = node.textContent;
+          const range = document.createRange();
+          const threshold = Math.max(4, (parseFloat(window.getComputedStyle(element).fontSize) || 16) * 0.5);
+          const lines = [];
+          let current = '';
+          let currentTop = null;
+          let measured = 0;
+          for (let i = 0; i < text.length; i++) {
+            const character = text.charAt(i);
+            if (character === '\n') {
+              lines.push(current);
+              current = '';
+              currentTop = null;
+              continue;
+            }
+            range.setStart(node, i);
+            range.setEnd(node, i + 1);
+            const rects = range.getClientRects();
+            if (rects.length) {
+              measured++;
+              const top = rects[0].top;
+              if (currentTop !== null && top - currentTop > threshold) {
+                lines.push(current);
+                current = '';
+                currentTop = null;
+              }
+              if (currentTop === null) currentTop = top;
+            }
+            current += character;
+          }
+          lines.push(current);
+          const trimmed = lines.map((line) => line.trim());
+          while (trimmed.length && !trimmed[0]) trimmed.shift();
+          while (trimmed.length && !trimmed[trimmed.length - 1]) trimmed.pop();
+          if (!measured || !trimmed.length) return { lines: typedLines, rendered: false };
+          return { lines: trimmed, rendered: true };
+        } catch (error) {
+          return { lines: typedLines, rendered: false };
+        }
+      };
+      const renderedPreview = getRenderedPreviewLines(textareaEl, textareaText);
+
       var trunkImg = new Image();
       trunkImg.crossOrigin = 'anonymous'; // This line solves CORS issues
       var fabricImg = new Image();
@@ -2310,12 +2361,12 @@ $(document).on("click", ".sdev_radios_btn", function () {
               ctx.fillStyle = textareaTextStyle.color; // Keep the original color for the text
       
               // Split the text by lines (handling both spaces and newlines)
-              const requestedLines = textareaText.split('\n');
+              const requestedLines = renderedPreview.lines;
               const lineHeight = scaledLineHeightValue(
                 textareaTextStyle.lineHeight,
                 textareaTextStyle.fontSize
               );
-              const maxWidth = 250; // Set max width to 300px
+              const maxWidth = renderedPreview.rendered ? Math.max(250, imageWidth) : 250;
 
               // Character-level wrapping prevents long words/numbers without
               // spaces from overflowing the exported embroidery image.
