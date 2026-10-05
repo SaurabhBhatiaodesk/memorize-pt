@@ -2670,7 +2670,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
 
         // Fixed preview line-heights requested for these fonts on mobile.
         if (element.classList.contains('textarea-text-display-os')) {
-          const mobileLineHeights = { 'fancy': 31, 'amalfi': 36.3, 'fondly-yours': 34.48, 'signature': 38.94 };
+          const mobileLineHeights = { 'fancy': 31, 'amalfi': 36.3, 'fondly-yours': 34.48, 'signature': 38.94, 'casually-cool': 33.48 };
           const lineHeightKey = Object.keys(mobileLineHeights).find((name) => element.closest('.' + name));
           if (lineHeightKey) renderedLineHeight = mobileLineHeights[lineHeightKey];
         }
