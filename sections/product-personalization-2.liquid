@@ -1836,46 +1836,46 @@ $(document).on("click", ".sdev_radios_btn", function () {
                   currentYPosition += lineHeight;
               }
           } else if (monogramText.length === 3) {
-              const redBoxTop = 125;
-              const redBoxHeight = 280;
-
+              // Draw the monogram exactly like the personalizer preview: the preview
+              // is a flex row (align-items: center) with a CSS gap between the three
+              // letters, so each letter is centred on one shared line and spaced by
+              // that gap. Without the gap the letters touched in the cart image.
               ctx.fillStyle = monogramTextStyle.color;
-              ctx.font = `${monogramTextStyle.fontWeight} ${scaledFontValue(monogramTextStyle.fontSize)} ${monogramTextStyle.fontFamily}`;
-              var firstLetterWidth = ctx.measureText(monogramText.charAt(0)).width;
-              ctx.font = `${monogramLargeTextStyle.fontWeight} ${scaledFontValue(monogramLargeTextStyle.fontSize)} ${monogramLargeTextStyle.fontFamily}`;
-              var secondLetterWidth = ctx.measureText(monogramText.charAt(1)).width;
-              ctx.font = `${monogramTextStyle.fontWeight} ${scaledFontValue(monogramTextStyle.fontSize)} ${monogramTextStyle.fontFamily}`;
-              var thirdLetterWidth = ctx.measureText(monogramText.charAt(2)).width;
-              var totalWidth = firstLetterWidth + secondLetterWidth + thirdLetterWidth;
-              var startXPosition = (canvasWidth - totalWidth) / 2;
+              const monogramSmallFont = `${monogramTextStyle.fontWeight} ${scaledFontValue(monogramTextStyle.fontSize)} ${monogramTextStyle.fontFamily}`;
+              const monogramLargeFont = `${monogramLargeTextStyle.fontWeight} ${scaledFontValue(monogramLargeTextStyle.fontSize)} ${monogramLargeTextStyle.fontFamily}`;
+              const monogramLetters = [
+                { character: monogramText.charAt(0), font: monogramSmallFont, fontPx: parseFloat(scaledFontValue(monogramTextStyle.fontSize)) },
+                { character: monogramText.charAt(1), font: monogramLargeFont, fontPx: parseFloat(scaledFontValue(monogramLargeTextStyle.fontSize)) },
+                { character: monogramText.charAt(2), font: monogramSmallFont, fontPx: parseFloat(scaledFontValue(monogramTextStyle.fontSize)) }
+              ];
+              const monogramLetterGap = (parseFloat(monogramTextStyle.columnGap) || parseFloat(monogramTextStyle.gap) || 0) * previewToCanvasScale;
+              monogramLetters.forEach((letter) => {
+                ctx.font = letter.font;
+                const letterMetrics = ctx.measureText(letter.character);
+                letter.width = letterMetrics.width;
+                letter.ascent = letterMetrics.fontBoundingBoxAscent || letterMetrics.actualBoundingBoxAscent || letter.fontPx * 0.8;
+                letter.descent = letterMetrics.fontBoundingBoxDescent || letterMetrics.actualBoundingBoxDescent || letter.fontPx * 0.2;
+              });
+              const monogramTotalWidth = monogramLetters.reduce((sum, letter) => sum + letter.width, 0) + monogramLetterGap * 2;
 
-              // Fixed: same baseline-vs-content-top bug as the textarea path
-              // above — real ascent/descent metrics now center the visible
-              // glyph in the box. Letters are aligned on a shared bottom
-              // edge so all three sit on one visual "line", same as the
-              // large middle letter originally sitting 7px below the outer
-              // two (280 vs 287).
-              ctx.font = `${monogramTextStyle.fontWeight} ${scaledFontValue(monogramTextStyle.fontSize)} ${monogramTextStyle.fontFamily}`;
-              const normalMetrics = ctx.measureText(monogramText.charAt(0) || 'M');
-              const normalFontPx = parseFloat(scaledFontValue(monogramTextStyle.fontSize));
-              const normalDescent = normalMetrics.actualBoundingBoxDescent || normalFontPx * 0.25;
+              // Height of the shared centre line, read from the preview as a share of
+              // the trunk image (the preview places it at 35%).
+              let monogramCenterRatio = 0.35;
+              const monogramTrunk = (monogramEl && monogramEl.closest('.custom-images-os') && monogramEl.closest('.custom-images-os').querySelector('.main-trunk-image-os')) || visiblePreviewTrunk;
+              const monogramTrunkRect = monogramTrunk && monogramTrunk.getBoundingClientRect ? monogramTrunk.getBoundingClientRect() : null;
+              const monogramRect = monogramEl && monogramEl.getBoundingClientRect ? monogramEl.getBoundingClientRect() : null;
+              if (monogramTrunkRect && monogramTrunkRect.height > 0 && monogramRect && monogramRect.height > 0) {
+                const measuredRatio = (monogramRect.top + monogramRect.height / 2 - monogramTrunkRect.top) / monogramTrunkRect.height;
+                if (measuredRatio > 0.1 && measuredRatio < 0.9) monogramCenterRatio = measuredRatio;
+              }
+              const monogramCenterY = 100 + monogramCenterRatio * imageHeight;
 
-              ctx.font = `${monogramLargeTextStyle.fontWeight} ${scaledFontValue(monogramLargeTextStyle.fontSize)} ${monogramLargeTextStyle.fontFamily}`;
-              const largeMetrics = ctx.measureText(monogramText.charAt(1) || 'M');
-              const largeFontPx = parseFloat(scaledFontValue(monogramLargeTextStyle.fontSize));
-              const largeAscent = largeMetrics.actualBoundingBoxAscent || largeFontPx * 0.75;
-              const largeDescent = largeMetrics.actualBoundingBoxDescent || largeFontPx * 0.25;
-
-              const largeBlockHeight = largeAscent + largeDescent;
-              const monogramLargeBaselineY = redBoxTop + (redBoxHeight - largeBlockHeight) / 2 + largeAscent;
-              const monogramBaselineY = monogramLargeBaselineY + largeDescent - normalDescent;
-
-              ctx.font = `${monogramTextStyle.fontWeight} ${scaledFontValue(monogramTextStyle.fontSize)} ${monogramTextStyle.fontFamily}`;
-              ctx.fillText(monogramText.charAt(0), startXPosition, monogramBaselineY);
-              ctx.font = `${monogramLargeTextStyle.fontWeight} ${scaledFontValue(monogramLargeTextStyle.fontSize)} ${monogramLargeTextStyle.fontFamily}`;
-              ctx.fillText(monogramText.charAt(1), startXPosition + firstLetterWidth, monogramLargeBaselineY);
-              ctx.font = `${monogramTextStyle.fontWeight} ${scaledFontValue(monogramTextStyle.fontSize)} ${monogramTextStyle.fontFamily}`;
-              ctx.fillText(monogramText.charAt(2), startXPosition + firstLetterWidth + secondLetterWidth, monogramBaselineY);
+              let monogramX = (canvasWidth - monogramTotalWidth) / 2;
+              monogramLetters.forEach((letter) => {
+                ctx.font = letter.font;
+                ctx.fillText(letter.character, monogramX, monogramCenterY + (letter.ascent - letter.descent) / 2);
+                monogramX += letter.width + monogramLetterGap;
+              });
           }
 
           var base64ImageURL = canvas.toDataURL('image/png');
