@@ -2372,6 +2372,13 @@ $(document).on("click", ".sdev_radios_btn", function () {
           }
         }
 
+        // Flourish preview text: a further 1px smaller on mobile.
+        if (element.classList.contains('textarea-text-display-os') && element.closest('.flourish') && renderedFontSize > 16) {
+          const smallerFlourish = (renderedFontSize - 1) / renderedFontSize;
+          renderedFontSize -= 1;
+          renderedLineHeight *= smallerFlourish;
+        }
+
         // Casually Cool monogram: a further 2px smaller on mobile.
         if (isMonogramPart && element.closest('.casually-cool') && renderedFontSize > 16) {
           const smallerMono = (renderedFontSize - 2) / renderedFontSize;
