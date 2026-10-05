@@ -1670,9 +1670,13 @@ $(document).on("click", ".sdev_radios_btn", function () {
         ? parseFloat(window.getComputedStyle(visiblePreviewTrunk).width) || 0
         : 0;
 
+      // Use the layout width (CSS px), not the on-screen rect: the popup can be
+      // CSS-scaled (transform: scale(0.8) on shorter screens), which shrinks the
+      // rect but not the font sizes, so the cart text came out ~25% bigger than
+      // the preview and wrapped differently.
       const previewTrunkWidth =
-        previewTrunkRectWidth ||
         previewTrunkCssWidth ||
+        previewTrunkRectWidth ||
         imageWidth;
 
       const previewToCanvasScale =
