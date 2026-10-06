@@ -2467,6 +2467,15 @@ $(document).on("click", ".sdev_radios_btn", function () {
           renderedLineHeight *= smallerFlourish;
         }
 
+        // Monogram fine-tune on mobile (client): Casually Cool 2px bigger, every
+        // other font 1px smaller.
+        if (isMonogramPart && renderedFontSize > 16) {
+          const monogramShift = element.closest('.casually-cool') ? 2 : -1;
+          const monogramShiftRatio = (renderedFontSize + monogramShift) / renderedFontSize;
+          renderedFontSize += monogramShift;
+          renderedLineHeight *= monogramShiftRatio;
+        }
+
         // Fixed preview line-heights requested for these fonts on mobile.
         if (element.classList.contains('textarea-text-display-os')) {
           const mobileLineHeights = { 'fancy': 31, 'amalfi': 36.3, 'fondly-yours': 34.48, 'signature': 35.94, 'casually-cool': 33.48, 'memorize': 35.48 };
