@@ -2644,9 +2644,9 @@ $(document).on("click", ".sdev_radios_btn", function () {
         // Monogram letters are capitals, so they are matched by capital height
         // (measured per font) instead of the lowercase x-height used above.
         const opticalMonogram = {
-          'signature': 0.91, 'amalfi': 1.03, 'fancy': 0.86, 'fondly-yours': 0.85,
+          'signature': 0.85, 'amalfi': 1.03, 'fancy': 0.80, 'fondly-yours': 0.85,
           'casually-cool': 0.72, 'memorize': 0.82, 'headliner': 0.958, 'letter-jacket': 0.86,
-          'vintage': 1.0, 'western': 0.91, 'royal': 0.96, 'flourish': 0.95
+          'vintage': 1.0, 'western': 0.91, 'royal': 0.96, 'flourish': 0.89
         };
         const isMonogramPart = element.classList.contains('monogram-text-display-os') || element.classList.contains('monogram-large-text-os');
         const opticalTable = isMonogramPart ? opticalMonogram : opticalSize;
