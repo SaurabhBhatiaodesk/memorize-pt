@@ -2878,10 +2878,10 @@ document.addEventListener('change', function(event) {
           renderedLineHeight *= smallerFlourish;
         }
 
-        // Monogram fine-tune on mobile (client): Casually Cool 2px bigger, every
-        // other font 1px smaller.
+        // Monogram fine-tune on mobile (client): Casually Cool 3px bigger, every
+        // other font 2px smaller.
         if (isMonogramPart && renderedFontSize > 16) {
-          const monogramShift = element.closest('.casually-cool') ? 2 : -1;
+          const monogramShift = element.closest('.casually-cool') ? 3 : -2;
           const monogramShiftRatio = (renderedFontSize + monogramShift) / renderedFontSize;
           renderedFontSize += monogramShift;
           renderedLineHeight *= monogramShiftRatio;
