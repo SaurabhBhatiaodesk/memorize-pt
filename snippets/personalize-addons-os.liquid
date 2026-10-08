@@ -6,9 +6,9 @@
 
   What is shown, in this order:
     A. add-on products set up in Shopify (below), with an engraving choice for the padlock;
-    B. then the OTHER personalizer trunks (addon_trunk_handles), each with a View button
-       that opens that trunk's page (a trunk needs its own personalizing, so it is never
-       added to the cart from here). The trunk being personalized is left out.
+    B. then the OTHER personalizer trunks (addon_trunk_handles), each with an Add button; a
+       picked trunk is added to the cart together with the current one (its first available
+       variant, no personalization). The trunk being personalized is left out.
   The add-on products (A) come from Shopify, in this order:
     1. the product's own "Complementary products" (Search & Discovery app), if set;
     2. otherwise the products of the collection with the handle addon_collection
@@ -22,9 +22,9 @@
     {% render 'personalize-addons-os', part: 'assets', product: product %}      CSS + JS, render once
 
   Cart: customformSubmission (product sections) calls
-  window.PersonalizeAddons.getCartItems() and sends the picked products in the same
-  cart/add.js request as the trunk. The engraving is the "Engraving" line item
-  property. getSelection() returns the raw choices.
+  window.PersonalizeAddons.getCartItems() and sends the picked products (padlock with
+  its "Engraving" line item property, trunks) in the same cart/add.js request as the
+  trunk. getSelection() returns the raw choices.
 
   Settings (edit below):
     addons_enabled        switch the whole step on/off
@@ -40,11 +40,10 @@
     engraving_presets     PLACEHOLDER preset messages, separated by |
     engraving_max_chars   PLACEHOLDER limit for the custom message
 
-  Review fallback: while nothing is set up, an UNPUBLISHED theme (Draft theme, theme
-  editor, preview link) shows two clearly labelled EXAMPLE cards (padlock, pouch) under a
-  banner so the step can be reviewed. They can never reach the cart. The published (live)
-  theme never shows them: with no products set up the step simply removes itself.
-  Shopify's default "related" products are never used (they are other trunks / gift cards).
+  Review example: on an UNPUBLISHED theme (Draft theme, theme editor, preview link), while the
+  real padlock product does not exist yet, ONE clearly labelled example padlock card is shown
+  first (under a banner) so the engraving options can be reviewed. It can never reach the
+  cart. The published (live) theme never shows it.
 {%- endcomment -%}
 
 {%- liquid
@@ -202,24 +201,15 @@
           info.appendChild(el('div', 'addon-title-os', p.title));
           if (p.preview) info.appendChild(el('div', 'addon-preview-note-os', 'Preview only: this product is not set up in Shopify yet'));
           info.appendChild(el('div', 'addon-price-os', formatPrice(p.price)));
-          if (p.trunk) {
-            // A personalizer trunk: it needs its own personalizing, so it opens its page.
-            var link = el('a', 'addon-btn-os', 'View');
-            link.href = p.url;
-            link.target = '_blank';
-            link.rel = 'noopener';
-            info.appendChild(link);
-          } else {
-            var button = el('button', 'addon-btn-os', isEngravable(p) ? 'Choose your engraving' : 'Add');
-            button.type = 'button';
-            button.setAttribute('data-addon-toggle', '');
-            info.appendChild(button);
-          }
+          var button = el('button', 'addon-btn-os', isEngravable(p) ? 'Choose your engraving' : 'Add');
+          button.type = 'button';
+          button.setAttribute('data-addon-toggle', '');
+          info.appendChild(button);
           main.appendChild(imgWrap);
           main.appendChild(info);
           card.appendChild(main);
 
-          if (!p.trunk && isEngravable(p)) {
+          if (isEngravable(p)) {
             card.setAttribute('data-engravable', 'true');
             var panel = el('div', 'addon-engrave-os');
             panel.setAttribute('data-addon-engrave', '');
@@ -451,40 +441,40 @@
               .then(function (collectionData) { return usable((collectionData.products || []).map(fromCollection)); });
           })
           .then(function (configured) {
-            // The other personalizer trunks are always offered too (not the one being personalized).
+            // The other personalizer trunks are offered too (not the one being personalized): picked
+            // ones are added to the cart together with the current trunk.
             var handles = (config.trunkHandles || []).filter(function (h) { return h && h !== currentHandle; });
             return Promise.all(handles.map(function (h) { return getJson('/products/' + encodeURIComponent(h) + '.js'); }))
               .then(function (found) {
                 var trunks = found.filter(function (p) { return p && p.id && p.available !== false && String(p.id) !== String(productId); })
                   .map(function (p) {
-                    return { id: p.id, handle: p.handle, title: p.title, price: p.price, featured_image: p.featured_image || (p.images && p.images[0]) || '', tags: [], variants: [], available: true, trunk: true, noCart: true, url: '/products/' + p.handle };
+                    var variants = (p.variants || []).map(function (v) { return { id: v.id, available: v.available !== false, price: v.price }; });
+                    return { id: p.id, handle: p.handle, title: p.title, price: p.price, featured_image: p.featured_image || (p.images && p.images[0]) || '', tags: [], variants: variants, available: true, trunk: true };
                   });
                 return configured.concat(trunks);
               });
           })
           .then(function (list) {
-            if (list.length || !config.previewWhenEmpty) return { list: list, preview: false };
-            // Unpublished theme only, nothing set up yet: two clearly labelled example cards so
-            // the step can be reviewed. They have no variant and can never reach the cart.
-            var pouchSvg = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"><rect width="300" height="300" fill="#f4f4f6"/><rect x="60" y="95" width="180" height="110" rx="26" fill="#fff" stroke="#b9c4d8" stroke-width="4"/><path d="M60 150h180M105 95l-45 55 45 55M195 95l45 55-45 55" fill="none" stroke="#c9d3e6" stroke-width="3"/></svg>');
-            return {
-              preview: true,
-              list: [
-                { id: 'preview-padlock', handle: config.engravableHandle, title: 'Engraved Heart Padlock', price: 3500, available: true, featured_image: config.previewImage, tags: [], variants: [], preview: true, noCart: true },
-                { id: 'preview-pouch', handle: 'preview-pouch', title: 'Small Archival Pouch', price: 3000, available: true, featured_image: pouchSvg, tags: [], variants: [], preview: true, noCart: true }
-              ]
-            };
+            // Unpublished theme only (Draft, preview link, editor): while the real engravable
+            // product (the padlock) does not exist yet, show ONE clearly labelled example padlock
+            // card first, so the engraving options (3 preset messages / custom message) can be
+            // reviewed. It has no variant and can never reach the cart.
+            var needsExample = config.previewWhenEmpty && !list.some(function (p) { return !p.trunk && isEngravable(p); });
+            if (needsExample) {
+              list = [{ id: 'preview-padlock', handle: config.engravableHandle, title: 'Engraved Heart Padlock', price: 3500, available: true, featured_image: config.previewImage, tags: [], variants: [], preview: true, noCart: true }].concat(list);
+            }
+            return { list: list, preview: needsExample };
           })
           .then(function (result) {
             var list = result.list;
             if (!list.length) { removeStep(); return; }
-            list.forEach(function (p) { if (!p.trunk) products[String(p.id)] = p; });
+            list.forEach(function (p) { products[String(p.id)] = p; });
             roots.forEach(function (root) {
               var track = root.querySelector('[data-addons-track]');
               var context = root.getAttribute('data-context') || 'x';
               if (!track) return;
               if (result.preview) {
-                var banner = el('p', 'addon-preview-banner-os', 'Preview only: these are examples because no add-ons are set up yet. Add the products to the "' + (config.collection || 'add-ons') + '" collection (or set Complementary products) to show your own.');
+                var banner = el('p', 'addon-preview-banner-os', 'Preview only: the padlock below is an example. It is replaced by the real product once it is created in Shopify and added to the "' + (config.collection || 'add-ons') + '" collection (or set as a Complementary product).');
                 track.parentNode.insertBefore(banner, track);
               }
               list.forEach(function (p, index) { track.appendChild(buildCard(p, context, index + 1)); });
