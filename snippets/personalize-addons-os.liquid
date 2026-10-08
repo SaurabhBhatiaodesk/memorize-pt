@@ -51,7 +51,8 @@
                           gives them: then only the custom message field is shown)
     engraving_max_chars   limit for the custom message (0 = no limit until the client gives one)
     demo_price            Draft theme only: the fee shown on the demo Lock card (e.g. 20), desktop and mobile,
-                          until the real lock product exists. Empty until the client gives the amount.
+                          until the real lock product exists. 20 for now (given by the team, not yet confirmed
+                          by the client); empty = no price shown.
                           The real product always shows its own Shopify price (that is what is charged).
     These can also be passed in the render call from personalize-it-popup-os.
 
@@ -69,7 +70,7 @@
   assign engravable_tag = engravable_tag | default: 'engravable'
   assign engraving_presets = engraving_presets | default: ''
   assign engraving_max_chars = engraving_max_chars | default: 0
-  assign demo_price = demo_price | default: ''
+  assign demo_price = demo_price | default: '20'
   assign demo_image = '//memorizeyourlife.com/cdn/shop/files/memorize-lock-blue-rgb-900px-w-72ppi.png?v=1751344119'
 -%}
 
