@@ -41,8 +41,8 @@
     engraving_max_chars   PLACEHOLDER limit for the custom message
 
   Review example: on an UNPUBLISHED theme (Draft theme, theme editor, preview link), while the
-  real padlock product does not exist yet, ONE clearly labelled example padlock card is shown
-  first (under a banner) so the engraving options can be reviewed. It can never reach the
+  real padlock product does not exist yet, ONE example padlock card is shown
+  first so the engraving options can be reviewed (no label). It can never reach the
   cart. The published (live) theme never shows it.
 {%- endcomment -%}
 
@@ -153,8 +153,6 @@
       .addon-choice-os.is-selected { background: #274864; color: #fff; }
     }
     .addon-error-os { color: red; margin: 10px 0; font-size: 14px; }
-    .addon-preview-banner-os { font-size: 12px; line-height: 16px; color: #b3261e; font-style: italic; margin: 0 0 8px; }
-    .addon-preview-note-os { font-size: 12px; line-height: 16px; color: #b3261e; margin: 0 0 6px; font-style: italic; }
     .personalize-product-popup-addons-os { margin-top: 20px; }
     .personalize-product-popup-addons-os[hidden] { display: none; }
     .addon-locked-note-os { display: none; margin: 4px 0 0; font-size: 14px; color: #5b7088; }
@@ -214,7 +212,6 @@
           }
           var info = el('div', 'addon-info-os');
           info.appendChild(el('div', 'addon-title-os', p.title));
-          if (p.preview) info.appendChild(el('div', 'addon-preview-note-os', 'Preview only: this product is not set up in Shopify yet'));
           info.appendChild(el('div', 'addon-price-os', formatPrice(p.price)));
           var button = el('button', 'addon-btn-os', isEngravable(p) ? 'Choose your engraving' : 'Add');
           button.type = 'button';
@@ -503,10 +500,6 @@
               var track = root.querySelector('[data-addons-track]');
               var context = root.getAttribute('data-context') || 'x';
               if (!track) return;
-              if (result.preview) {
-                var banner = el('p', 'addon-preview-banner-os', 'Preview only: the padlock below is an example. It is replaced by the real product once it is created in Shopify and added to the "' + (config.collection || 'add-ons') + '" collection (or set as a Complementary product).');
-                track.parentNode.insertBefore(banner, track);
-              }
               list.forEach(function (p, index) { track.appendChild(buildCard(p, context, index + 1)); });
               var area = root.querySelector('[data-addons-engrave-area]');
               if (area) list.forEach(function (p) { if (isEngravable(p)) area.appendChild(buildPanel(p)); });
