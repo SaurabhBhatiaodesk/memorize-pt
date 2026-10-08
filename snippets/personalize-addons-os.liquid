@@ -21,6 +21,10 @@
     {% render 'personalize-addons-os', part: 'markup', context: 'mobile', product: product %}
     {% render 'personalize-addons-os', part: 'assets', product: product %}      CSS + JS, render once
 
+  Review aid: on an unpublished theme, ?addons_demo=1 in the page address shows a demo lock
+  with the engraving options (3 example options + custom message). Not shown otherwise,
+  never on the published theme, and it can never reach the cart.
+
   Cart: customformSubmission (product sections) calls
   window.PersonalizeAddons.getCartItems() and sends the picked products (padlock with
   its "Engraving" line item property, trunks) in the same cart/add.js request as the
@@ -80,7 +84,8 @@
       "engravableTag": {{ engravable_tag | json }},
       "presets": {{ preset_list | json }},
       "maxChars": {{ engraving_max_chars | json }},
-      "currency": {{ cart.currency.symbol | default: '$' | json }}
+      "currency": {{ cart.currency.symbol | default: '$' | json }},
+      "allowDemo": {% if theme.role != 'main' %}true{% else %}false{% endif %}
     }
   </script>
   <style>
@@ -218,7 +223,7 @@
           }
           var info = el('div', 'addon-info-os');
           info.appendChild(el('div', 'addon-title-os', p.title));
-          info.appendChild(el('div', 'addon-price-os', formatPrice(p.price)));
+          if (p.price !== null && p.price !== undefined) info.appendChild(el('div', 'addon-price-os', formatPrice(p.price)));
           var button = el('button', 'addon-btn-os', isEngravable(p) ? 'Choose your engraving' : 'Add');
           button.type = 'button';
           button.setAttribute('data-addon-toggle', '');
@@ -518,7 +523,18 @@
                 return configured.concat(trunks);
               });
           })
-          .then(function (list) { return { list: list }; })
+          .then(function (list) {
+            // Review aid, never shown to customers: on an unpublished theme (Draft / preview link) add
+            // ?addons_demo=1 to the page address to see how a lock with engraved message looks before the
+            // real product exists. It has no price and no variant, so it can never reach the cart.
+            var demoOn = config.allowDemo && /[?&]addons_demo=1(&|$)/.test(window.location.search);
+            if (demoOn && !list.some(function (p) { return isEngravable(p); })) {
+              if (!(config.presets || []).length) config.presets = ['Message option 1', 'Message option 2', 'Message option 3'];
+              if (!config.maxChars) config.maxChars = 30;
+              list = [{ id: 'demo-lock', handle: 'demo-lock', title: 'Lock (demo)', price: null, available: true, featured_image: '', tags: [config.engravableTag || 'engravable'], variants: [], noCart: true }].concat(list);
+            }
+            return { list: list };
+          })
           .then(function (result) {
             var list = result.list;
             if (!list.length) { removeStep(); return; }
