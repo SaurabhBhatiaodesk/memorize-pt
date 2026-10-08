@@ -1121,8 +1121,8 @@
 </div>
   
 <div class="popup-overlay-os"></div>
-{%- capture addons_desktop_html -%}{% render 'personalize-addons-os', part: 'markup', context: 'desktop' %}{%- endcapture -%}
-{%- capture addons_mobile_html -%}{% render 'personalize-addons-os', part: 'markup', context: 'mobile' %}{%- endcapture -%}
+{%- capture addons_desktop_html -%}{% render 'personalize-addons-os', part: 'markup', context: 'desktop', product: product %}{%- endcapture -%}
+{%- capture addons_mobile_html -%}{% render 'personalize-addons-os', part: 'markup', context: 'mobile', product: product %}{%- endcapture -%}
 <section class="personalize-product-popup-section-os">
   <!-- <img src="" class="testing-image-os" /> -->
  <form id="mobile-desktop-product" method="post" action="/cart/add" enctype="multipart/form-data">
@@ -1666,4 +1666,4 @@
  
 </section>
 
-{% render 'personalize-addons-os', part: 'assets' %}
+{% render 'personalize-addons-os', part: 'assets', product: product %}
