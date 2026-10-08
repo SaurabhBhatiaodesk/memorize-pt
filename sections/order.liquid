@@ -106,7 +106,7 @@
               class="order--item--title" data-item="paragraph"
               data-label="{{ 'customer.order.item' | t }}"
             >
-              {{ line_item.title | link_to: line_item.product.url }}
+              {%- if line_item.product.tags contains 'engravable' -%}{{ line_item.title }}{%- else -%}{{ line_item.title | link_to: line_item.product.url }}{%- endif -%}
 
               {%- if line_item.selling_plan_allocation -%}
                 <div class="order--selling-plan" data-item="small-text">
