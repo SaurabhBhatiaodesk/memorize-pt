@@ -408,6 +408,13 @@
         }
         function cardOf(node) { return node.closest('.addon-card-os, [data-addon-panel]'); }
         function hasEngraving(s) { return !!(s && s.engraving && s.engraving.text); }
+        // One token per picked lock. It travels on the lock line AND on its trunk line (hidden "_lock_pair" property),
+        // so the cart can remove the lock together with its trunk.
+        function pairOf(id) {
+          if (!state[id]) return '';
+          if (!state[id].pair) state[id].pair = 'lk' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+          return state[id].pair;
+        }
 
         // Mobile step 2 ("add your message") only exists in the stepper while the lock is picked: it is taken out
         // of the page otherwise, so the stepper (which counts its steps from the page) skips it.
@@ -636,20 +643,22 @@
               if (isEngravable(p)) {
                 if (!hasEngraving(state[id])) return null;
                 item.properties['Engraving'] = state[id].engraving.text;
+                item.properties['_lock_pair'] = pairOf(id);
               }
               return item;
             }).filter(Boolean);
           },
           // An engravable product that cannot be a cart line of its own (the Draft demo "Lock" has no
           // variant) still keeps its message: it travels as a property of the trunk line,
-          // e.g. "Lock message". A real product with a variant goes to the cart as its own line instead.
+          // e.g. "Lock message". A real product with a variant goes to the cart as its own line instead;
+          // its trunk line only gets the hidden "_lock_pair" token that ties the two together.
           getTrunkProperties: function () {
             var props = {};
             Object.keys(state).forEach(function (id) {
               var p = products[id];
               if (!p || !isEngravable(p) || !hasEngraving(state[id])) return;
               var sellable = (p.variants || []).some(function (v) { return v && v.id; });
-              if (sellable && !p.noCart) return;
+              if (sellable && !p.noCart) { props['_lock_pair'] = pairOf(id); return; }
               props[String(p.title) + ' message'] = state[id].engraving.text;
             });
             return props;

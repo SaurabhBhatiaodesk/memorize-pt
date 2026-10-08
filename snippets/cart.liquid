@@ -1610,6 +1610,19 @@
 
   const CUSTOM_EMBROIDERY_PRODUCT_ID = 7351943430217;
 
+  // The engraved lock (cart line with an "Engraving" property) belongs to the trunk added with it:
+  // both carry the same hidden "_lock_pair" token. Remove the trunk and the lock goes too.
+  function getLockPairToken(item) {
+    return String((item && item.properties && item.properties._lock_pair) || '');
+  }
+
+  function isLockLine(item) {
+    if (!item || Number(item.product_id) === CUSTOM_EMBROIDERY_PRODUCT_ID) return false;
+    const properties = item.properties || {};
+    return Object.prototype.hasOwnProperty.call(properties, 'Engraving') &&
+      !Object.prototype.hasOwnProperty.call(properties, 'personalize_it_variant_id');
+  }
+
   function getRequiredEmbroideryQuantities(cartItems) {
     const requiredByVariantId = {};
 
@@ -1666,6 +1679,22 @@
         }
       });
     });
+
+    // A lock whose trunk is no longer in the cart is removed too.
+    const lockLines = cartItems.filter(isLockLine);
+    if (lockLines.length) {
+      const trunkLines = cartItems.filter(item => Number(item.product_id) !== CUSTOM_EMBROIDERY_PRODUCT_ID && !isLockLine(item));
+      const trunkTokens = new Set(trunkLines.map(getLockPairToken).filter(Boolean));
+
+      lockLines.forEach(lockLine => {
+        const token = getLockPairToken(lockLine);
+        const orphan = token ? !trunkTokens.has(token) : trunkLines.length === 0;
+
+        if (orphan && lockLine.key && Number(lockLine.quantity) > 0) {
+          updates[lockLine.key] = 0;
+        }
+      });
+    }
 
     if (Object.keys(updates).length === 0) {
       return cartData;
@@ -2018,6 +2047,16 @@
     const updates = {
       [mainProduct.key]: 0
     };
+
+    // The lock added together with this trunk goes with it.
+    const mainLockToken = getLockPairToken(mainProduct);
+    if (mainLockToken) {
+      cartLineItemsData.forEach(item => {
+        if (item && item.key && isLockLine(item) && getLockPairToken(item) === mainLockToken) {
+          updates[item.key] = 0;
+        }
+      });
+    }
 
     // Calculate how many embroidery charge units are still required
     // after this exact main product has been removed.
