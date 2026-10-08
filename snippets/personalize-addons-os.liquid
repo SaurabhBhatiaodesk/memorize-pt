@@ -35,15 +35,13 @@
                           options" note and reveals the products once the embroidery options (type,
                           words/monogram, font) are filled in; false = products always visible
     addon_exclude_handles never shown as add-ons (the trunks, custom embroidery, gift cards)
-    engravable_handle     handle of the product that takes an engraving
-    engravable_tag        or any product with this tag takes an engraving
-    engraving_presets     PLACEHOLDER preset messages, separated by |
-    engraving_max_chars   PLACEHOLDER limit for the custom message
+    engravable_tag        a product with this tag (default 'engravable') takes an engraving
+    engravable_handle     or the product with this handle (empty = none)
+    engraving_presets     the preset engraving messages, separated by | (empty until the client
+                          gives them: then only the custom message field is shown)
+    engraving_max_chars   limit for the custom message (0 = no limit until the client gives one)
+    These four can also be passed in the render call from personalize-it-popup-os.
 
-  Review example: on an UNPUBLISHED theme (Draft theme, theme editor, preview link), while the
-  real padlock product does not exist yet, ONE example padlock card is shown
-  first so the engraving options can be reviewed (no label). It can never reach the
-  cart. The published (live) theme never shows it.
 {%- endcomment -%}
 
 {%- liquid
@@ -54,16 +52,16 @@
   assign addons_reveal_after_embroidery = true
   assign addon_trunk_handles = 'weddings,graduations,baby-child,other-family'
   assign addon_exclude_handles = 'holiday-limited-time-edition,custom-embroidery,memorize-trunks-egift-card'
-  assign engravable_handle = 'engraved-heart-padlock'
-  assign engravable_tag = 'engravable'
-  assign engraving_presets = 'Forever & Always|Love You More|Together Since'
-  assign engraving_max_chars = 30
-  assign preview_image = '//memorizeyourlife.com/cdn/shop/files/memorize-lock-blue-rgb-900px-w-72ppi.png?v=1751344119'
+  assign engravable_handle = engravable_handle | default: ''
+  assign engravable_tag = engravable_tag | default: 'engravable'
+  assign engraving_presets = engraving_presets | default: ''
+  assign engraving_max_chars = engraving_max_chars | default: 0
 -%}
 
 {%- if part == 'markup' and addons_enabled and product != blank -%}
   <div class="addons-os" data-addons-os data-context="{{ context | escape }}" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle | escape }}">
     <div class="addons-track-os" data-addons-track></div>
+    <div class="addons-dots-os" data-addons-dots hidden></div>
     <div class="addons-engrave-area-os" data-addons-engrave-area></div>
     <div class="addon-error-os" data-addon-error hidden>Please choose an engraving or write your own message, or remove the item.</div>
   </div>
@@ -82,37 +80,45 @@
       "engravableTag": {{ engravable_tag | json }},
       "presets": {{ preset_list | json }},
       "maxChars": {{ engraving_max_chars | json }},
-      "currency": {{ cart.currency.symbol | default: '$' | json }},
-      "previewWhenEmpty": {% if theme.role != 'main' %}true{% else %}false{% endif %},
-      "previewImage": {{ preview_image | json }}
+      "currency": {{ cart.currency.symbol | default: '$' | json }}
     }
   </script>
   <style>
     .addons-os { width: 100%; }
     .addons-track-os {
       display: flex;
-      align-items: flex-start; /* a card that opens its engraving panel must not stretch the others */
-      gap: 12px;
+      align-items: flex-start;
+      gap: 14px;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
-      padding: 2px 2px 8px;
+      scroll-behavior: smooth;
+      padding: 2px 2px 6px;
       -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;          /* no scrollbar with left/right arrows */
+      -ms-overflow-style: none;
     }
+    .addons-track-os::-webkit-scrollbar { display: none; width: 0; height: 0; }
     .addon-card-os {
-      flex: 0 0 88%;
-      max-width: 88%;
+      flex: 0 0 86%;
+      max-width: 86%;
       scroll-snap-align: start;
-      border: 1px solid #c8d6e5;
-      border-radius: 6px;
-      padding: 12px;
+      border: 1px solid #dde6ef;
+      border-radius: 12px;
+      padding: 14px;
       box-sizing: border-box;
       background: #fff;
+      box-shadow: 0 2px 10px rgba(39, 72, 100, .06);
+      transition: border-color .2s ease, box-shadow .2s ease;
     }
     .addon-card-os:only-child { flex-basis: 100%; max-width: 100%; }
-    .addon-card-os.is-selected { border-color: #274864; box-shadow: 0 0 0 1px #274864; }
+    .addon-card-os.is-selected { border-color: #274864; box-shadow: 0 0 0 1px #274864, 0 4px 14px rgba(39, 72, 100, .12); }
+    .addons-dots-os { display: flex; justify-content: center; gap: 8px; padding: 6px 0 4px; }
+    .addons-dots-os[hidden] { display: none; }
+    .addon-dot-os { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 999px; background: #c9d6e3; cursor: pointer; transition: width .25s ease, background .25s ease; }
+    .addon-dot-os.is-active { width: 22px; background: #274864; }
     .addon-main-os { display: flex; gap: 14px; align-items: center; }
     .addon-img-os { flex: 0 0 96px; }
-    .addon-img-os img { width: 96px; height: 96px; object-fit: contain; display: block; }
+    .addon-img-os img { width: 96px; height: 96px; object-fit: cover; border-radius: 12px; display: block; }
     .addon-info-os { flex: 1 1 auto; min-width: 0; }
     .addon-title-os { font-size: 17px; line-height: 22px; color: #274864; }
     .addon-price-os { font-size: 16px; font-weight: 600; color: #274864; margin: 4px 0 8px; }
@@ -189,7 +195,7 @@
           return config.currency + (amount % 1 === 0 ? String(amount) : amount.toFixed(2));
         }
         function isEngravable(p) {
-          return p.handle === config.engravableHandle || (Array.isArray(p.tags) && p.tags.indexOf(config.engravableTag) !== -1);
+          return (!!config.engravableHandle && p.handle === config.engravableHandle) || (!!config.engravableTag && Array.isArray(p.tags) && p.tags.indexOf(config.engravableTag) !== -1);
         }
         function imageUrl(src) {
           if (!src) return '';
@@ -233,36 +239,40 @@
           panel.hidden = true;
           panel.appendChild(el('h4', 'addon-engrave-title-os', 'CHOOSE AN ENGRAVED MESSAGE'));
           panel.appendChild(el('p', 'addon-engrave-for-os', 'For: ' + p.title));
-          var choices = el('div', 'addon-choices-os');
-          (config.presets || []).forEach(function (preset) {
-            var text = String(preset).trim();
-            if (!text) return;
-            var choice = el('button', 'addon-choice-os', text);
-            choice.type = 'button';
-            choice.setAttribute('value', 'preset');
-            choice.setAttribute('data-addon-engraving', '');
-            choice.setAttribute('data-text', text);
-            choices.appendChild(choice);
-          });
-          var customChoice = el('button', 'addon-choice-os', 'Write my own message');
-          customChoice.type = 'button';
-          customChoice.setAttribute('value', 'custom');
-          customChoice.setAttribute('data-addon-engraving', '');
-          choices.appendChild(customChoice);
-          panel.appendChild(choices);
+          var presets = (config.presets || []).map(function (t) { return String(t).trim(); }).filter(Boolean);
+          var limit = Number(config.maxChars) || 0;
+          if (presets.length) {
+            var choices = el('div', 'addon-choices-os');
+            presets.forEach(function (text) {
+              var choice = el('button', 'addon-choice-os', text);
+              choice.type = 'button';
+              choice.setAttribute('value', 'preset');
+              choice.setAttribute('data-addon-engraving', '');
+              choice.setAttribute('data-text', text);
+              choices.appendChild(choice);
+            });
+            var customChoice = el('button', 'addon-choice-os', 'Write my own message');
+            customChoice.type = 'button';
+            customChoice.setAttribute('value', 'custom');
+            customChoice.setAttribute('data-addon-engraving', '');
+            choices.appendChild(customChoice);
+            panel.appendChild(choices);
+          }
           var custom = el('div', 'addon-custom-os');
           custom.setAttribute('data-addon-custom', '');
           custom.hidden = true;
           var head = el('div', 'addon-custom-head-os');
           head.appendChild(el('span', '', 'ENGRAVED MESSAGE'));
-          var count = el('span', 'addon-count-os');
-          var countNumber = el('span', '', String(config.maxChars || 30));
-          countNumber.setAttribute('data-addon-count', '');
-          count.appendChild(countNumber);
-          count.appendChild(document.createTextNode(' characters left'));
-          head.appendChild(count);
+          if (limit > 0) {
+            var count = el('span', 'addon-count-os');
+            var countNumber = el('span', '', String(limit));
+            countNumber.setAttribute('data-addon-count', '');
+            count.appendChild(countNumber);
+            count.appendChild(document.createTextNode(' characters left'));
+            head.appendChild(count);
+          }
           var input = el('input', 'addon-custom-input-os');
-          input.type = 'text'; input.maxLength = config.maxChars || 30; input.placeholder = 'Type your message'; input.autocomplete = 'off';
+          input.type = 'text'; if (limit > 0) input.maxLength = limit; input.placeholder = 'Type your message'; input.autocomplete = 'off';
           input.setAttribute('data-addon-custom-input', '');
           custom.appendChild(head);
           custom.appendChild(input);
@@ -272,6 +282,30 @@
           remove.setAttribute('data-addon-remove', '');
           panel.appendChild(remove);
           return panel;
+        }
+
+        // Premium carousel: no scrollbar; small dots show the position and jump to a card.
+        function buildDots(track, dots) {
+          var cards = Array.prototype.slice.call(track.querySelectorAll('.addon-card-os'));
+          dots.hidden = false;
+          cards.forEach(function (card, i) {
+            var dot = el('button', 'addon-dot-os');
+            dot.type = 'button';
+            dot.setAttribute('aria-label', 'Go to product ' + (i + 1));
+            dot.addEventListener('click', function () { track.scrollTo({ left: card.offsetLeft - track.offsetLeft, behavior: 'smooth' }); });
+            dots.appendChild(dot);
+          });
+          function sync() {
+            var nearest = 0, best = Infinity;
+            cards.forEach(function (card, i) {
+              var d = Math.abs((card.offsetLeft - track.offsetLeft) - track.scrollLeft);
+              if (d < best) { best = d; nearest = i; }
+            });
+            if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 2) nearest = cards.length - 1;
+            Array.prototype.forEach.call(dots.children, function (dot, i) { dot.classList.toggle('is-active', i === nearest); });
+          }
+          track.addEventListener('scroll', function () { window.requestAnimationFrame(sync); });
+          sync();
         }
 
         function idOf(card) { return card.getAttribute('data-addon-id'); }
@@ -304,7 +338,7 @@
             if (input && s && s.engraving && s.engraving.type === 'custom' && input.value.trim() !== s.engraving.text) input.value = s.engraving.text;
             if (input && !s) input.value = '';
             var count = panel.querySelector('[data-addon-count]');
-            if (count && input) count.textContent = String(Math.max(input.maxLength, 0) - input.value.length);
+            if (count && input && input.maxLength > 0) count.textContent = String(input.maxLength - input.value.length);
           });
           document.querySelectorAll('[data-addon-error]').forEach(function (node) { node.hidden = true; });
         }
@@ -320,7 +354,10 @@
           var id = idOf(card);
           var engravable = isEngravable(products[id]);
           if (remove || (toggle && state[id] && !engravable)) { delete state[id]; }
-          else if (!state[id]) { state[id] = { engraving: null }; }
+          else if (!state[id]) {
+            var hasPresets = (config.presets || []).some(function (t) { return String(t).trim(); });
+            state[id] = { engraving: (engravable && !hasPresets) ? { type: 'custom', text: '' } : null };
+          }
           render();
         });
 
@@ -481,17 +518,7 @@
                 return configured.concat(trunks);
               });
           })
-          .then(function (list) {
-            // Unpublished theme only (Draft, preview link, editor): while the real engravable
-            // product (the padlock) does not exist yet, show ONE clearly labelled example padlock
-            // card first, so the engraving options (3 preset messages / custom message) can be
-            // reviewed. It has no variant and can never reach the cart.
-            var needsExample = config.previewWhenEmpty && !list.some(function (p) { return !p.trunk && isEngravable(p); });
-            if (needsExample) {
-              list = [{ id: 'preview-padlock', handle: config.engravableHandle, title: 'Engraved Heart Padlock', price: 3500, available: true, featured_image: config.previewImage, tags: [], variants: [], preview: true, noCart: true }].concat(list);
-            }
-            return { list: list, preview: needsExample };
-          })
+          .then(function (list) { return { list: list }; })
           .then(function (result) {
             var list = result.list;
             if (!list.length) { removeStep(); return; }
@@ -501,6 +528,8 @@
               var context = root.getAttribute('data-context') || 'x';
               if (!track) return;
               list.forEach(function (p, index) { track.appendChild(buildCard(p, context, index + 1)); });
+              var dots = root.querySelector('[data-addons-dots]');
+              if (dots && list.length > 1) { buildDots(track, dots); }
               var area = root.querySelector('[data-addons-engrave-area]');
               if (area) list.forEach(function (p) { if (isEngravable(p)) area.appendChild(buildPanel(p)); });
             });
