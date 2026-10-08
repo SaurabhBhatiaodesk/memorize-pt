@@ -31,11 +31,11 @@
     engraving_presets     PLACEHOLDER preset messages, separated by |
     engraving_max_chars   PLACEHOLDER limit for the custom message
 
-  Preview card: while Shopify returns no recommended products, an UNPUBLISHED theme
-  (Draft theme, theme editor, preview link) shows two clearly labelled preview
-  cards (padlock, pouch) so the step can be reviewed. It has no variant, so it can never reach
-  the cart. The published (live) theme never shows it: with no products the step
-  simply removes itself.
+  Review fallback: while nothing is set up, an UNPUBLISHED theme (Draft theme, theme
+  editor, preview link) shows one labelled preview padlock card (for the engraving flow)
+  plus Shopify's default related products, under a banner, so the step can be reviewed.
+  None of these can reach the cart. The published (live) theme never shows them: with
+  no products set up the step simply removes itself.
 {%- endcomment -%}
 
 {%- liquid
@@ -123,6 +123,7 @@
     .addon-count-os { display: block; font-size: 12px; color: #5b7088; margin-top: 4px; }
     .addon-remove-os { background: none; border: 0; padding: 4px 0; color: #5b7088; text-decoration: underline; cursor: pointer; font-size: 13px; }
     .addon-error-os { color: red; margin: 10px 0; font-size: 14px; }
+    .addon-preview-banner-os { font-size: 12px; line-height: 16px; color: #b3261e; font-style: italic; margin: 0 0 8px; }
     .addon-preview-note-os { font-size: 12px; line-height: 16px; color: #b3261e; margin: 0 0 6px; font-style: italic; }
     .personalize-product-popup-addons-os { margin-top: 20px; }
   </style>
@@ -334,7 +335,7 @@
           getCartItems: function () {
             return Object.keys(state).map(function (id) {
               var p = products[id];
-              if (!p) return null;
+              if (!p || p.noCart) return null;
               var variants = p.variants || [];
               var variant = variants.filter(function (v) { return v.available !== false; })[0] || variants[0];
               if (!variant || !variant.id) return null;
@@ -374,7 +375,9 @@
           };
         }
 
-        getJson('/recommendations/products.json?product_id=' + encodeURIComponent(productId) + '&limit=' + encodeURIComponent(config.limit) + '&intent=' + encodeURIComponent(config.intent))
+        var base = '/recommendations/products.json?product_id=' + encodeURIComponent(productId) + '&limit=' + encodeURIComponent(config.limit) + '&intent=';
+
+        getJson(base + encodeURIComponent(config.intent))
           .then(function (data) {
             var own = usable(data.products);
             if (own.length || !config.collection) return own;
@@ -382,20 +385,28 @@
               .then(function (collectionData) { return usable((collectionData.products || []).map(fromCollection)); });
           })
           .then(function (list) {
-            if (!list.length && config.previewWhenEmpty) {
-              // Unpublished theme only: labelled preview cards, never sellable (no variants).
-              var pouchSvg = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"><rect width="300" height="300" fill="#f4f4f6"/><rect x="60" y="95" width="180" height="110" rx="26" fill="#fff" stroke="#b9c4d8" stroke-width="4"/><path d="M60 150h180M105 95l-45 55 45 55M195 95l45 55-45 55M150 95l-45 55 45 55 45-55z" fill="none" stroke="#c9d3e6" stroke-width="3"/></svg>');
-              list = [
-                { id: 'preview-padlock', handle: config.engravableHandle, title: 'Engraved Heart Padlock', price: 3500, available: true, featured_image: config.previewImage, tags: [], variants: [], preview: true },
-                { id: 'preview-pouch', handle: 'preview-pouch', title: 'Small Archival Pouch', price: 3000, available: true, featured_image: pouchSvg, tags: [], variants: [], preview: true }
-              ];
-            }
+            if (list.length || !config.previewWhenEmpty) return { list: list, preview: false };
+            // Unpublished theme only, nothing set up yet: show Shopify's default related
+            // products so the step can be reviewed, plus one labelled padlock card for the
+            // engraving flow. None of these can ever reach the cart (noCart).
+            return getJson(base + 'related').then(function (data) {
+              var related = usable(data.products).map(function (p) { p.noCart = true; return p; });
+              var padlock = { id: 'preview-padlock', handle: config.engravableHandle, title: 'Engraved Heart Padlock', price: 3500, available: true, featured_image: config.previewImage, tags: [], variants: [], preview: true, noCart: true };
+              return { list: [padlock].concat(related).slice(0, config.limit), preview: true };
+            });
+          })
+          .then(function (result) {
+            var list = result.list;
             if (!list.length) { removeStep(); return; }
             list.forEach(function (p) { products[String(p.id)] = p; });
             roots.forEach(function (root) {
               var track = root.querySelector('[data-addons-track]');
               var context = root.getAttribute('data-context') || 'x';
               if (!track) return;
+              if (result.preview) {
+                var banner = el('p', 'addon-preview-banner-os', 'Preview only: the default related products from Shopify are shown because no add-ons are set up yet. Add the products to the "' + (config.collection || 'add-ons') + '" collection (or set Complementary products) to choose your own.');
+                track.parentNode.insertBefore(banner, track);
+              }
               list.forEach(function (p, index) { track.appendChild(buildCard(p, context, index + 1)); });
             });
           })
