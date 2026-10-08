@@ -847,6 +847,15 @@ label[data-item="swatch"]::after {
 .cart--item--image {
     width: 300px;
 }
+/* The lock in the cart: same size box as the other product pictures (4:3), picture fitted inside */
+.cart--item--image-addon img {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+}
 .cart--root:not([data-view="desktop"]) .cart--item--image {
     width: 100%;
     align-self: center;
