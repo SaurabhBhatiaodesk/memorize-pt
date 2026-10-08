@@ -50,7 +50,9 @@
                           words/monogram, font) are filled in; false = products always visible
     addon_exclude_handles never shown as add-ons (the trunks, custom embroidery, gift cards)
     engravable_tag        a product with this tag (default 'engravable') takes an engraving
-    engravable_handle     or the product with this handle (empty = none)
+    engravable_handle     or the product with this handle (default 'lock'). A product that is UNLISTED in Shopify
+                          (hidden from search, collections and recommendations, still sold) is found by this
+                          handle: /products/<handle>.js
     engraving_presets     the preset engraving messages, separated by | (empty until the client
                           gives them: then only the custom message field is shown)
     engraving_max_chars   limit for the custom message (0 = no limit until the client gives one)
@@ -70,7 +72,7 @@
   assign addons_reveal_after_embroidery = true
   assign addon_trunk_handles = 'weddings,graduations,baby-child,other-family'
   assign addon_exclude_handles = 'holiday-limited-time-edition,custom-embroidery,memorize-trunks-egift-card'
-  assign engravable_handle = engravable_handle | default: ''
+  assign engravable_handle = engravable_handle | default: 'lock'
   assign engravable_tag = engravable_tag | default: 'engravable'
   assign engraving_presets = engraving_presets | default: ''
   assign engraving_max_chars = engraving_max_chars | default: 0
@@ -738,6 +740,15 @@
                   });
                 return configured.concat(trunks);
               });
+          })
+          .then(function (list) {
+            // The lock is UNLISTED in Shopify: it is in no collection or recommendation list, so ask for it by its handle.
+            if (!config.engravableHandle || list.some(function (p) { return isEngravable(p); })) return list;
+            return getJson('/products/' + encodeURIComponent(config.engravableHandle) + '.js').then(function (p) {
+              if (!p || !p.id || p.available === false) return list;
+              var variants = (p.variants || []).map(function (v) { return { id: v.id, available: v.available !== false, price: v.price }; });
+              return [{ id: p.id, handle: p.handle, title: p.title, price: p.price, featured_image: p.featured_image || (p.images && p.images[0]) || '', tags: Array.isArray(p.tags) ? p.tags : [], variants: variants, available: true }].concat(list);
+            });
           })
           .then(function (list) {
             // Review aid, never shown to customers: on an UNPUBLISHED theme (Draft / preview link) a lock card
