@@ -147,17 +147,18 @@
     .addon-dot-os.is-active { width: 22px; background: #274864; }
     .addon-main-os { display: flex; gap: 14px; align-items: center; }
     .addon-img-os { flex: 0 0 96px; }
-    .addon-img-os img { width: 96px; height: 96px; object-fit: cover; border-radius: 12px; display: block; }
+    .addon-img-os img { width: 96px; height: 96px; object-fit: contain; border-radius: 12px; background: #f6f3ef; padding: 6px; box-sizing: border-box; display: block; }
     .addon-info-os { flex: 1 1 auto; min-width: 0; }
-    .addon-title-os { font-size: 17px; line-height: 22px; color: #274864; }
-    .addon-price-os { font-size: 16px; font-weight: 600; color: #274864; margin: 4px 0 8px; }
+    .addon-title-os { font-size: 17px; line-height: 22px; color: #274864; margin-bottom: 8px; }
+    .addon-price-os { font-size: 16px; font-weight: 600; color: #274864; margin: -2px 0 10px; }
     .addon-btn-os {
       background: #274864;
       color: #fff;
       border: 1px solid #274864;
       border-radius: 4px;
-      padding: 10px 14px;
-      min-height: 40px;
+      padding: 6px 18px;
+      min-height: 34px;
+      line-height: 18px;
       cursor: pointer;
       text-transform: uppercase;
       font-size: 13px;
@@ -168,12 +169,11 @@
     .addons-engrave-area-os { margin-top: 4px; }
     .addon-engrave-os { margin: 0 2px 8px; padding: 14px; border: 1px solid #274864; border-radius: 6px; background: #fff; box-sizing: border-box; }
     .addon-engrave-os[hidden], .addon-custom-os[hidden], .addon-error-os[hidden] { display: none; }
-    .addon-engrave-title-os { margin: 0 0 4px; font-size: 16px; line-height: 20px; color: #00334D; text-transform: uppercase; }
-    .addon-engrave-for-os { margin: 0 0 10px; font-size: 14px; line-height: 18px; color: #5b7088; }
+    .addon-engrave-title-os { margin: 0 0 12px; font-size: 16px; line-height: 20px; color: #00334D; text-transform: uppercase; }
     /* Option buttons look like the personalizer own ones (Words/Numbers, fonts) */
     .addon-choices-os { display: flex; flex-wrap: wrap; gap: 8px; padding-bottom: 12px; }
     .addon-choice-os {
-      font-size: 16px; line-height: 20px; min-height: 40px; padding: 8px 12px;
+      font-size: 15px; line-height: 18px; min-height: 34px; padding: 6px 12px;
       border: 2px solid #ddd; border-radius: 8px; background: #fff; color: #274864; cursor: pointer;
     }
     .addon-choice-os.is-selected { border-color: #274864; background: #274864; color: #fff; }
@@ -186,7 +186,7 @@
     @media screen and (max-width: 767px) {
       /* Same look as the mobile embroidery type buttons */
       .addon-choices-os { flex-direction: column; gap: 10px; }
-      .addon-choice-os { width: 100%; min-height: 52px; border: 1px solid #274864; border-radius: 5px; font-size: 16px; }
+      .addon-choice-os { width: 100%; min-height: 44px; border: 1px solid #274864; border-radius: 5px; font-size: 16px; }
       .addon-choice-os.is-selected { background: #274864; color: #fff; }
     }
     .addon-error-os { color: red; margin: 10px 0; font-size: 14px; }
@@ -250,7 +250,7 @@
           var info = el('div', 'addon-info-os');
           info.appendChild(el('div', 'addon-title-os', p.title));
           if (p.price !== null && p.price !== undefined) info.appendChild(el('div', 'addon-price-os', formatPrice(p.price)));
-          var button = el('button', 'addon-btn-os', isEngravable(p) ? 'Choose your engraving' : 'Add');
+          var button = el('button', 'addon-btn-os', isEngravable(p) ? 'Lock message' : 'Add');
           button.type = 'button';
           button.setAttribute('data-addon-toggle', '');
           info.appendChild(button);
@@ -268,8 +268,7 @@
           panel.setAttribute('data-addon-panel', '');
           panel.setAttribute('data-addon-id', String(p.id));
           panel.hidden = true;
-          panel.appendChild(el('h4', 'addon-engrave-title-os', 'CHOOSE AN ENGRAVED MESSAGE'));
-          panel.appendChild(el('p', 'addon-engrave-for-os', 'For: ' + p.title));
+          panel.appendChild(el('h4', 'addon-engrave-title-os', String(p.title).toUpperCase() + ' MESSAGE'));
           var presets = (config.presets || []).map(function (t) { return String(t).trim(); }).filter(Boolean);
           var limit = Number(config.maxChars) || 0;
           if (presets.length) {
@@ -383,7 +382,7 @@
             var engravable = card.getAttribute('data-engravable') === 'true';
             card.classList.toggle('is-selected', selected);
             var toggle = card.querySelector('[data-addon-toggle]');
-            if (toggle) toggle.textContent = selected ? 'Added' : (engravable ? 'Choose your engraving' : 'Add');
+            if (toggle) toggle.textContent = selected ? 'Added' : (engravable ? 'Lock message' : 'Add');
           });
           // The engraving panels sit below the row of cards.
           document.querySelectorAll('[data-addons-os] [data-addon-panel]').forEach(function (panel) {
