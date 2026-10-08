@@ -198,7 +198,7 @@
   </style>
   <script>
     (function () {
-      var noop = { validate: function () { return true; }, getSelection: function () { return []; }, getCartItems: function () { return []; }, reset: function () {} };
+      var noop = { validate: function () { return true; }, getSelection: function () { return []; }, getCartItems: function () { return []; }, getTrunkProperties: function () { return {}; }, reset: function () {} };
       window.PersonalizeAddons = noop;
       try {
         var configEl = document.getElementById('addons-config-os');
@@ -506,6 +506,20 @@
               }
               return item;
             }).filter(Boolean);
+          },
+          // An engravable product that cannot be a cart line of its own (the Draft demo "Lock" has no
+          // variant) still keeps its message: it travels as a property of the trunk line,
+          // e.g. "Lock message". A real product with a variant goes to the cart as its own line instead.
+          getTrunkProperties: function () {
+            var props = {};
+            Object.keys(state).forEach(function (id) {
+              var p = products[id];
+              if (!p || !isEngravable(p) || !hasEngraving(state[id])) return;
+              var sellable = (p.variants || []).some(function (v) { return v && v.id; });
+              if (sellable && !p.noCart) return;
+              props[String(p.title) + ' message'] = state[id].engraving.text;
+            });
+            return props;
           },
           reset: function () { state = {}; render(); }
         };

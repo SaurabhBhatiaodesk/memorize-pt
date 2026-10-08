@@ -3686,6 +3686,10 @@ label.radios--option-label.customText h3 {
     try {
       if (window.PersonalizeAddons && typeof window.PersonalizeAddons.getCartItems === 'function') {
         window.PersonalizeAddons.getCartItems().forEach((addonItem) => formData.items.push(addonItem));
+        // A picked engravable add-on that is not a cart line of its own keeps its message on the trunk line.
+        if (typeof window.PersonalizeAddons.getTrunkProperties === 'function' && formData.items[0] && formData.items[0].properties) {
+          Object.assign(formData.items[0].properties, window.PersonalizeAddons.getTrunkProperties());
+        }
       }
     } catch (addonError) {
       console.warn('Add-ons were not added to the cart request', addonError);
