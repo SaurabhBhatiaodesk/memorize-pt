@@ -588,11 +588,12 @@
           document.addEventListener(type, function () { pointerDown = false; setTimeout(flushCollapse, 0); }, true);
         });
         document.addEventListener('focusout', function (event) {
-          var input = event.target;
-          if (!input || !input.matches || !input.matches('[data-addon-custom-input]')) return;
-          var card = cardOf(input);
-          if (!card || !state[idOf(card)] || contextOf(card) !== 'desktop') return;
-          if (pointerDown) pendingCollapse = idOf(card); else collapse(idOf(card));
+          var node = event.target;
+          var panel = node && node.closest ? node.closest('[data-addon-panel]') : null;
+          if (!panel || contextOf(panel) !== 'desktop' || !state[idOf(panel)]) return;
+          // moving inside the box (e.g. Tab from the message to Remove) keeps it open
+          if (event.relatedTarget && panel.contains(event.relatedTarget)) return;
+          if (pointerDown) pendingCollapse = idOf(panel); else collapse(idOf(panel));
         });
 
         window.PersonalizeAddons = {
