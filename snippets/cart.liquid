@@ -32,7 +32,7 @@
 {%- assign matching_items = '' -%}
 
 {%- for item in cart.items -%}
-  {%- if item.product_id == 7351943430217 -%}
+  {%- if item.product_id == 7351943430217 or item.product.tags contains 'engravable' -%}
     {%- assign matching_items = matching_items | append: item.id | append: ',' -%}
   {%- else -%}
      {%- liquid
@@ -66,7 +66,7 @@
         >
     
           
-          <div class="cart--item--image">
+          <div class="cart--item--image{% if item.product.tags contains 'engravable' %} cart--item--image-addon{% endif %}">
             <!-- HC - 08 Mar '24 - cart lightbox -->
           
             
@@ -284,7 +284,7 @@
             </div>
           </div>
     
-          <div class="cart--item--image">
+          <div class="cart--item--image{% if item.product.tags contains 'engravable' %} cart--item--image-addon{% endif %}">
             <!-- HC - 08 Mar '24 - cart lightbox -->
             <a {%- if item.product.tags contains 'engravable' %} style="pointer-events:none;cursor:default" tabindex="-1" aria-hidden="true"{%- endif %} data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
                      {% if flag %}
@@ -455,8 +455,18 @@
   {%- assign item_ids = matching_items | split: ',' -%}
   {%- assign item_ids = item_ids | slice: 0, item_ids.size | join: ',' -%} <!-- Remove trailing comma -->
 
+  {%- for lock_pass in (1..2) -%}
   {%- for item in cart.items -%}
+     {%- comment -%} pass 1: the embroidery lines, pass 2: the lock (it sits last, just above the gift message button) {%- endcomment -%}
+     {%- assign render_now = false -%}
      {%- if item_ids contains item.id -%}
+       {%- if item.product.tags contains 'engravable' -%}
+         {%- if lock_pass == 2 -%}{%- assign render_now = true -%}{%- endif -%}
+       {%- elsif lock_pass == 1 -%}
+         {%- assign render_now = true -%}
+       {%- endif -%}
+     {%- endif -%}
+     {%- if render_now -%}
         {%- liquid
           assign id = view | append: '-updates-' | append: item.key
       
@@ -488,7 +498,7 @@
           >
       
             
-            <div class="cart--item--image">
+            <div class="cart--item--image{% if item.product.tags contains 'engravable' %} cart--item--image-addon{% endif %}">
               <!-- HC - 08 Mar '24 - cart lightbox -->
             
               
@@ -695,7 +705,7 @@
               </div>
             </div>
       
-            <div class="cart--item--image">
+            <div class="cart--item--image{% if item.product.tags contains 'engravable' %} cart--item--image-addon{% endif %}">
               <!-- HC - 08 Mar '24 - cart lightbox -->
               <a {%- if item.product.tags contains 'engravable' %} style="pointer-events:none;cursor:default" tabindex="-1" aria-hidden="true"{%- endif %} data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
                        {% if flag %}
@@ -834,6 +844,7 @@
         {%- endcapture -%}
      {% endif %}
    {%- endfor -%}
+  {%- endfor -%}
 {%- endif -%}
 <!-- Re-Order the cart items ends -->
 
@@ -870,7 +881,7 @@
     >
 
       
-      <div class="cart--item--image">
+      <div class="cart--item--image{% if item.product.tags contains 'engravable' %} cart--item--image-addon{% endif %}">
         <!-- HC - 08 Mar '24 - cart lightbox -->
       
         
@@ -1069,7 +1080,7 @@
         </div>
       </div>
 
-      <div class="cart--item--image">
+      <div class="cart--item--image{% if item.product.tags contains 'engravable' %} cart--item--image-addon{% endif %}">
         <!-- HC - 08 Mar '24 - cart lightbox -->
         <a {%- if item.product.tags contains 'engravable' %} style="pointer-events:none;cursor:default" tabindex="-1" aria-hidden="true"{%- endif %} data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
                  {% if flag %}

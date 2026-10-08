@@ -30,7 +30,7 @@
     >
 
       
-      <div class="cart--item--image">
+      <div class="cart--item--image{% if item.product.tags contains 'engravable' %} cart--item--image-addon{% endif %}">
         <!-- HC - 08 Mar '24 - cart lightbox -->
       
         
@@ -246,7 +246,7 @@
         </div>
       </div>
 
-      <div class="cart--item--image">
+      <div class="cart--item--image{% if item.product.tags contains 'engravable' %} cart--item--image-addon{% endif %}">
         <!-- HC - 08 Mar '24 - cart lightbox -->
         <a {%- if item.product.tags contains 'engravable' %} style="pointer-events:none;cursor:default" tabindex="-1" aria-hidden="true"{%- endif %} data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
                  {% if flag %}
