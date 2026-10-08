@@ -250,7 +250,7 @@
           var info = el('div', 'addon-info-os');
           info.appendChild(el('div', 'addon-title-os', p.title));
           if (p.price !== null && p.price !== undefined) info.appendChild(el('div', 'addon-price-os', formatPrice(p.price)));
-          var button = el('button', 'addon-btn-os', isEngravable(p) ? 'Lock message' : 'Add');
+          var button = el('button', 'addon-btn-os', isEngravable(p) ? (context === 'mobile' ? 'Engrave It' : 'Lock message') : 'Add');
           button.type = 'button';
           button.setAttribute('data-addon-toggle', '');
           info.appendChild(button);
@@ -262,13 +262,13 @@
           return card;
         }
 
-        function buildPanel(p) {
+        function buildPanel(p, context) {
           var panel = el('div', 'addon-engrave-os');
           panel.setAttribute('data-addon-engrave', '');
           panel.setAttribute('data-addon-panel', '');
           panel.setAttribute('data-addon-id', String(p.id));
           panel.hidden = true;
-          panel.appendChild(el('h4', 'addon-engrave-title-os', String(p.title).toUpperCase() + ' MESSAGE'));
+          panel.appendChild(el('h4', 'addon-engrave-title-os', context === 'mobile' ? 'ADD YOUR MESSAGE' : String(p.title).toUpperCase() + ' MESSAGE'));
           var presets = (config.presets || []).map(function (t) { return String(t).trim(); }).filter(Boolean);
           var limit = Number(config.maxChars) || 0;
           if (presets.length) {
@@ -382,7 +382,11 @@
             var engravable = card.getAttribute('data-engravable') === 'true';
             card.classList.toggle('is-selected', selected);
             var toggle = card.querySelector('[data-addon-toggle]');
-            if (toggle) toggle.textContent = selected ? 'Added' : (engravable ? 'Lock message' : 'Add');
+            if (toggle) {
+              var host = card.closest('[data-addons-os]');
+              var isMobile = host && host.getAttribute('data-context') === 'mobile';
+              toggle.textContent = selected ? 'Added' : (engravable ? (isMobile ? 'Engrave It' : 'Lock message') : 'Add');
+            }
           });
           // The engraving panels sit below the row of cards.
           document.querySelectorAll('[data-addons-os] [data-addon-panel]').forEach(function (panel) {
@@ -626,11 +630,18 @@
               var track = root.querySelector('[data-addons-track]');
               var context = root.getAttribute('data-context') || 'x';
               if (!track) return;
-              list.forEach(function (p, index) { track.appendChild(buildCard(p, context, index + 1)); });
+              // Mobile is a two-step Lock flow: only the engravable Lock is shown there.
+              // Desktop continues to show the existing recommendation carousel unchanged.
+              var visibleList = context === 'mobile' ? list.filter(isEngravable).slice(0, 1) : list;
+              if (!visibleList.length) {
+                root.hidden = true;
+                return;
+              }
+              visibleList.forEach(function (p, index) { track.appendChild(buildCard(p, context, index + 1)); });
               var dots = root.querySelector('[data-addons-dots]');
-              if (dots && list.length > 1) { buildDots(track, dots); }
+              if (dots && visibleList.length > 1) { buildDots(track, dots); }
               var area = root.querySelector('[data-addons-engrave-area]');
-              if (area) list.forEach(function (p) { if (isEngravable(p)) area.appendChild(buildPanel(p)); });
+              if (area) visibleList.forEach(function (p) { if (isEngravable(p)) area.appendChild(buildPanel(p, context)); });
             });
           })
           .catch(function () { removeStep(); });
