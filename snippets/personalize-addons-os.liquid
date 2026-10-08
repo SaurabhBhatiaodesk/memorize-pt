@@ -22,7 +22,7 @@
     {% render 'personalize-addons-os', part: 'assets', product: product %}      CSS + JS, render once
 
   Review aid: on an UNPUBLISHED theme (Draft theme, preview link, editor) a "Lock" card with the
-  engraving options (3 example options + custom message) is shown until the real product exists
+  engraving options (only the custom message for now: presets appear when they are configured) is shown until the real product exists
   (?addons_demo=0 in the page address hides it). No price, never added to the cart, never shown on
   the published theme.
 
@@ -601,8 +601,6 @@
             // page address to hide it). It has no price and no variant, so it can never reach the cart.
             var demoOn = config.allowDemo && !/[?&]addons_demo=0(&|$)/.test(window.location.search);
             if (demoOn && !list.some(function (p) { return isEngravable(p); })) {
-              if (!(config.presets || []).length) config.presets = ['Message option 1', 'Message option 2', 'Message option 3'];
-              if (!config.maxChars) config.maxChars = 30;
               list = [{ id: 'demo-lock', handle: 'demo-lock', title: 'Lock', price: null, available: true, featured_image: config.demoImage || '', tags: [config.engravableTag || 'engravable'], variants: [], noCart: true }].concat(list);
             }
             return { list: list };
