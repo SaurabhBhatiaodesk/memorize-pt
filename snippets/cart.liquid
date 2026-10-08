@@ -83,7 +83,7 @@
                   {% endfor %}
               {% endif %}
             
-            <a data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
+            <a {%- if item.product.tags contains 'engravable' %} style="pointer-events:none;cursor:default" tabindex="-1" aria-hidden="true"{%- endif %} data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
              {% if flag %}
       
                <img src="{{ preview_image }}" height="500px" width="500px" sizes="200px" >
@@ -107,12 +107,12 @@
     
           <div class="cart--item--title">
             <div data-item="block-heading">
-              <a href="{{ item.url }}">{{ item.product.title }}</a>
+              <a {%- unless item.product.tags contains 'engravable' %} href="{{ item.url }}"{%- endunless -%}>{{ item.product.title }}</a>
             </div>
     
             {%- unless item.variant.title contains 'Default' -%}
               <div class="cart--item--variant-name" data-item="accent-text">
-                <a href="{{ item.url }}">{{ item.variant.title }}</a>
+                <a {%- unless item.product.tags contains 'engravable' %} href="{{ item.url }}"{%- endunless -%}>{{ item.variant.title }}</a>
               </div>
             {%- endunless -%}
        
@@ -276,7 +276,7 @@
         >
           <div class="cart--item--title">
             <div data-item="block-heading">
-              <a href="{{ item.url }}">{{ item.product.title }}</a>
+              <a {%- unless item.product.tags contains 'engravable' %} href="{{ item.url }}"{%- endunless -%}>{{ item.product.title }}</a>
             </div>
     
             <div class='cart--error' data-item='small-text' style='display:none;'>
@@ -286,7 +286,7 @@
     
           <div class="cart--item--image">
             <!-- HC - 08 Mar '24 - cart lightbox -->
-            <a data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
+            <a {%- if item.product.tags contains 'engravable' %} style="pointer-events:none;cursor:default" tabindex="-1" aria-hidden="true"{%- endif %} data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
                      {% if flag %}
       
                <img src="{{ preview_image }}" height="500px" width="500px" sizes="150px" >
@@ -381,7 +381,7 @@
             
             {%- unless item.variant.title contains 'Default' -%}
               <div class="cart--item--variant-name" data-item="accent-text">
-                <a href="{{ item.url }}">{{ item.variant.title }}</a>
+                <a {%- unless item.product.tags contains 'engravable' %} href="{{ item.url }}"{%- endunless -%}>{{ item.variant.title }}</a>
               </div>
             {%- endunless -%}
     
@@ -505,7 +505,7 @@
                     {% endfor %}
                 {% endif %}
               
-              <a data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
+              <a {%- if item.product.tags contains 'engravable' %} style="pointer-events:none;cursor:default" tabindex="-1" aria-hidden="true"{%- endif %} data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
                {% if flag %}
         
                  <img src="{{ preview_image }}" height="500px" width="500px" sizes="200px" >
@@ -529,12 +529,12 @@
       
             <div class="cart--item--title">
               <div data-item="block-heading">
-                <a href="{{ item.url }}">{{ item.product.title }}</a>
+                <a {%- unless item.product.tags contains 'engravable' %} href="{{ item.url }}"{%- endunless -%}>{{ item.product.title }}</a>
               </div>
       
               {%- unless item.variant.title contains 'Default' -%}
                 <div class="cart--item--variant-name" data-item="accent-text">
-                  <a href="{{ item.url }}">{{ item.variant.title }}</a>
+                  <a {%- unless item.product.tags contains 'engravable' %} href="{{ item.url }}"{%- endunless -%}>{{ item.variant.title }}</a>
                 </div>
               {%- endunless -%}
          
@@ -687,7 +687,7 @@
           >
             <div class="cart--item--title">
               <div data-item="block-heading">
-                <a href="{{ item.url }}">{{ item.product.title }}</a>
+                <a {%- unless item.product.tags contains 'engravable' %} href="{{ item.url }}"{%- endunless -%}>{{ item.product.title }}</a>
               </div>
       
               <div class='cart--error' data-item='small-text' style='display:none;'>
@@ -697,7 +697,7 @@
       
             <div class="cart--item--image">
               <!-- HC - 08 Mar '24 - cart lightbox -->
-              <a data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
+              <a {%- if item.product.tags contains 'engravable' %} style="pointer-events:none;cursor:default" tabindex="-1" aria-hidden="true"{%- endif %} data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
                        {% if flag %}
         
                  <img src="{{ preview_image }}" height="500px" width="500px" sizes="150px" >
@@ -767,7 +767,7 @@
               
               {%- unless item.variant.title contains 'Default' -%}
                 <div class="cart--item--variant-name" data-item="accent-text">
-                  <a href="{{ item.url }}">{{ item.variant.title }}</a>
+                  <a {%- unless item.product.tags contains 'engravable' %} href="{{ item.url }}"{%- endunless -%}>{{ item.variant.title }}</a>
                 </div>
               {%- endunless -%}
       
@@ -887,7 +887,7 @@
               {% endfor %}
           {% endif %}
         
-        <a data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
+        <a {%- if item.product.tags contains 'engravable' %} style="pointer-events:none;cursor:default" tabindex="-1" aria-hidden="true"{%- endif %} data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
          {% if flag %}
   
            <img src="{{ preview_image }}" height="500px" width="500px" sizes="200px" >
@@ -911,12 +911,12 @@
 
       <div class="cart--item--title">
         <div data-item="block-heading">
-          <a href="{{ item.url }}">{{ item.product.title }}</a>
+          <a {%- unless item.product.tags contains 'engravable' %} href="{{ item.url }}"{%- endunless -%}>{{ item.product.title }}</a>
         </div>
 
         {%- unless item.variant.title contains 'Default' -%}
           <div class="cart--item--variant-name" data-item="accent-text">
-            <a href="{{ item.url }}">{{ item.variant.title }}</a>
+            <a {%- unless item.product.tags contains 'engravable' %} href="{{ item.url }}"{%- endunless -%}>{{ item.variant.title }}</a>
           </div>
         {%- endunless -%}
    
@@ -1061,7 +1061,7 @@
     >
       <div class="cart--item--title">
         <div data-item="block-heading">
-          <a href="{{ item.url }}">{{ item.product.title }}</a>
+          <a {%- unless item.product.tags contains 'engravable' %} href="{{ item.url }}"{%- endunless -%}>{{ item.product.title }}</a>
         </div>
 
         <div class='cart--error' data-item='small-text' style='display:none;'>
@@ -1071,7 +1071,7 @@
 
       <div class="cart--item--image">
         <!-- HC - 08 Mar '24 - cart lightbox -->
-        <a data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
+        <a {%- if item.product.tags contains 'engravable' %} style="pointer-events:none;cursor:default" tabindex="-1" aria-hidden="true"{%- endif %} data-fancybox="" title="click to zoom-in" href="{% if flag %}{{ preview_image }}{% else %}{{ preview_image | img_url: 'master'}}{% endif %}" itemprop="contentUrl" data-size="1200x600" aria-label="{{ item.product.title }}">
                  {% if flag %}
   
            <img src="{{ preview_image }}" height="500px" width="500px" sizes="150px" >
@@ -1137,7 +1137,7 @@
         
         {%- unless item.variant.title contains 'Default' -%}
           <div class="cart--item--variant-name" data-item="accent-text">
-            <a href="{{ item.url }}">{{ item.variant.title }}</a>
+            <a {%- unless item.product.tags contains 'engravable' %} href="{{ item.url }}"{%- endunless -%}>{{ item.variant.title }}</a>
           </div>
         {%- endunless -%}
 
