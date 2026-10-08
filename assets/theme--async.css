@@ -856,6 +856,17 @@ label[data-item="swatch"]::after {
     aspect-ratio: 4 / 3;
     object-fit: contain;
 }
+/* Phone and drawer: the lock picture sits in the middle, like the text under it */
+.cart--root:not([data-view="desktop"]) .cart--item--image-addon img {
+    margin-left: auto;
+    margin-right: auto;
+}
+@media screen and (max-width: 767px) {
+    .cart--item--image-addon img {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
 .cart--root:not([data-view="desktop"]) .cart--item--image {
     width: 100%;
     align-self: center;

@@ -29,13 +29,17 @@
 {%- assign embroidery_type = lineItems.properties['Embroidery Type'] -%}
 
 
+{%- comment -%} The engraved lock is always 1 piece: no plus / minus, only Remove. {%- endcomment -%}
+{%- assign is_lock_line = false -%}
+{%- if lineItems.product.tags contains 'engravable' -%}{%- assign is_lock_line = true -%}{%- endif -%}
+
 {% if personalize_it_variant_id == blank %}
   <quantity-selector class="quantity-selector--root" data-id="{{ id }}" data-type="{{ type }}">
     <label for="{{ id }}" data-item="{{ label_type }}">
       {{- quantity_t -}}
     </label>
   
-    <div class="quantity-selector--container">
+    <div class="quantity-selector--container"{% if is_lock_line %} hidden style="display:none"{% endif %}>
       <button
         type="button"
         class="quantity-selector--minus"
