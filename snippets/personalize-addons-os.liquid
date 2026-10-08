@@ -32,8 +32,8 @@
     engraving_max_chars   PLACEHOLDER limit for the custom message
 
   Preview card: while Shopify returns no recommended products, an UNPUBLISHED theme
-  (Draft theme, theme editor, preview link) shows one clearly labelled preview
-  padlock card so the step can be reviewed. It has no variant, so it can never reach
+  (Draft theme, theme editor, preview link) shows two clearly labelled preview
+  cards (padlock, pouch) so the step can be reviewed. It has no variant, so it can never reach
   the cart. The published (live) theme never shows it: with no products the step
   simply removes itself.
 {%- endcomment -%}
@@ -383,8 +383,12 @@
           })
           .then(function (list) {
             if (!list.length && config.previewWhenEmpty) {
-              // Unpublished theme only: one labelled preview card, never sellable (no variants).
-              list = [{ id: 'preview-padlock', handle: config.engravableHandle, title: 'Engraved Heart Padlock', price: 3500, available: true, featured_image: config.previewImage, tags: [], variants: [], preview: true }];
+              // Unpublished theme only: labelled preview cards, never sellable (no variants).
+              var pouchSvg = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"><rect width="300" height="300" fill="#f4f4f6"/><rect x="60" y="95" width="180" height="110" rx="26" fill="#fff" stroke="#b9c4d8" stroke-width="4"/><path d="M60 150h180M105 95l-45 55 45 55M195 95l45 55-45 55M150 95l-45 55 45 55 45-55z" fill="none" stroke="#c9d3e6" stroke-width="3"/></svg>');
+              list = [
+                { id: 'preview-padlock', handle: config.engravableHandle, title: 'Engraved Heart Padlock', price: 3500, available: true, featured_image: config.previewImage, tags: [], variants: [], preview: true },
+                { id: 'preview-pouch', handle: 'preview-pouch', title: 'Small Archival Pouch', price: 3000, available: true, featured_image: pouchSvg, tags: [], variants: [], preview: true }
+              ];
             }
             if (!list.length) { removeStep(); return; }
             list.forEach(function (p) { products[String(p.id)] = p; });
