@@ -176,9 +176,11 @@
       font-size: 16px; line-height: 20px; min-height: 40px; padding: 8px 12px;
       border: 2px solid #ddd; border-radius: 8px; background: #fff; color: #274864; cursor: pointer;
     }
-    .addon-choice-os.is-selected { border-color: #274864; }
+    .addon-choice-os.is-selected { border-color: #274864; background: #274864; color: #fff; }
     .addon-custom-head-os { display: flex; justify-content: space-between; flex-wrap: wrap; padding-bottom: 8px; font-size: 14px; line-height: 18px; color: #274864; }
     .addon-custom-input-os { width: 100%; box-sizing: border-box; border: 1px solid #274864; border-radius: 8px; padding: 12px; font-size: 16px; margin: 0; }
+    .addon-custom-input-os[readonly] { background: #f4f7fa; cursor: default; }
+    .addon-count-os[hidden] { display: none; }
     .addon-count-os { font-size: 14px; line-height: 18px; color: #274864; }
     .addon-remove-os { background: none; border: 0; padding: 8px 0 0; color: #5b7088; text-decoration: underline; cursor: pointer; font-size: 13px; }
     @media screen and (max-width: 767px) {
@@ -291,7 +293,9 @@
           custom.setAttribute('data-addon-custom', '');
           custom.hidden = true;
           var head = el('div', 'addon-custom-head-os');
-          head.appendChild(el('span', '', 'ENGRAVED MESSAGE'));
+          var messageLabel = el('span', '', 'ENGRAVED MESSAGE');
+          messageLabel.setAttribute('data-addon-message-label', '');
+          head.appendChild(messageLabel);
           if (limit > 0) {
             var count = el('span', 'addon-count-os');
             var countNumber = el('span', '', String(limit));
@@ -392,13 +396,24 @@
               choice.classList.toggle('is-selected', on);
               choice.setAttribute('aria-pressed', on ? 'true' : 'false');
             });
+            var type = s && s.engraving && s.engraving.type;
             var custom = panel.querySelector('[data-addon-custom]');
-            if (custom) custom.hidden = !(s && s.engraving && s.engraving.type === 'custom');
+            if (custom) custom.hidden = !type;
             var input = panel.querySelector('[data-addon-custom-input]');
-            if (input && s && s.engraving && s.engraving.type === 'custom' && input.value.trim() !== s.engraving.text) input.value = s.engraving.text;
-            if (input && !s) input.value = '';
+            if (input) {
+              // A preset fills the box (read only) so the chosen message is visible; "Write my own" empties it.
+              input.readOnly = type === 'preset';
+              if (type === 'preset') input.value = s.engraving.text;
+              else if (type === 'custom' && input.value.trim() !== s.engraving.text) input.value = s.engraving.text;
+              else if (!s) input.value = '';
+            }
+            var label = panel.querySelector('[data-addon-message-label]');
+            if (label) label.textContent = type === 'preset' ? 'YOUR ENGRAVED MESSAGE' : 'ENGRAVED MESSAGE';
             var count = panel.querySelector('[data-addon-count]');
-            if (count && input && input.maxLength > 0) count.textContent = String(input.maxLength - input.value.length);
+            if (count && input && input.maxLength > 0) {
+              count.textContent = String(input.maxLength - input.value.length);
+              if (count.parentNode) count.parentNode.hidden = type === 'preset';
+            }
           });
           document.querySelectorAll('[data-addon-error]').forEach(function (node) { node.hidden = true; });
         }
@@ -431,7 +446,9 @@
           var isCustom = choice.getAttribute('value') === 'custom';
           if (isCustom) {
             var typed = card.querySelector('[data-addon-custom-input]');
-            state[idOf(card)].engraving = { type: 'custom', text: typed ? typed.value.trim() : '' };
+            var before = state[idOf(card)].engraving;
+            // coming from a preset the box starts empty; coming from custom text it keeps what was typed
+            state[idOf(card)].engraving = { type: 'custom', text: (before && before.type === 'custom' && typed) ? typed.value.trim() : '' };
           } else {
             state[idOf(card)].engraving = { type: 'preset', text: choice.getAttribute('data-text') };
           }
