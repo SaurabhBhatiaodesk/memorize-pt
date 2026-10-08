@@ -2514,11 +2514,14 @@ $(document).on("click", ".sdev_radios_btn", function () {
 
         } else {
 
-          // Desktop Flourish size (Client approved)
-          setScaledPreviewSize(monogramDisplay, 28, 32.9);
+          // Desktop Flourish monogram: same size as the other fonts (client: it was too small,
+          // 21px / 31px against 46px / 76px for the others). Satisfy has narrow letters, so it is
+          // 10% above the others' base size (62 / 102) to look equal in width and height.
+          // Mobile keeps its own sizes (branch above).
+          setScaledPreviewSize(monogramDisplay, 68.2, 70.84);
 
           if (largeTextSpan) {
-            setScaledPreviewSize(largeTextSpan, 42, 53);
+            setScaledPreviewSize(largeTextSpan, 112.2, 134.64);
           }
 
         }
