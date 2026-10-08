@@ -4,9 +4,11 @@
   A product with the handle / tag set below gets an engraving choice (3 preset
   messages or a custom message).
 
-  The products are NOT hard-coded: the client picks them in Shopify (Search &
-  Discovery app > Recommendations > "Complementary products" for each trunk).
-  If Shopify returns none, the step removes itself and the personalizer behaves
+  The products are NOT hard-coded. They come from Shopify, in this order:
+    1. the product's own "Complementary products" (Search & Discovery app), if set;
+    2. otherwise the products of the collection with the handle addon_collection
+       (one collection = the same add-ons on EVERY personalizer product).
+  If neither returns anything, the step removes itself and the personalizer behaves
   exactly as before.
 
   Usage (from personalize-it-popup-os):
@@ -23,20 +25,29 @@
     addons_enabled        switch the whole step on/off
     addon_intent          Shopify recommendation type ('complementary' = add-ons)
     addon_limit           max products shown
+    addon_collection      handle of the collection used when a product has no complementary products
     engravable_handle     handle of the product that takes an engraving
     engravable_tag        or any product with this tag takes an engraving
     engraving_presets     PLACEHOLDER preset messages, separated by |
     engraving_max_chars   PLACEHOLDER limit for the custom message
+
+  Preview card: while Shopify returns no recommended products, an UNPUBLISHED theme
+  (Draft theme, theme editor, preview link) shows one clearly labelled preview
+  padlock card so the step can be reviewed. It has no variant, so it can never reach
+  the cart. The published (live) theme never shows it: with no products the step
+  simply removes itself.
 {%- endcomment -%}
 
 {%- liquid
   assign addons_enabled = true
   assign addon_intent = 'complementary'
   assign addon_limit = 8
+  assign addon_collection = 'personalizer-add-ons'
   assign engravable_handle = 'engraved-heart-padlock'
   assign engravable_tag = 'engravable'
   assign engraving_presets = 'Forever & Always|Love You More|Together Since'
   assign engraving_max_chars = 30
+  assign preview_image = '//memorizeyourlife.com/cdn/shop/files/memorize-lock-blue-rgb-900px-w-72ppi.png?v=1751344119'
 -%}
 
 {%- if part == 'markup' and addons_enabled and product != blank -%}
@@ -51,11 +62,14 @@
     {
       "intent": {{ addon_intent | json }},
       "limit": {{ addon_limit | json }},
+      "collection": {{ addon_collection | json }},
       "engravableHandle": {{ engravable_handle | json }},
       "engravableTag": {{ engravable_tag | json }},
       "presets": {{ preset_list | json }},
       "maxChars": {{ engraving_max_chars | json }},
-      "currency": {{ cart.currency.symbol | default: '$' | json }}
+      "currency": {{ cart.currency.symbol | default: '$' | json }},
+      "previewWhenEmpty": {% if theme.role != 'main' %}true{% else %}false{% endif %},
+      "previewImage": {{ preview_image | json }}
     }
   </script>
   <style>
@@ -109,6 +123,7 @@
     .addon-count-os { display: block; font-size: 12px; color: #5b7088; margin-top: 4px; }
     .addon-remove-os { background: none; border: 0; padding: 4px 0; color: #5b7088; text-decoration: underline; cursor: pointer; font-size: 13px; }
     .addon-error-os { color: red; margin: 10px 0; font-size: 14px; }
+    .addon-preview-note-os { font-size: 12px; line-height: 16px; color: #b3261e; margin: 0 0 6px; font-style: italic; }
     .personalize-product-popup-addons-os { margin-top: 20px; }
   </style>
   <script>
@@ -163,6 +178,7 @@
           }
           var info = el('div', 'addon-info-os');
           info.appendChild(el('div', 'addon-title-os', p.title));
+          if (p.preview) info.appendChild(el('div', 'addon-preview-note-os', 'Preview only: this product is not set up in Shopify yet'));
           info.appendChild(el('div', 'addon-price-os', formatPrice(p.price)));
           var button = el('button', 'addon-btn-os', isEngravable(p) ? 'Choose your engraving' : 'Add');
           button.type = 'button';
@@ -334,10 +350,42 @@
         };
 
         if (!productId) { removeStep(); return; }
-        fetch('/recommendations/products.json?product_id=' + encodeURIComponent(productId) + '&limit=' + encodeURIComponent(config.limit) + '&intent=' + encodeURIComponent(config.intent), { headers: { Accept: 'application/json' } })
-          .then(function (response) { return response.ok ? response.json() : { products: [] }; })
+
+        function getJson(url) {
+          return fetch(url, { headers: { Accept: 'application/json' } })
+            .then(function (response) { return response.ok ? response.json() : {}; })
+            .catch(function () { return {}; });
+        }
+        function usable(list) {
+          return (list || []).filter(function (p) { return p && p.available && String(p.id) !== String(productId); });
+        }
+        // Collection products come in the storefront format (price as "35.00" dollars,
+        // images[], no 'available'): bring them to the shape used above.
+        function fromCollection(p) {
+          var variants = (p.variants || []).map(function (v) { return { id: v.id, available: v.available !== false, price: v.price }; });
+          var first = variants.filter(function (v) { return v.available; })[0] || variants[0] || {};
+          var tags = Array.isArray(p.tags) ? p.tags : String(p.tags || '').split(',').map(function (t) { return t.trim(); });
+          return {
+            id: p.id, handle: p.handle, title: p.title, tags: tags,
+            available: variants.some(function (v) { return v.available; }),
+            price: Math.round(parseFloat(first.price || 0) * 100),
+            featured_image: (p.images && p.images[0] && p.images[0].src) || '',
+            variants: variants
+          };
+        }
+
+        getJson('/recommendations/products.json?product_id=' + encodeURIComponent(productId) + '&limit=' + encodeURIComponent(config.limit) + '&intent=' + encodeURIComponent(config.intent))
           .then(function (data) {
-            var list = (data.products || []).filter(function (p) { return p && p.available && String(p.id) !== String(productId); });
+            var own = usable(data.products);
+            if (own.length || !config.collection) return own;
+            return getJson('/collections/' + encodeURIComponent(config.collection) + '/products.json?limit=' + encodeURIComponent(config.limit))
+              .then(function (collectionData) { return usable((collectionData.products || []).map(fromCollection)); });
+          })
+          .then(function (list) {
+            if (!list.length && config.previewWhenEmpty) {
+              // Unpublished theme only: one labelled preview card, never sellable (no variants).
+              list = [{ id: 'preview-padlock', handle: config.engravableHandle, title: 'Engraved Heart Padlock', price: 3500, available: true, featured_image: config.previewImage, tags: [], variants: [], preview: true }];
+            }
             if (!list.length) { removeStep(); return; }
             list.forEach(function (p) { products[String(p.id)] = p; });
             roots.forEach(function (root) {
