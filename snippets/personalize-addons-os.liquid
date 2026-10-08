@@ -26,16 +26,17 @@
     addon_intent          Shopify recommendation type ('complementary' = add-ons)
     addon_limit           max products shown
     addon_collection      handle of the collection used when a product has no complementary products
+    addon_exclude_handles never shown as add-ons (the trunks, custom embroidery, gift cards)
     engravable_handle     handle of the product that takes an engraving
     engravable_tag        or any product with this tag takes an engraving
     engraving_presets     PLACEHOLDER preset messages, separated by |
     engraving_max_chars   PLACEHOLDER limit for the custom message
 
   Review fallback: while nothing is set up, an UNPUBLISHED theme (Draft theme, theme
-  editor, preview link) shows one labelled preview padlock card (for the engraving flow)
-  plus Shopify's default related products, under a banner, so the step can be reviewed.
-  None of these can reach the cart. The published (live) theme never shows them: with
-  no products set up the step simply removes itself.
+  editor, preview link) shows two clearly labelled EXAMPLE cards (padlock, pouch) under a
+  banner so the step can be reviewed. They can never reach the cart. The published (live)
+  theme never shows them: with no products set up the step simply removes itself.
+  Shopify's default "related" products are never used (they are other trunks / gift cards).
 {%- endcomment -%}
 
 {%- liquid
@@ -43,6 +44,7 @@
   assign addon_intent = 'complementary'
   assign addon_limit = 8
   assign addon_collection = 'personalizer-add-ons'
+  assign addon_exclude_handles = 'weddings,graduations,baby-child,other-family,holiday-limited-time-edition,custom-embroidery,memorize-trunks-egift-card'
   assign engravable_handle = 'engraved-heart-padlock'
   assign engravable_tag = 'engravable'
   assign engraving_presets = 'Forever & Always|Love You More|Together Since'
@@ -63,6 +65,7 @@
       "intent": {{ addon_intent | json }},
       "limit": {{ addon_limit | json }},
       "collection": {{ addon_collection | json }},
+      "excludeHandles": {{ addon_exclude_handles | split: ',' | json }},
       "engravableHandle": {{ engravable_handle | json }},
       "engravableTag": {{ engravable_tag | json }},
       "presets": {{ preset_list | json }},
@@ -126,6 +129,7 @@
     .addon-preview-banner-os { font-size: 12px; line-height: 16px; color: #b3261e; font-style: italic; margin: 0 0 8px; }
     .addon-preview-note-os { font-size: 12px; line-height: 16px; color: #b3261e; margin: 0 0 6px; font-style: italic; }
     .personalize-product-popup-addons-os { margin-top: 20px; }
+    .personalize-product-popup-addons-os[hidden] { display: none; }
   </style>
   <script>
     (function () {
@@ -350,6 +354,35 @@
           reset: function () { state = {}; render(); }
         };
 
+        // Desktop: the step appears once the embroidery options are filled in (type, the
+        // words or the 3 monogram letters, and a font). The thread colour always has a
+        // default. On mobile the stepper already puts this step after the embroidery steps.
+        function embroideryDone() {
+          var root = document.querySelector('.personalize-product-popup-section-os');
+          if (!root) return false;
+          var type = root.querySelector('input[name="properties[Embroidery Type]"]:checked');
+          if (!type) return false;
+          var font = root.querySelector('.custom-font-names-os');
+          if (!font || !String(font.value || '').trim()) return false;
+          if (type.value === 'Monogram') {
+            var mono = root.querySelector('.monogram-text-value-os');
+            return !!(mono && String(mono.value || '').replace(/\s/g, '').length === 3);
+          }
+          var words = root.querySelector('.printing-textarea-os');
+          return !!(words && String(words.value || '').trim());
+        }
+        function updateDesktopStep() {
+          var block = document.querySelector('.personalize-product-popup-addons-os');
+          if (block) block.hidden = !embroideryDone();
+        }
+        var popupRoot = document.querySelector('.personalize-product-popup-section-os');
+        if (popupRoot) {
+          ['input', 'change', 'click'].forEach(function (type) {
+            popupRoot.addEventListener(type, function () { setTimeout(updateDesktopStep, 60); });
+          });
+        }
+        updateDesktopStep();
+
         if (!productId) { removeStep(); return; }
 
         function getJson(url) {
@@ -358,7 +391,13 @@
             .catch(function () { return {}; });
         }
         function usable(list) {
-          return (list || []).filter(function (p) { return p && p.available && String(p.id) !== String(productId); });
+          var excluded = config.excludeHandles || [];
+          return (list || []).filter(function (p) {
+            if (!p || !p.available || String(p.id) === String(productId)) return false;
+            if (excluded.indexOf(p.handle) !== -1) return false;
+            // gift cards are never add-ons
+            return String(p.type || p.product_type || '').toLowerCase() !== 'gift cards';
+          });
         }
         // Collection products come in the storefront format (price as "35.00" dollars,
         // images[], no 'available'): bring them to the shape used above.
@@ -367,7 +406,7 @@
           var first = variants.filter(function (v) { return v.available; })[0] || variants[0] || {};
           var tags = Array.isArray(p.tags) ? p.tags : String(p.tags || '').split(',').map(function (t) { return t.trim(); });
           return {
-            id: p.id, handle: p.handle, title: p.title, tags: tags,
+            id: p.id, handle: p.handle, title: p.title, tags: tags, product_type: p.product_type || '',
             available: variants.some(function (v) { return v.available; }),
             price: Math.round(parseFloat(first.price || 0) * 100),
             featured_image: (p.images && p.images[0] && p.images[0].src) || '',
@@ -386,14 +425,16 @@
           })
           .then(function (list) {
             if (list.length || !config.previewWhenEmpty) return { list: list, preview: false };
-            // Unpublished theme only, nothing set up yet: show Shopify's default related
-            // products so the step can be reviewed, plus one labelled padlock card for the
-            // engraving flow. None of these can ever reach the cart (noCart).
-            return getJson(base + 'related').then(function (data) {
-              var related = usable(data.products).map(function (p) { p.noCart = true; return p; });
-              var padlock = { id: 'preview-padlock', handle: config.engravableHandle, title: 'Engraved Heart Padlock', price: 3500, available: true, featured_image: config.previewImage, tags: [], variants: [], preview: true, noCart: true };
-              return { list: [padlock].concat(related).slice(0, config.limit), preview: true };
-            });
+            // Unpublished theme only, nothing set up yet: two clearly labelled example cards so
+            // the step can be reviewed. They have no variant and can never reach the cart.
+            var pouchSvg = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"><rect width="300" height="300" fill="#f4f4f6"/><rect x="60" y="95" width="180" height="110" rx="26" fill="#fff" stroke="#b9c4d8" stroke-width="4"/><path d="M60 150h180M105 95l-45 55 45 55M195 95l45 55-45 55" fill="none" stroke="#c9d3e6" stroke-width="3"/></svg>');
+            return {
+              preview: true,
+              list: [
+                { id: 'preview-padlock', handle: config.engravableHandle, title: 'Engraved Heart Padlock', price: 3500, available: true, featured_image: config.previewImage, tags: [], variants: [], preview: true, noCart: true },
+                { id: 'preview-pouch', handle: 'preview-pouch', title: 'Small Archival Pouch', price: 3000, available: true, featured_image: pouchSvg, tags: [], variants: [], preview: true, noCart: true }
+              ]
+            };
           })
           .then(function (result) {
             var list = result.list;
@@ -404,7 +445,7 @@
               var context = root.getAttribute('data-context') || 'x';
               if (!track) return;
               if (result.preview) {
-                var banner = el('p', 'addon-preview-banner-os', 'Preview only: the default related products from Shopify are shown because no add-ons are set up yet. Add the products to the "' + (config.collection || 'add-ons') + '" collection (or set Complementary products) to choose your own.');
+                var banner = el('p', 'addon-preview-banner-os', 'Preview only: these are examples because no add-ons are set up yet. Add the products to the "' + (config.collection || 'add-ons') + '" collection (or set Complementary products) to show your own.');
                 track.parentNode.insertBefore(banner, track);
               }
               list.forEach(function (p, index) { track.appendChild(buildCard(p, context, index + 1)); });
