@@ -3880,7 +3880,7 @@ document.addEventListener('change', function(event) {
       } else if (currentIndex === 7) {
         const selectedColor = document.querySelector('.selectedColor').value;
         if (!selectedColor) { document.getElementById('colorError').style.display = 'block'; return; }
-      } else if (currentIndex === 8 && document.querySelector('[data-addons-step]') && window.PersonalizeAddons && !window.PersonalizeAddons.validate()) {
+      } else if (currentIndex === 9 && document.querySelector('[data-addons-message-step]') && window.PersonalizeAddons && !window.PersonalizeAddons.validate()) {
         return;
       }
 
