@@ -126,6 +126,7 @@
     .addon-preview-banner-os { font-size: 12px; line-height: 16px; color: #b3261e; font-style: italic; margin: 0 0 8px; }
     .addon-preview-note-os { font-size: 12px; line-height: 16px; color: #b3261e; margin: 0 0 6px; font-style: italic; }
     .personalize-product-popup-addons-os { margin-top: 20px; }
+    .personalize-product-popup-addons-os[hidden] { display: none; }
   </style>
   <script>
     (function () {
@@ -349,6 +350,35 @@
           },
           reset: function () { state = {}; render(); }
         };
+
+        // Desktop: the step appears once the embroidery options are filled in (type, the
+        // words or the 3 monogram letters, and a font). The thread colour always has a
+        // default. On mobile the stepper already puts this step after the embroidery steps.
+        function embroideryDone() {
+          var root = document.querySelector('.personalize-product-popup-section-os');
+          if (!root) return false;
+          var type = root.querySelector('input[name="properties[Embroidery Type]"]:checked');
+          if (!type) return false;
+          var font = root.querySelector('.custom-font-names-os');
+          if (!font || !String(font.value || '').trim()) return false;
+          if (type.value === 'Monogram') {
+            var mono = root.querySelector('.monogram-text-value-os');
+            return !!(mono && String(mono.value || '').replace(/\s/g, '').length === 3);
+          }
+          var words = root.querySelector('.printing-textarea-os');
+          return !!(words && String(words.value || '').trim());
+        }
+        function updateDesktopStep() {
+          var block = document.querySelector('.personalize-product-popup-addons-os');
+          if (block) block.hidden = !embroideryDone();
+        }
+        var popupRoot = document.querySelector('.personalize-product-popup-section-os');
+        if (popupRoot) {
+          ['input', 'change', 'click'].forEach(function (type) {
+            popupRoot.addEventListener(type, function () { setTimeout(updateDesktopStep, 60); });
+          });
+        }
+        updateDesktopStep();
 
         if (!productId) { removeStep(); return; }
 
