@@ -268,7 +268,7 @@
           panel.setAttribute('data-addon-panel', '');
           panel.setAttribute('data-addon-id', String(p.id));
           panel.hidden = true;
-          panel.appendChild(el('h4', 'addon-engrave-title-os', context === 'mobile' ? 'ADD YOUR MESSAGE' : String(p.title).toUpperCase() + ' MESSAGE'));
+          panel.appendChild(el('h4', 'addon-engrave-title-os', 'ADD YOUR MESSAGE'));
           var presets = (config.presets || []).map(function (t) { return String(t).trim(); }).filter(Boolean);
           var limit = Number(config.maxChars) || 0;
           if (presets.length) {
@@ -628,9 +628,9 @@
               var track = root.querySelector('[data-addons-track]');
               var context = root.getAttribute('data-context') || 'x';
               if (!track) return;
-              // Mobile is a two-step Lock flow: only the engravable Lock is shown there.
-              // Desktop continues to show the existing recommendation carousel unchanged.
-              var visibleList = context === 'mobile' ? list.filter(isEngravable).slice(0, 1) : list;
+              // The add-on flow is a single Lock product on both desktop and mobile.
+              // Other trunk recommendations remain available in Shopify but are not rendered here.
+              var visibleList = list.filter(isEngravable).slice(0, 1);
               if (!visibleList.length) {
                 root.hidden = true;
                 return;
