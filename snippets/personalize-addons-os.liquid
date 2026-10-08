@@ -31,8 +31,9 @@
     addon_intent          Shopify recommendation type ('complementary' = add-ons)
     addon_limit           max products shown
     addon_collection      handle of the collection used when a product has no complementary products
-    addons_reveal_after_embroidery  true = on desktop the step stays hidden until the embroidery
-                          options (type, words/monogram, font) are filled in; false = always visible
+    addons_reveal_after_embroidery  true = on desktop the step shows a short "complete your embroidery
+                          options" note and reveals the products once the embroidery options (type,
+                          words/monogram, font) are filled in; false = products always visible
     addon_exclude_handles never shown as add-ons (the trunks, custom embroidery, gift cards)
     engravable_handle     handle of the product that takes an engraving
     engravable_tag        or any product with this tag takes an engraving
@@ -51,7 +52,7 @@
   assign addon_intent = 'complementary'
   assign addon_limit = 8
   assign addon_collection = 'personalizer-add-ons'
-  assign addons_reveal_after_embroidery = false
+  assign addons_reveal_after_embroidery = true
   assign addon_trunk_handles = 'weddings,graduations,baby-child,other-family'
   assign addon_exclude_handles = 'holiday-limited-time-edition,custom-embroidery,memorize-trunks-egift-card'
   assign engravable_handle = 'engraved-heart-padlock'
@@ -142,6 +143,9 @@
     .addon-preview-note-os { font-size: 12px; line-height: 16px; color: #b3261e; margin: 0 0 6px; font-style: italic; }
     .personalize-product-popup-addons-os { margin-top: 20px; }
     .personalize-product-popup-addons-os[hidden] { display: none; }
+    .addon-locked-note-os { display: none; margin: 4px 0 0; font-size: 14px; color: #5b7088; }
+    .personalize-product-popup-addons-os.is-locked .addons-os { display: none; }
+    .personalize-product-popup-addons-os.is-locked .addon-locked-note-os { display: block; }
   </style>
   <script>
     (function () {
@@ -376,10 +380,10 @@
           reset: function () { state = {}; render(); }
         };
 
-        // Optional (addons_reveal_after_embroidery): on desktop the step appears once the
-        // embroidery options are filled in (type, the words or the 3 monogram letters, and a
-        // font). Off by default: the step is always visible. On mobile the stepper already puts
-        // this step after the embroidery steps.
+        // addons_reveal_after_embroidery: on desktop the step shows a note until the embroidery
+        // options are filled in (type, the words or the 3 monogram letters, and a font), then
+        // reveals the products. On mobile the stepper already puts this step after the
+        // embroidery steps.
         function embroideryDone() {
           var root = document.querySelector('.personalize-product-popup-section-os');
           if (!root) return false;
@@ -396,7 +400,7 @@
         }
         function updateDesktopStep() {
           var block = document.querySelector('.personalize-product-popup-addons-os');
-          if (block) block.hidden = !embroideryDone();
+          if (block) block.classList.toggle('is-locked', !embroideryDone());
         }
         var popupRoot = document.querySelector('.personalize-product-popup-section-os');
         if (popupRoot && config.revealAfterEmbroidery) {
