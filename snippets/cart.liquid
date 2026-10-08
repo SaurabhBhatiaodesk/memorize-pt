@@ -2048,11 +2048,21 @@
       [mainProduct.key]: 0
     };
 
-    // The lock added together with this trunk goes with it.
+    // The lock added together with this trunk goes with it. Only a lock that is still in the cart: one the
+    // customer already removed with its own Remove link is gone from the page, and a key that is no longer
+    // in the cart makes Shopify refuse the whole update (422).
     const mainLockToken = getLockPairToken(mainProduct);
     if (mainLockToken) {
+      const keysOnPage = new Set(
+        Array.from(document.querySelectorAll('[data-item-key]')).map(el => el.getAttribute('data-item-key'))
+      );
+
       cartLineItemsData.forEach(item => {
-        if (item && item.key && isLockLine(item) && getLockPairToken(item) === mainLockToken) {
+        if (
+          item && item.key && isLockLine(item) &&
+          getLockPairToken(item) === mainLockToken &&
+          keysOnPage.has(String(item.key))
+        ) {
           updates[item.key] = 0;
         }
       });
