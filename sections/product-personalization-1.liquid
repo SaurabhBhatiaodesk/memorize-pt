@@ -3316,6 +3316,7 @@ document.addEventListener('change', function(event) {
             alert(validationResult.errorMessage);
             return;
         }
+        if (window.PersonalizeAddons && !window.PersonalizeAddons.validate()) { return; } // lock picked but no message yet
         addToCartButton.disabled = true;
         addToCartButton.textContent = "Adding To Cart";
         await desktopAddLoaderAndDisableFields();
@@ -4079,7 +4080,9 @@ document.addEventListener('change', function(event) {
           const currencySymbol = {{currency_symbol | json}};
           const priceText = pdpProductVariantPrice.textContent.trim();
           const price = parseFloat(priceText.replace(currencySymbol, '').trim());
-          const updatedPrice = price;
+          // fee of the lock picked in the "Don't forget to add" step (0 when none)
+          const addonFee = (window.PersonalizeAddons && typeof window.PersonalizeAddons.getTotalCents === 'function') ? (Number(window.PersonalizeAddons.getTotalCents()) || 0) / 100 : 0;
+          const updatedPrice = price + addonFee;
           if (addToCartButton) addToCartButton.textContent = `Add To Cart (${currencySymbol}${updatedPrice.toFixed(2)})`;
           if (mobileAddToCartButton) mobileAddToCartButton.textContent = `Add To Cart (${currencySymbol}${updatedPrice.toFixed(2)})`;
       } else {
@@ -4091,6 +4094,12 @@ document.addEventListener('change', function(event) {
       const observer = new MutationObserver(() => { updatePriceInPopupCartToCartButton(); });
       observer.observe(pdpProductVariantPrice, { childList: true, subtree: true });
   }
+
+  // The lock add-on changed: show the new total on the Add To Cart buttons
+  document.addEventListener('personalize-addons:change', () => {
+    if ((addToCartButton && addToCartButton.disabled) || (mobileAddToCartButton && mobileAddToCartButton.disabled)) return; // adding to cart: leave the buttons alone
+    updatePriceInPopupCartToCartButton();
+  });
 
   document.addEventListener('DOMContentLoaded', () => {
     updateContent();
