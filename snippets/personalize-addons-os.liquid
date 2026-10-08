@@ -130,13 +130,24 @@
     a.addon-btn-os { display: inline-block; text-decoration: none; text-align: center; line-height: 20px; box-sizing: border-box; }
     .addon-engrave-os { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e3ebf3; }
     .addon-engrave-os[hidden], .addon-custom-os[hidden], .addon-error-os[hidden] { display: none; }
-    .addon-engrave-title-os { margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #274864; }
-    .addon-option-os { display: flex; align-items: center; gap: 8px; padding: 8px 0; cursor: pointer; font-size: 15px; color: #274864; }
-    .addon-option-os input { margin: 0; accent-color: #274864; }
-    .addon-custom-os { margin: 4px 0 8px 24px; }
-    .addon-custom-input-os { width: 100%; box-sizing: border-box; border: 1px solid #274864; border-radius: 4px; padding: 10px; font-size: 16px; }
-    .addon-count-os { display: block; font-size: 12px; color: #5b7088; margin-top: 4px; }
-    .addon-remove-os { background: none; border: 0; padding: 4px 0; color: #5b7088; text-decoration: underline; cursor: pointer; font-size: 13px; }
+    .addon-engrave-title-os { margin: 0 0 10px; font-size: 16px; line-height: 20px; color: #00334D; text-transform: uppercase; }
+    /* Option buttons look like the personalizer own ones (Words/Numbers, fonts) */
+    .addon-choices-os { display: flex; flex-wrap: wrap; gap: 8px; padding-bottom: 12px; }
+    .addon-choice-os {
+      font-size: 16px; line-height: 20px; min-height: 40px; padding: 8px 12px;
+      border: 2px solid #ddd; border-radius: 8px; background: #fff; color: #274864; cursor: pointer;
+    }
+    .addon-choice-os.is-selected { border-color: #274864; }
+    .addon-custom-head-os { display: flex; justify-content: space-between; flex-wrap: wrap; padding-bottom: 8px; font-size: 14px; line-height: 18px; color: #274864; }
+    .addon-custom-input-os { width: 100%; box-sizing: border-box; border: 1px solid #274864; border-radius: 8px; padding: 12px; font-size: 16px; margin: 0; }
+    .addon-count-os { font-size: 14px; line-height: 18px; color: #274864; }
+    .addon-remove-os { background: none; border: 0; padding: 8px 0 0; color: #5b7088; text-decoration: underline; cursor: pointer; font-size: 13px; }
+    @media screen and (max-width: 767px) {
+      /* Same look as the mobile embroidery type buttons */
+      .addon-choices-os { flex-direction: column; gap: 10px; }
+      .addon-choice-os { width: 100%; min-height: 52px; border: 1px solid #274864; border-radius: 5px; font-size: 16px; }
+      .addon-choice-os.is-selected { background: #274864; color: #fff; }
+    }
     .addon-error-os { color: red; margin: 10px 0; font-size: 14px; }
     .addon-preview-banner-os { font-size: 12px; line-height: 16px; color: #b3261e; font-style: italic; margin: 0 0 8px; }
     .addon-preview-note-os { font-size: 12px; line-height: 16px; color: #b3261e; margin: 0 0 6px; font-style: italic; }
@@ -214,40 +225,40 @@
             var panel = el('div', 'addon-engrave-os');
             panel.setAttribute('data-addon-engrave', '');
             panel.hidden = true;
-            panel.appendChild(el('p', 'addon-engrave-title-os', 'Choose an engraved message'));
-            var groupName = 'addon-engraving-' + context + '-' + index;
+            panel.appendChild(el('h4', 'addon-engrave-title-os', 'CHOOSE AN ENGRAVED MESSAGE'));
+            var choices = el('div', 'addon-choices-os');
             (config.presets || []).forEach(function (preset) {
               var text = String(preset).trim();
               if (!text) return;
-              var label = el('label', 'addon-option-os');
-              var radio = el('input');
-              radio.type = 'radio'; radio.name = groupName; radio.value = 'preset';
-              radio.setAttribute('data-addon-engraving', '');
-              radio.setAttribute('data-text', text);
-              label.appendChild(radio);
-              label.appendChild(el('span', '', text));
-              panel.appendChild(label);
+              var choice = el('button', 'addon-choice-os', text);
+              choice.type = 'button';
+              choice.setAttribute('value', 'preset');
+              choice.setAttribute('data-addon-engraving', '');
+              choice.setAttribute('data-text', text);
+              choices.appendChild(choice);
             });
-            var customLabel = el('label', 'addon-option-os');
-            var customRadio = el('input');
-            customRadio.type = 'radio'; customRadio.name = groupName; customRadio.value = 'custom';
-            customRadio.setAttribute('data-addon-engraving', '');
-            customLabel.appendChild(customRadio);
-            customLabel.appendChild(el('span', '', 'Write my own message'));
-            panel.appendChild(customLabel);
+            var customChoice = el('button', 'addon-choice-os', 'Write my own message');
+            customChoice.type = 'button';
+            customChoice.setAttribute('value', 'custom');
+            customChoice.setAttribute('data-addon-engraving', '');
+            choices.appendChild(customChoice);
+            panel.appendChild(choices);
             var custom = el('div', 'addon-custom-os');
             custom.setAttribute('data-addon-custom', '');
             custom.hidden = true;
-            var input = el('input', 'addon-custom-input-os');
-            input.type = 'text'; input.maxLength = config.maxChars || 30; input.placeholder = 'Type your message'; input.autocomplete = 'off';
-            input.setAttribute('data-addon-custom-input', '');
+            var head = el('div', 'addon-custom-head-os');
+            head.appendChild(el('span', '', 'ENGRAVED MESSAGE'));
             var count = el('span', 'addon-count-os');
-            var countNumber = el('span', '', String(input.maxLength));
+            var countNumber = el('span', '', String(config.maxChars || 30));
             countNumber.setAttribute('data-addon-count', '');
             count.appendChild(countNumber);
             count.appendChild(document.createTextNode(' characters left'));
+            head.appendChild(count);
+            var input = el('input', 'addon-custom-input-os');
+            input.type = 'text'; input.maxLength = config.maxChars || 30; input.placeholder = 'Type your message'; input.autocomplete = 'off';
+            input.setAttribute('data-addon-custom-input', '');
+            custom.appendChild(head);
             custom.appendChild(input);
-            custom.appendChild(count);
             panel.appendChild(custom);
             var remove = el('button', 'addon-remove-os', 'Remove');
             remove.type = 'button';
@@ -273,10 +284,12 @@
             if (toggle) toggle.textContent = selected ? 'Added' : (engravable ? 'Choose your engraving' : 'Add');
             var panel = card.querySelector('[data-addon-engrave]');
             if (panel) panel.hidden = !selected;
-            card.querySelectorAll('[data-addon-engraving]').forEach(function (radio) {
-              var isCustom = radio.value === 'custom';
-              radio.checked = !!(s && s.engraving && ((isCustom && s.engraving.type === 'custom') ||
-                (!isCustom && s.engraving.type === 'preset' && s.engraving.text === radio.getAttribute('data-text'))));
+            card.querySelectorAll('[data-addon-engraving]').forEach(function (choice) {
+              var isCustom = choice.getAttribute('value') === 'custom';
+              var on = !!(s && s.engraving && ((isCustom && s.engraving.type === 'custom') ||
+                (!isCustom && s.engraving.type === 'preset' && s.engraving.text === choice.getAttribute('data-text'))));
+              choice.classList.toggle('is-selected', on);
+              choice.setAttribute('aria-pressed', on ? 'true' : 'false');
             });
             var custom = card.querySelector('[data-addon-custom]');
             if (custom) custom.hidden = !(s && s.engraving && s.engraving.type === 'custom');
@@ -304,18 +317,25 @@
           render();
         });
 
-        document.addEventListener('change', function (event) {
-          var radio = event.target;
-          if (!radio || !radio.matches || !radio.matches('[data-addon-engraving]')) return;
-          var card = cardOf(radio);
+        document.addEventListener('click', function (event) {
+          var target = event.target;
+          if (!target || !target.closest) return;
+          var choice = target.closest('[data-addon-engraving]');
+          if (!choice) return;
+          var card = cardOf(choice);
           if (!card || !state[idOf(card)]) return;
-          if (radio.value === 'custom') {
-            var input = card.querySelector('[data-addon-custom-input]');
-            state[idOf(card)].engraving = { type: 'custom', text: input ? input.value.trim() : '' };
+          var isCustom = choice.getAttribute('value') === 'custom';
+          if (isCustom) {
+            var typed = card.querySelector('[data-addon-custom-input]');
+            state[idOf(card)].engraving = { type: 'custom', text: typed ? typed.value.trim() : '' };
           } else {
-            state[idOf(card)].engraving = { type: 'preset', text: radio.getAttribute('data-text') };
+            state[idOf(card)].engraving = { type: 'preset', text: choice.getAttribute('data-text') };
           }
           render();
+          if (isCustom) {
+            var field = card.querySelector('[data-addon-custom-input]');
+            if (field && field.offsetParent !== null) field.focus();
+          }
         });
 
         document.addEventListener('input', function (event) {
