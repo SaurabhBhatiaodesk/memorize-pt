@@ -3111,6 +3111,16 @@ $(document).on("click", ".sdev_radios_btn", function () {
       formData.items.push(predefinedItem);
     }
 
+    // Add-ons picked in the "Don't forget to add" step (e.g. the engraved padlock,
+    // with its message as a line item property). Nothing is added when none picked.
+    try {
+      if (window.PersonalizeAddons && typeof window.PersonalizeAddons.getCartItems === 'function') {
+        window.PersonalizeAddons.getCartItems().forEach((addonItem) => formData.items.push(addonItem));
+      }
+    } catch (addonError) {
+      console.warn('Add-ons were not added to the cart request', addonError);
+    }
+
     if (cartNote) formData.note = cartNote;
     console.log("customformSubmission formData ::", formData);
     fetch(window.Shopify.routes.root + 'cart/add.js', {
