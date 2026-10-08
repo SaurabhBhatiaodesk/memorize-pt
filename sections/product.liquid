@@ -3289,7 +3289,10 @@ label.radios--option-label.customText h3 {
           const priceText = pdpProductVariantPrice.textContent.trim();
           const price = parseFloat(priceText.replace(currencySymbol, '').trim());
     
-          const updatedPrice = price + priceAddition;
+          // Remember the embroidery fee: the lock step adds its own fee to the same button (one total, see updatePriceInPopupCartToCartButton)
+          window.personalizeEmbroideryFee = Number(priceAddition) || 0;
+          const lockFee = (window.PersonalizeAddons && typeof window.PersonalizeAddons.getTotalCents === 'function') ? (Number(window.PersonalizeAddons.getTotalCents()) || 0) / 100 : 0;
+          const updatedPrice = price + priceAddition + lockFee;
           // console.log("updatePriceAccordingToLetters updatedPrice ::", updatedPrice);
     
           if (addToCartButton) {
@@ -4780,7 +4783,7 @@ label.radios--option-label.customText h3 {
           // const updatedPrice = price + 25;
           // fee of the lock picked in the "Don't forget to add" step (0 when none)
           const addonFee = (window.PersonalizeAddons && typeof window.PersonalizeAddons.getTotalCents === 'function') ? (Number(window.PersonalizeAddons.getTotalCents()) || 0) / 100 : 0;
-          const updatedPrice = price + addonFee;
+          const updatedPrice = price + (Number(window.personalizeEmbroideryFee) || 0) + addonFee; // page price + embroidery fee + lock fee
           // console.log("updatePriceInPopupCartToCartButton updatedPrice ::", updatedPrice);
     
           // const desktopPersonalizeItAddToCartButton = document.querySelector('.personalize-product-popup-buyNow-os button');
