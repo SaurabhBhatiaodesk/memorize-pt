@@ -1,0 +1,277 @@
+{%- comment -%}
+  Personalizer step "Don't forget to add": recommended add-on products, with an
+  engraving choice for the padlock.
+
+  Usage (from personalize-it-popup-os):
+    {% render 'personalize-addons-os', part: 'markup', context: 'desktop' %}   cards for the desktop panel
+    {% render 'personalize-addons-os', part: 'markup', context: 'mobile' %}    cards for the mobile step
+    {% render 'personalize-addons-os', part: 'assets' %}                       CSS + JS, render once
+
+  The markup part prints nothing when it is switched off, so the caller can skip
+  the whole step.
+
+  Cart wiring is not part of this yet: choices are kept inside the step only and
+  are NOT submitted with the trunk. window.PersonalizeAddons.getSelection()
+  returns what the customer picked, ready for the cart step later.
+
+  Settings (edit below):
+    addons_enabled        switch the whole step on/off
+    addon_handles         product handles shown (comma separated); missing handles are skipped
+    engravable_handle     the product that gets the engraving choice
+    engraving_presets     PLACEHOLDER preset messages, separated by |
+    engraving_max_chars   PLACEHOLDER limit for the custom message
+    fallback_*            PLACEHOLDER card shown while the padlock product does not exist
+                          in the store yet (create it with the handle above and it is used instead)
+{%- endcomment -%}
+
+{%- liquid
+  assign addons_enabled = true
+  assign addon_handles = 'engraved-heart-padlock'
+  assign engravable_handle = 'engraved-heart-padlock'
+  assign engraving_presets = 'Forever & Always|Love You More|Together Since'
+  assign engraving_max_chars = 30
+  assign fallback_title = 'Engraved Heart Padlock'
+  assign fallback_subtitle = 'Free Personalization'
+  assign fallback_price = '$35'
+  assign fallback_image = '//memorizeyourlife.com/cdn/shop/files/memorize-lock-blue-rgb-900px-w-72ppi.png?v=1751344119'
+-%}
+
+{%- if part == 'markup' and addons_enabled -%}
+  {%- assign preset_list = engraving_presets | split: '|' -%}
+  {%- assign handle_list = addon_handles | split: ',' -%}
+
+  {%- comment -%} Keep only the handles that exist and are in stock. {%- endcomment -%}
+  {%- assign card_handles = '' -%}
+  {%- for raw_handle in handle_list -%}
+    {%- assign handle = raw_handle | strip -%}
+    {%- assign check_product = all_products[handle] -%}
+    {%- if check_product != blank and check_product.available -%}
+      {%- assign card_handles = card_handles | append: handle | append: ',' -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- assign use_fallback = false -%}
+  {%- if card_handles == blank -%}
+    {%- assign use_fallback = true -%}
+    {%- assign card_handles = engravable_handle | append: ',' -%}
+  {%- endif -%}
+  {%- assign card_list = card_handles | split: ',' -%}
+
+  <div class="addons-os" data-addons-os>
+    <div class="addons-track-os">
+      {%- for card_handle in card_list -%}
+        {%- if card_handle == blank -%}{%- continue -%}{%- endif -%}
+        {%- assign card_index = forloop.index -%}
+        {%- assign is_engravable = false -%}
+        {%- if card_handle == engravable_handle -%}{%- assign is_engravable = true -%}{%- endif -%}
+
+        {%- if use_fallback -%}
+          {%- assign card_title = fallback_title -%}
+          {%- assign card_price = fallback_price -%}
+          {%- assign card_image = fallback_image -%}
+        {%- else -%}
+          {%- assign card_product = all_products[card_handle] -%}
+          {%- assign card_title = card_product.title -%}
+          {%- assign card_price = card_product.price | money_without_trailing_zeros -%}
+          {%- assign card_image = card_product.featured_image | image_url: width: 300 -%}
+        {%- endif -%}
+
+        <div class="addon-card-os" data-addon-id="{{ card_handle | escape }}" data-engravable="{{ is_engravable }}">
+          <div class="addon-main-os">
+            <div class="addon-img-os">
+              {%- if card_image != blank -%}
+                <img src="{{ card_image }}" alt="{{ card_title | escape }}" width="96" height="96" loading="lazy">
+              {%- endif -%}
+            </div>
+            <div class="addon-info-os">
+              <div class="addon-title-os">{{ card_title | escape }}</div>
+              {%- if is_engravable -%}<div class="addon-sub-os">{{ fallback_subtitle | escape }}</div>{%- endif -%}
+              <div class="addon-price-os">{{ card_price | escape }}</div>
+              {%- if is_engravable -%}
+                <button type="button" class="addon-btn-os" data-addon-toggle>Choose your engraving</button>
+              {%- endif -%}
+            </div>
+          </div>
+
+          {%- if is_engravable -%}
+            <div class="addon-engrave-os" data-addon-engrave hidden>
+              <p class="addon-engrave-title-os">Choose an engraved message</p>
+              {%- for preset in preset_list -%}
+                <label class="addon-option-os">
+                  <input type="radio" name="addon-engraving-{{ context }}-{{ card_index }}" value="preset" data-addon-engraving data-text="{{ preset | strip | escape }}">
+                  <span>{{ preset | strip | escape }}</span>
+                </label>
+              {%- endfor -%}
+              <label class="addon-option-os">
+                <input type="radio" name="addon-engraving-{{ context }}-{{ card_index }}" value="custom" data-addon-engraving>
+                <span>Write my own message</span>
+              </label>
+              <div class="addon-custom-os" data-addon-custom hidden>
+                <input type="text" class="addon-custom-input-os" maxlength="{{ engraving_max_chars }}" placeholder="Type your message" autocomplete="off" data-addon-custom-input>
+                <span class="addon-count-os"><span data-addon-count>{{ engraving_max_chars }}</span> characters left</span>
+              </div>
+              <button type="button" class="addon-remove-os" data-addon-remove>Remove</button>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+    <div class="addon-error-os" data-addon-error hidden>Please choose an engraving or write your own message, or remove the padlock.</div>
+  </div>
+
+{%- elsif part == 'assets' and addons_enabled -%}
+  <style>
+    .addons-os { width: 100%; }
+    .addons-track-os {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 2px 2px 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .addon-card-os {
+      flex: 0 0 88%;
+      max-width: 88%;
+      scroll-snap-align: start;
+      border: 1px solid #c8d6e5;
+      border-radius: 6px;
+      padding: 12px;
+      box-sizing: border-box;
+      background: #fff;
+    }
+    .addon-card-os:only-child { flex-basis: 100%; max-width: 100%; }
+    .addon-card-os.is-selected { border-color: #274864; box-shadow: 0 0 0 1px #274864; }
+    .addon-main-os { display: flex; gap: 14px; align-items: center; }
+    .addon-img-os { flex: 0 0 96px; }
+    .addon-img-os img { width: 96px; height: 96px; object-fit: contain; display: block; }
+    .addon-info-os { flex: 1 1 auto; min-width: 0; }
+    .addon-title-os { font-size: 17px; line-height: 22px; color: #274864; }
+    .addon-sub-os { font-size: 13px; line-height: 18px; color: #274864; font-weight: 600; margin-top: 2px; }
+    .addon-price-os { font-size: 16px; font-weight: 600; color: #274864; margin: 4px 0 8px; }
+    .addon-btn-os {
+      background: #274864;
+      color: #fff;
+      border: 1px solid #274864;
+      border-radius: 4px;
+      padding: 10px 14px;
+      min-height: 40px;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: .02em;
+    }
+    .addon-card-os.is-selected .addon-btn-os { background: #fff; color: #274864; }
+    .addon-engrave-os { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e3ebf3; }
+    .addon-engrave-os[hidden], .addon-custom-os[hidden], .addon-error-os[hidden] { display: none; }
+    .addon-engrave-title-os { margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #274864; }
+    .addon-option-os { display: flex; align-items: center; gap: 8px; padding: 8px 0; cursor: pointer; font-size: 15px; color: #274864; }
+    .addon-option-os input { margin: 0; accent-color: #274864; }
+    .addon-custom-os { margin: 4px 0 8px 24px; }
+    .addon-custom-input-os { width: 100%; box-sizing: border-box; border: 1px solid #274864; border-radius: 4px; padding: 10px; font-size: 16px; }
+    .addon-count-os { display: block; font-size: 12px; color: #5b7088; margin-top: 4px; }
+    .addon-remove-os { background: none; border: 0; padding: 4px 0; color: #5b7088; text-decoration: underline; cursor: pointer; font-size: 13px; }
+    .addon-error-os { color: red; margin: 10px 0; font-size: 14px; }
+    .personalize-product-popup-addons-os { margin-top: 20px; }
+  </style>
+  <script>
+    (function () {
+      try {
+        var state = {};
+
+        function cards() { return document.querySelectorAll('[data-addons-os] .addon-card-os'); }
+        function idOf(card) { return card.getAttribute('data-addon-id'); }
+        function cardOf(el) { return el.closest('.addon-card-os'); }
+
+        // Show the same choice in the desktop and the mobile copy of the step.
+        function render() {
+          cards().forEach(function (card) {
+            var s = state[idOf(card)];
+            var selected = !!s;
+            card.classList.toggle('is-selected', selected);
+            var panel = card.querySelector('[data-addon-engrave]');
+            if (panel) panel.hidden = !selected;
+            var toggle = card.querySelector('[data-addon-toggle]');
+            if (toggle) toggle.textContent = selected ? 'Added' : 'Choose your engraving';
+            card.querySelectorAll('[data-addon-engraving]').forEach(function (radio) {
+              var isCustom = radio.value === 'custom';
+              radio.checked = !!(s && s.engraving && ((isCustom && s.engraving.type === 'custom') ||
+                (!isCustom && s.engraving.type === 'preset' && s.engraving.text === radio.getAttribute('data-text'))));
+            });
+            var custom = card.querySelector('[data-addon-custom]');
+            if (custom) custom.hidden = !(s && s.engraving && s.engraving.type === 'custom');
+            var input = card.querySelector('[data-addon-custom-input]');
+            if (input && s && s.engraving && s.engraving.type === 'custom' && input.value.trim() !== s.engraving.text) input.value = s.engraving.text;
+            if (input && !s) input.value = '';
+            var count = card.querySelector('[data-addon-count]');
+            if (count && input) count.textContent = String(Math.max(input.maxLength, 0) - input.value.length);
+          });
+          document.querySelectorAll('[data-addon-error]').forEach(function (el) { el.hidden = true; });
+        }
+
+        document.addEventListener('click', function (event) {
+          var target = event.target;
+          if (!target || !target.closest) return;
+          var toggle = target.closest('[data-addon-toggle]');
+          var remove = target.closest('[data-addon-remove]');
+          if (!toggle && !remove) return;
+          var card = cardOf(target);
+          if (!card) return;
+          var id = idOf(card);
+          if (remove) { delete state[id]; }
+          else if (!state[id]) { state[id] = { engraving: null }; }
+          render();
+        });
+
+        document.addEventListener('change', function (event) {
+          var radio = event.target;
+          if (!radio || !radio.matches || !radio.matches('[data-addon-engraving]')) return;
+          var card = cardOf(radio);
+          if (!card || !state[idOf(card)]) return;
+          if (radio.value === 'custom') {
+            var input = card.querySelector('[data-addon-custom-input]');
+            state[idOf(card)].engraving = { type: 'custom', text: input ? input.value.trim() : '' };
+          } else {
+            state[idOf(card)].engraving = { type: 'preset', text: radio.getAttribute('data-text') };
+          }
+          render();
+        });
+
+        document.addEventListener('input', function (event) {
+          var input = event.target;
+          if (!input || !input.matches || !input.matches('[data-addon-custom-input]')) return;
+          var card = cardOf(input);
+          if (!card || !state[idOf(card)]) return;
+          state[idOf(card)].engraving = { type: 'custom', text: input.value.trim() };
+          render();
+        });
+
+        function hasEngraving(s) { return !!(s && s.engraving && s.engraving.text); }
+
+        window.PersonalizeAddons = {
+          // Optional step: fine to continue with nothing picked. A picked add-on
+          // that takes an engraving needs one.
+          validate: function () {
+            var ok = true;
+            Object.keys(state).forEach(function (id) { if (!hasEngraving(state[id])) ok = false; });
+            if (!ok) {
+              // Show the message only in the copy of the step that is on screen.
+              document.querySelectorAll('[data-addon-error]').forEach(function (el) {
+                var host = el.closest('[data-addons-os]');
+                el.hidden = !(host && host.offsetParent !== null);
+              });
+            }
+            return ok;
+          },
+          getSelection: function () {
+            return Object.keys(state).map(function (id) { return { id: id, engraving: state[id].engraving }; });
+          },
+          reset: function () { state = {}; render(); }
+        };
+      } catch (error) {
+        console.warn('Personalizer add-ons step failed to start', error);
+        window.PersonalizeAddons = { validate: function () { return true; }, getSelection: function () { return []; }, reset: function () {} };
+      }
+    })();
+  </script>
+{%- endif -%}
