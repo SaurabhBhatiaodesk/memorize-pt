@@ -17,9 +17,14 @@
   exactly as before.
 
   Usage (from personalize-it-popup-os):
-    {% render 'personalize-addons-os', part: 'markup', context: 'desktop', product: product %}
-    {% render 'personalize-addons-os', part: 'markup', context: 'mobile', product: product %}
+    {% render 'personalize-addons-os', part: 'markup', context: 'desktop', product: product %}          lock + message, one block
+    {% render 'personalize-addons-os', part: 'markup', context: 'mobile', product: product %}           mobile step 1: the lock ("Engrave It")
+    {% render 'personalize-addons-os', part: 'markup', context: 'mobile-message', product: product %}   mobile step 2: add your message
     {% render 'personalize-addons-os', part: 'assets', product: product %}      CSS + JS, render once
+
+  Mobile: two stepper steps. Step 1 shows the lock; "Engrave It" picks it and goes to step 2, "add your
+  message". Step 2 is only part of the stepper while the lock is picked (it leaves the page otherwise, so
+  the step counter and the last step stay right); "Remove" in step 2 drops the lock and goes back to step 1.
 
   Review aid: on an UNPUBLISHED theme (Draft theme, preview link, editor) a "Lock" card with the
   engraving options (only the custom message for now: presets appear when they are configured) is shown until the real product exists
@@ -66,6 +71,7 @@
 
 {%- if part == 'markup' and addons_enabled and product != blank -%}
   <div class="addons-os" data-addons-os data-context="{{ context | escape }}" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle | escape }}">
+    {%- if context != 'mobile-message' -%}
     <div class="addons-viewport-os">
       <button type="button" class="addon-arrow-os is-prev" data-addon-arrow="-1" aria-label="Previous product" hidden>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -76,7 +82,10 @@
       </button>
     </div>
     <div class="addons-dots-os" data-addons-dots hidden></div>
+    {%- endif -%}
+    {%- if context != 'mobile' -%}
     <div class="addons-engrave-area-os" data-addons-engrave-area></div>
+    {%- endif -%}
     <div class="addon-error-os" data-addon-error hidden>Please choose an engraving or write your own message, or remove the item.</div>
   </div>
 
@@ -192,6 +201,9 @@
     .addon-error-os { color: red; margin: 10px 0; font-size: 14px; }
     .personalize-product-popup-addons-os { margin-top: 20px; }
     .personalize-product-popup-addons-os[hidden] { display: none; }
+    /* mobile step 2: the step heading already says "Add your message" */
+    [data-context="mobile-message"] .addon-engrave-title-os { display: none; }
+    [data-context="mobile-message"] .addon-engrave-os { margin: 0; }
     .addon-locked-note-os { display: none; margin: 4px 0 0; font-size: 14px; color: #5b7088; }
     .personalize-product-popup-addons-os.is-locked .addons-os { display: none; }
     .personalize-product-popup-addons-os.is-locked .addon-locked-note-os { display: block; }
@@ -212,7 +224,7 @@
 
         // Nothing to recommend: take the step out so the personalizer is unchanged.
         function removeStep() {
-          document.querySelectorAll('[data-addons-step], .personalize-product-popup-addons-os').forEach(function (node) { node.remove(); });
+          document.querySelectorAll('[data-addons-step], [data-addons-message-step], .personalize-product-popup-addons-os').forEach(function (node) { node.remove(); });
         }
 
         function el(tag, className, text) {
@@ -375,6 +387,30 @@
         function cardOf(node) { return node.closest('.addon-card-os, [data-addon-panel]'); }
         function hasEngraving(s) { return !!(s && s.engraving && s.engraving.text); }
 
+        // Mobile step 2 ("add your message") only exists in the stepper while the lock is picked: it is taken out
+        // of the page otherwise, so the stepper (which counts its steps from the page) skips it.
+        var messageStep = document.querySelector('[data-addons-message-step]');
+        var messageAnchor = messageStep ? document.createComment('addons-message-step') : null;
+        if (messageStep && messageStep.parentNode) messageStep.parentNode.insertBefore(messageAnchor, messageStep);
+        if (messageStep) messageStep.remove();
+        function lockPicked() {
+          return Object.keys(state).some(function (id) { return products[id] && isEngravable(products[id]); });
+        }
+        function refreshStepper() {
+          // the step counter (x/N) follows the number of steps on the page
+          if (typeof updateContent === 'function') { try { updateContent(); } catch (e) {} }
+        }
+        function syncMessageStep() {
+          if (!messageStep || !messageAnchor.parentNode) return;
+          var attached = !!messageStep.parentNode;
+          var want = lockPicked();
+          if (want === attached) return;
+          if (want) messageAnchor.parentNode.insertBefore(messageStep, messageAnchor.nextSibling);
+          else messageStep.remove();
+          render();
+          refreshStepper();
+        }
+
         // Show the same choice in the desktop and the mobile copy of the step.
         function render() {
           document.querySelectorAll('[data-addons-os] .addon-card-os').forEach(function (card) {
@@ -429,12 +465,20 @@
           if (!card || !products[idOf(card)]) return;
           var id = idOf(card);
           var engravable = isEngravable(products[id]);
+          var inMessageStep = !!(remove && remove.closest('[data-addons-message-step]'));
           if (remove || (toggle && state[id] && !engravable)) { delete state[id]; }
           else if (!state[id]) {
             var hasPresets = (config.presets || []).some(function (t) { return String(t).trim(); });
             state[id] = { engraving: (engravable && !hasPresets) ? { type: 'custom', text: '' } : null };
           }
           render();
+          syncMessageStep();
+          // Mobile: "Engrave It" goes on to step 2, "Remove" in step 2 goes back to step 1.
+          if (toggle && engravable && toggle.closest('[data-context="mobile"]') && messageStep && messageStep.parentNode && typeof changeContent === 'function') {
+            try { changeContent(1); } catch (e) {}
+          } else if (inMessageStep && typeof changeContent === 'function') {
+            try { changeContent(-1); } catch (e) {}
+          }
         });
 
         document.addEventListener('click', function (event) {
@@ -523,7 +567,7 @@
             });
             return props;
           },
-          reset: function () { state = {}; render(); }
+          reset: function () { state = {}; render(); syncMessageStep(); }
         };
 
         // addons_reveal_after_embroidery: on desktop the step shows a note until the embroidery
@@ -624,28 +668,28 @@
             var list = result.list;
             if (!list.length) { removeStep(); return; }
             list.forEach(function (p) { products[String(p.id)] = p; });
+            // The add-on flow is a single Lock product on desktop and mobile.
+            // Other trunk recommendations remain available in Shopify but are not rendered here.
+            var visibleList = list.filter(isEngravable).slice(0, 1);
+            if (!visibleList.length) { removeStep(); return; }
             roots.forEach(function (root) {
-              var track = root.querySelector('[data-addons-track]');
               var context = root.getAttribute('data-context') || 'x';
-              if (!track) return;
-              // The add-on flow is a single Lock product on both desktop and mobile.
-              // Other trunk recommendations remain available in Shopify but are not rendered here.
-              var visibleList = list.filter(isEngravable).slice(0, 1);
-              if (!visibleList.length) {
-                root.hidden = true;
-                return;
+              // desktop: card + message; mobile step 1: the card only; mobile step 2: the message only
+              var track = root.querySelector('[data-addons-track]');
+              if (track) {
+                visibleList.forEach(function (p, index) { track.appendChild(buildCard(p, context, index + 1)); });
+                var dots = root.querySelector('[data-addons-dots]');
+                if (dots && visibleList.length > 1) { buildDots(track, dots); }
               }
-              visibleList.forEach(function (p, index) { track.appendChild(buildCard(p, context, index + 1)); });
-              var dots = root.querySelector('[data-addons-dots]');
-              if (dots && visibleList.length > 1) { buildDots(track, dots); }
               var area = root.querySelector('[data-addons-engrave-area]');
-              if (area) visibleList.forEach(function (p) { if (isEngravable(p)) area.appendChild(buildPanel(p, context)); });
+              if (area) visibleList.forEach(function (p) { area.appendChild(buildPanel(p, context)); });
             });
+            syncMessageStep();
           })
           .catch(function () { removeStep(); });
       } catch (error) {
         console.warn('Personalizer add-ons step failed to start', error);
-        try { document.querySelectorAll('[data-addons-step], .personalize-product-popup-addons-os').forEach(function (node) { node.remove(); }); } catch (e) {}
+        try { document.querySelectorAll('[data-addons-step], [data-addons-message-step], .personalize-product-popup-addons-os').forEach(function (node) { node.remove(); }); } catch (e) {}
       }
     })();
   </script>

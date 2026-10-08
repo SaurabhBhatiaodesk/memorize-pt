@@ -1123,6 +1123,7 @@
 <div class="popup-overlay-os"></div>
 {%- capture addons_desktop_html -%}{% render 'personalize-addons-os', part: 'markup', context: 'desktop', product: product %}{%- endcapture -%}
 {%- capture addons_mobile_html -%}{% render 'personalize-addons-os', part: 'markup', context: 'mobile', product: product %}{%- endcapture -%}
+{%- capture addons_mobile_message_html -%}{% render 'personalize-addons-os', part: 'markup', context: 'mobile-message', product: product %}{%- endcapture -%}
 <section class="personalize-product-popup-section-os">
   <!-- <img src="" class="testing-image-os" /> -->
  <form id="mobile-desktop-product" method="post" action="/cart/add" enctype="multipart/form-data">
@@ -1586,9 +1587,15 @@
             {%- if addons_mobile_html != blank -%}
             <div class="mobile-personalize-fields-col-os" style="display:none;" data-addons-step>
               <div class="mobile-personalize-heading-without-tooltip-os">
-                <h4>DON'T FORGET TO ADD</h4>
+                <h4>ADD LOCK</h4>
               </div>
               {{ addons_mobile_html }}
+            </div>
+            <div class="mobile-personalize-fields-col-os" style="display:none;" data-addons-message-step>
+              <div class="mobile-personalize-heading-without-tooltip-os">
+                <h4>ADD YOUR MESSAGE</h4>
+              </div>
+              {{ addons_mobile_message_html }}
             </div>
             {%- endif -%}
 
