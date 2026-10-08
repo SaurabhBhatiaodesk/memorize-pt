@@ -867,6 +867,21 @@ label[data-item="swatch"]::after {
         margin-right: auto;
     }
 }
+/* Phone and drawer: the lock has no plus/minus box, so no big gap between its price and Remove */
+.cart--root:not([data-view="desktop"]) .cart--item--image-addon ~ .cart--item--info .cart--item--price {
+    padding-bottom: 6px;
+}
+.cart--root:not([data-view="desktop"]) .cart--item--image-addon ~ .cart--item--info .quantity-selector--remove {
+    padding-top: 0;
+}
+@media screen and (max-width: 767px) {
+    .cart--item--image-addon ~ .cart--item--info .cart--item--price {
+        padding-bottom: 6px;
+    }
+    .cart--item--image-addon ~ .cart--item--info .quantity-selector--remove {
+        padding-top: 0;
+    }
+}
 .cart--root:not([data-view="desktop"]) .cart--item--image {
     width: 100%;
     align-self: center;
