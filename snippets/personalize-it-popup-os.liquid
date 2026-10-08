@@ -1121,6 +1121,8 @@
 </div>
   
 <div class="popup-overlay-os"></div>
+{%- capture addons_desktop_html -%}{% render 'personalize-addons-os', part: 'markup', context: 'desktop' %}{%- endcapture -%}
+{%- capture addons_mobile_html -%}{% render 'personalize-addons-os', part: 'markup', context: 'mobile' %}{%- endcapture -%}
 <section class="personalize-product-popup-section-os">
   <!-- <img src="" class="testing-image-os" /> -->
  <form id="mobile-desktop-product" method="post" action="/cart/add" enctype="multipart/form-data">
@@ -1301,6 +1303,15 @@
               </div>
               <!-- Custom dropdown for color ends -->
             </div>
+
+            {%- if addons_desktop_html != blank -%}
+            <div class="personalize-product-popup-addons-os">
+              <div class="heading-content-os">
+                <h4>7. DON'T FORGET TO ADD</h4>
+              </div>
+              {{ addons_desktop_html }}
+            </div>
+            {%- endif -%}
 
             {% comment %} <div class="pk-promises-content-os">
               <p>PK Promise</p>
@@ -1571,6 +1582,15 @@
             </div>
   
   
+            {%- if addons_mobile_html != blank -%}
+            <div class="mobile-personalize-fields-col-os" style="display:none;" data-addons-step>
+              <div class="mobile-personalize-heading-without-tooltip-os">
+                <h4>DON'T FORGET TO ADD</h4>
+              </div>
+              {{ addons_mobile_html }}
+            </div>
+            {%- endif -%}
+
             <div class="mobile-personalize-fields-col-os " style="display:none;">
               <div class="mobile-personalize-heading-without-tooltip-os">
                 <h4>MEMORIES TO TREASURE, STYLE TO CELEBRATE, QUALITY YOU CAN TRUST.</h4>
@@ -1645,3 +1665,5 @@
   </form>
  
 </section>
+
+{% render 'personalize-addons-os', part: 'assets' %}

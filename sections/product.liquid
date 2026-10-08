@@ -4180,7 +4180,7 @@ label.radios--option-label.customText h3 {
       });
     
       // Update the pagination counter
-      document.querySelector('.pagination-counter-os').innerText = `${currentIndex}/8`;
+      document.querySelector('.pagination-counter-os').innerText = `${currentIndex}/${sections.length + 3}`;
 
     
       // Handle slick initialization for mobile font buttons (currentIndex === 6)
@@ -4265,7 +4265,7 @@ label.radios--option-label.customText h3 {
     
       // Update visibility of forward step button based on currentIndex
       if (forwardStepElement) {
-        if (currentIndex === 8) {
+        if (currentIndex === sections.length + 3) {
             forwardStepElement.style.opacity = "0";
             forwardStepElement.style.visibility = "hidden";
             mobilePersonalizeHeading.innerHTML = "Congratulations!";
@@ -4339,6 +4339,8 @@ label.radios--option-label.customText h3 {
           document.getElementById('colorError').style.display = 'block';
           return;
         }
+      } else if (currentIndex === 8 && document.querySelector('[data-addons-step]') && window.PersonalizeAddons && !window.PersonalizeAddons.validate()) {
+        return;
       }
     
       // If all validations passed, go to the next section

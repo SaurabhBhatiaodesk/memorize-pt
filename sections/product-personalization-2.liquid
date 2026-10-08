@@ -3290,7 +3290,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
       const forwardStepElement = document.querySelector(".forward-step-os");
       const mobilePersonalizeHeading = document.querySelector(".personalize-product-popup-heading-os h2");
       sections.forEach((section, index) => { section.style.display = (index === currentIndex - 4) ? 'block' : 'none'; });
-      document.querySelector('.pagination-counter-os').innerText = `${currentIndex}/8`;
+      document.querySelector('.pagination-counter-os').innerText = `${currentIndex}/${sections.length + 3}`;
       if (currentIndex === 6) {
           if (mobileFontsContainer && $(mobileFontsContainer).hasClass('slick-initialized')) { $(mobileFontsContainer).slick('unslick'); }
           if (mobileFontsContainer) {
@@ -3308,7 +3308,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
           }
       }
       if (forwardStepElement) {
-        if (currentIndex === 8) {
+        if (currentIndex === sections.length + 3) {
             forwardStepElement.style.opacity = "0"; forwardStepElement.style.visibility = "hidden";
             mobilePersonalizeHeading.innerHTML = "Congratulations!";
         } else {
@@ -3349,6 +3349,8 @@ $(document).on("click", ".sdev_radios_btn", function () {
       } else if (currentIndex === 7) {
         const selectedColor = document.querySelector('.selectedColor').value;
         if (!selectedColor) { document.getElementById('colorError').style.display = 'block'; return; }
+      } else if (currentIndex === 8 && document.querySelector('[data-addons-step]') && window.PersonalizeAddons && !window.PersonalizeAddons.validate()) {
+        return;
       }
       changeContent(1);
   }
