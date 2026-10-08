@@ -383,7 +383,7 @@
             card.classList.toggle('is-selected', selected);
             var toggle = card.querySelector('[data-addon-toggle]');
             if (toggle) {
-              toggle.textContent = selected ? 'Added' : (engravable ? 'Engrave It' : 'Add');
+              toggle.textContent = engravable ? 'Engrave It' : (selected ? 'Added' : 'Add');
             }
           });
           // The engraving panels sit below the row of cards.
