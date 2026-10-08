@@ -250,7 +250,7 @@
           var info = el('div', 'addon-info-os');
           info.appendChild(el('div', 'addon-title-os', p.title));
           if (p.price !== null && p.price !== undefined) info.appendChild(el('div', 'addon-price-os', formatPrice(p.price)));
-          var button = el('button', 'addon-btn-os', isEngravable(p) ? (context === 'mobile' ? 'Engrave It' : 'Lock message') : 'Add');
+          var button = el('button', 'addon-btn-os', isEngravable(p) ? 'Engrave It' : 'Add');
           button.type = 'button';
           button.setAttribute('data-addon-toggle', '');
           info.appendChild(button);
@@ -383,9 +383,7 @@
             card.classList.toggle('is-selected', selected);
             var toggle = card.querySelector('[data-addon-toggle]');
             if (toggle) {
-              var host = card.closest('[data-addons-os]');
-              var isMobile = host && host.getAttribute('data-context') === 'mobile';
-              toggle.textContent = selected ? 'Added' : (engravable ? (isMobile ? 'Engrave It' : 'Lock message') : 'Add');
+              toggle.textContent = selected ? 'Added' : (engravable ? 'Engrave It' : 'Add');
             }
           });
           // The engraving panels sit below the row of cards.
