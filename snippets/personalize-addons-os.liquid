@@ -31,6 +31,8 @@
     addon_intent          Shopify recommendation type ('complementary' = add-ons)
     addon_limit           max products shown
     addon_collection      handle of the collection used when a product has no complementary products
+    addons_reveal_after_embroidery  true = on desktop the step stays hidden until the embroidery
+                          options (type, words/monogram, font) are filled in; false = always visible
     addon_exclude_handles never shown as add-ons (the trunks, custom embroidery, gift cards)
     engravable_handle     handle of the product that takes an engraving
     engravable_tag        or any product with this tag takes an engraving
@@ -49,6 +51,7 @@
   assign addon_intent = 'complementary'
   assign addon_limit = 8
   assign addon_collection = 'personalizer-add-ons'
+  assign addons_reveal_after_embroidery = false
   assign addon_trunk_handles = 'weddings,graduations,baby-child,other-family'
   assign addon_exclude_handles = 'holiday-limited-time-edition,custom-embroidery,memorize-trunks-egift-card'
   assign engravable_handle = 'engraved-heart-padlock'
@@ -71,6 +74,7 @@
       "intent": {{ addon_intent | json }},
       "limit": {{ addon_limit | json }},
       "collection": {{ addon_collection | json }},
+      "revealAfterEmbroidery": {{ addons_reveal_after_embroidery | json }},
       "excludeHandles": {{ addon_exclude_handles | split: ',' | json }},
       "trunkHandles": {{ addon_trunk_handles | split: ',' | json }},
       "engravableHandle": {{ engravable_handle | json }},
@@ -372,9 +376,10 @@
           reset: function () { state = {}; render(); }
         };
 
-        // Desktop: the step appears once the embroidery options are filled in (type, the
-        // words or the 3 monogram letters, and a font). The thread colour always has a
-        // default. On mobile the stepper already puts this step after the embroidery steps.
+        // Optional (addons_reveal_after_embroidery): on desktop the step appears once the
+        // embroidery options are filled in (type, the words or the 3 monogram letters, and a
+        // font). Off by default: the step is always visible. On mobile the stepper already puts
+        // this step after the embroidery steps.
         function embroideryDone() {
           var root = document.querySelector('.personalize-product-popup-section-os');
           if (!root) return false;
@@ -394,12 +399,12 @@
           if (block) block.hidden = !embroideryDone();
         }
         var popupRoot = document.querySelector('.personalize-product-popup-section-os');
-        if (popupRoot) {
+        if (popupRoot && config.revealAfterEmbroidery) {
           ['input', 'change', 'click'].forEach(function (type) {
             popupRoot.addEventListener(type, function () { setTimeout(updateDesktopStep, 60); });
           });
         }
-        updateDesktopStep();
+        if (config.revealAfterEmbroidery) updateDesktopStep();
 
         if (!productId) { removeStep(); return; }
 
