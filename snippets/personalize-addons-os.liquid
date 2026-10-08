@@ -22,6 +22,10 @@
     {% render 'personalize-addons-os', part: 'markup', context: 'mobile-message', product: product %}   mobile step 2: add your message
     {% render 'personalize-addons-os', part: 'assets', product: product %}      CSS + JS, render once
 
+  Desktop: once the message is written (Enter, or leaving the box) the message box folds away and the
+  card shows the message; "Engrave It" opens the box again to change it. The fee of the picked lock
+  is added to the Add To Cart total (getTotalCents + the personalize-addons:change event).
+
   Mobile: two stepper steps. Step 1 shows the lock; "Engrave It" picks it and goes to step 2, "add your
   message". Step 2 is only part of the stepper while the lock is picked (it leaves the page otherwise, so
   the step counter and the last step stay right); "Remove" in step 2 drops the lock and goes back to step 1.
@@ -166,6 +170,8 @@
     .addon-info-os { flex: 1 1 auto; min-width: 0; }
     .addon-title-os { font-size: 17px; line-height: 22px; color: #274864; margin-bottom: 8px; }
     .addon-price-os { font-size: 16px; font-weight: 600; color: #274864; margin: -2px 0 10px; }
+    .addon-saved-os { margin-top: 8px; font-size: 14px; line-height: 18px; color: #274864; word-break: break-word; }
+    .addon-saved-os[hidden] { display: none; }
     .addon-btn-os {
       background: #274864;
       color: #fff;
@@ -216,7 +222,7 @@
   </style>
   <script>
     (function () {
-      var noop = { validate: function () { return true; }, getSelection: function () { return []; }, getCartItems: function () { return []; }, getTrunkProperties: function () { return {}; }, reset: function () {} };
+      var noop = { validate: function () { return true; }, getSelection: function () { return []; }, getCartItems: function () { return []; }, getTrunkProperties: function () { return {}; }, getTotalCents: function () { return 0; }, reset: function () {} };
       window.PersonalizeAddons = noop;
       try {
         var configEl = document.getElementById('addons-config-os');
@@ -272,6 +278,10 @@
           button.type = 'button';
           button.setAttribute('data-addon-toggle', '');
           info.appendChild(button);
+          var saved = el('div', 'addon-saved-os');
+          saved.setAttribute('data-addon-saved', '');
+          saved.hidden = true;
+          info.appendChild(saved);
           main.appendChild(imgWrap);
           main.appendChild(info);
           card.appendChild(main);
@@ -390,6 +400,10 @@
         }
 
         function idOf(card) { return card.getAttribute('data-addon-id'); }
+        function contextOf(node) {
+          var host = node && node.closest ? node.closest('[data-addons-os]') : null;
+          return host ? host.getAttribute('data-context') : '';
+        }
         function cardOf(node) { return node.closest('.addon-card-os, [data-addon-panel]'); }
         function hasEngraving(s) { return !!(s && s.engraving && s.engraving.text); }
 
@@ -427,11 +441,20 @@
             if (toggle) {
               toggle.textContent = engravable ? 'Engrave It' : (selected ? 'Added' : 'Add');
             }
+            // the message written so far, under the button (desktop: once the box is folded away)
+            var saved = card.querySelector('[data-addon-saved]');
+            if (saved) {
+              var st = state[idOf(card)];
+              var show = hasEngraving(st) && (contextOf(card) !== 'desktop' || st.collapsed);
+              saved.hidden = !show;
+              saved.textContent = show ? st.engraving.text : '';
+            }
           });
           // The engraving panels sit below the row of cards.
           document.querySelectorAll('[data-addons-os] [data-addon-panel]').forEach(function (panel) {
             var s = state[idOf(panel)];
-            panel.hidden = !s;
+            // desktop: the box folds away once the message is written; the button opens it again
+            panel.hidden = !s || (s.collapsed && contextOf(panel) === 'desktop');
             panel.querySelectorAll('[data-addon-engraving]').forEach(function (choice) {
               var isCustom = choice.getAttribute('value') === 'custom';
               var on = !!(s && s.engraving && ((isCustom && s.engraving.type === 'custom') ||
@@ -459,6 +482,27 @@
             }
           });
           document.querySelectorAll('[data-addon-error]').forEach(function (node) { node.hidden = true; });
+          // tell the Add To Cart buttons when the total changes
+          var total = totalCents();
+          if (total !== lastTotal) {
+            lastTotal = total;
+            try { document.dispatchEvent(new CustomEvent('personalize-addons:change')); } catch (e) {}
+          }
+        }
+        var lastTotal = 0;
+        // Fee of the picked add-ons (cents). Only what is really sent counts: an engravable product needs its message.
+        function totalCents() {
+          var sum = 0;
+          Object.keys(state).forEach(function (id) {
+            var p = products[id];
+            if (!p || (isEngravable(p) && !hasEngraving(state[id]))) return;
+            sum += Number(p.price) || 0;
+          });
+          return sum;
+        }
+        // Desktop: fold the message box away once there is a message.
+        function collapse(id) {
+          if (state[id] && hasEngraving(state[id]) && !state[id].collapsed) { state[id].collapsed = true; render(); }
         }
 
         document.addEventListener('click', function (event) {
@@ -472,13 +516,19 @@
           var id = idOf(card);
           var engravable = isEngravable(products[id]);
           var inMessageStep = !!(remove && remove.closest('[data-addons-message-step]'));
+          var reopened = false;
           if (remove || (toggle && state[id] && !engravable)) { delete state[id]; }
+          else if (toggle && state[id] && engravable && state[id].collapsed) { state[id].collapsed = false; reopened = true; }
           else if (!state[id]) {
             var hasPresets = (config.presets || []).some(function (t) { return String(t).trim(); });
             state[id] = { engraving: (engravable && !hasPresets) ? { type: 'custom', text: '' } : null };
           }
           render();
           syncMessageStep();
+          if (reopened) {
+            var again = document.querySelector('[data-addons-os][data-context="desktop"] [data-addon-custom-input]');
+            if (again && again.offsetParent !== null && !again.readOnly) again.focus();
+          }
           // Mobile: "Engrave It" goes on to step 2, "Remove" in step 2 goes back to step 1.
           if (toggle && engravable && toggle.closest('[data-context="mobile"]') && messageStep && messageStep.parentNode && typeof changeContent === 'function') {
             try { changeContent(1); } catch (e) {}
@@ -504,6 +554,7 @@
             state[idOf(card)].engraving = { type: 'preset', text: choice.getAttribute('data-text') };
           }
           render();
+          if (!isCustom && contextOf(card) === 'desktop') collapse(idOf(card));
           if (isCustom) {
             var field = card.querySelector('[data-addon-custom-input]');
             if (field && field.offsetParent !== null) field.focus();
@@ -517,6 +568,31 @@
           if (!card || !state[idOf(card)]) return;
           state[idOf(card)].engraving = { type: 'custom', text: input.value.trim() };
           render();
+        });
+
+        document.addEventListener('keydown', function (event) {
+          var input = event.target;
+          if (!input || !input.matches || !input.matches('[data-addon-custom-input]') || event.key !== 'Enter') return;
+          event.preventDefault(); // Enter must not submit the product form
+          var card = cardOf(input);
+          if (card && state[idOf(card)] && contextOf(card) === 'desktop') collapse(idOf(card));
+        });
+        // Leaving the box folds it away. If the leave is a click (e.g. on Add To Cart), wait until the click is done:
+        // folding earlier would move the buttons under the pointer and the click would be lost.
+        var pointerDown = false, pendingCollapse = null;
+        function flushCollapse() { if (pendingCollapse) { var id = pendingCollapse; pendingCollapse = null; collapse(id); } }
+        ['mousedown', 'touchstart'].forEach(function (type) {
+          document.addEventListener(type, function () { pointerDown = true; }, true);
+        });
+        ['mouseup', 'touchend', 'touchcancel'].forEach(function (type) {
+          document.addEventListener(type, function () { pointerDown = false; setTimeout(flushCollapse, 0); }, true);
+        });
+        document.addEventListener('focusout', function (event) {
+          var input = event.target;
+          if (!input || !input.matches || !input.matches('[data-addon-custom-input]')) return;
+          var card = cardOf(input);
+          if (!card || !state[idOf(card)] || contextOf(card) !== 'desktop') return;
+          if (pointerDown) pendingCollapse = idOf(card); else collapse(idOf(card));
         });
 
         window.PersonalizeAddons = {
@@ -535,6 +611,8 @@
             }
             return ok;
           },
+          // Fee of the picked add-ons (cents), for the Add To Cart total.
+          getTotalCents: totalCents,
           getSelection: function () {
             return Object.keys(state).map(function (id) {
               var p = products[id] || {};
