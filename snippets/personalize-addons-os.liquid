@@ -4,7 +4,12 @@
   A product with the handle / tag set below gets an engraving choice (3 preset
   messages or a custom message).
 
-  The products are NOT hard-coded. They come from Shopify, in this order:
+  What is shown, in this order:
+    A. add-on products set up in Shopify (below), with an engraving choice for the padlock;
+    B. then the OTHER personalizer trunks (addon_trunk_handles), each with a View button
+       that opens that trunk's page (a trunk needs its own personalizing, so it is never
+       added to the cart from here). The trunk being personalized is left out.
+  The add-on products (A) come from Shopify, in this order:
     1. the product's own "Complementary products" (Search & Discovery app), if set;
     2. otherwise the products of the collection with the handle addon_collection
        (one collection = the same add-ons on EVERY personalizer product).
@@ -44,7 +49,8 @@
   assign addon_intent = 'complementary'
   assign addon_limit = 8
   assign addon_collection = 'personalizer-add-ons'
-  assign addon_exclude_handles = 'weddings,graduations,baby-child,other-family,holiday-limited-time-edition,custom-embroidery,memorize-trunks-egift-card'
+  assign addon_trunk_handles = 'weddings,graduations,baby-child,other-family'
+  assign addon_exclude_handles = 'holiday-limited-time-edition,custom-embroidery,memorize-trunks-egift-card'
   assign engravable_handle = 'engraved-heart-padlock'
   assign engravable_tag = 'engravable'
   assign engraving_presets = 'Forever & Always|Love You More|Together Since'
@@ -53,7 +59,7 @@
 -%}
 
 {%- if part == 'markup' and addons_enabled and product != blank -%}
-  <div class="addons-os" data-addons-os data-context="{{ context | escape }}" data-product-id="{{ product.id }}">
+  <div class="addons-os" data-addons-os data-context="{{ context | escape }}" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle | escape }}">
     <div class="addons-track-os" data-addons-track></div>
     <div class="addon-error-os" data-addon-error hidden>Please choose an engraving or write your own message, or remove the item.</div>
   </div>
@@ -66,6 +72,7 @@
       "limit": {{ addon_limit | json }},
       "collection": {{ addon_collection | json }},
       "excludeHandles": {{ addon_exclude_handles | split: ',' | json }},
+      "trunkHandles": {{ addon_trunk_handles | split: ',' | json }},
       "engravableHandle": {{ engravable_handle | json }},
       "engravableTag": {{ engravable_tag | json }},
       "presets": {{ preset_list | json }},
@@ -116,6 +123,7 @@
       letter-spacing: .02em;
     }
     .addon-card-os.is-selected .addon-btn-os { background: #fff; color: #274864; }
+    a.addon-btn-os { display: inline-block; text-decoration: none; text-align: center; line-height: 20px; box-sizing: border-box; }
     .addon-engrave-os { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e3ebf3; }
     .addon-engrave-os[hidden], .addon-custom-os[hidden], .addon-error-os[hidden] { display: none; }
     .addon-engrave-title-os { margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #274864; }
@@ -141,6 +149,7 @@
         if (!configEl || !roots.length) return;
         var config = JSON.parse(configEl.textContent);
         var productId = roots[0].getAttribute('data-product-id');
+        var currentHandle = roots[0].getAttribute('data-product-handle') || '';
         var products = {};     // id -> product data
         var state = {};        // id -> { engraving: null | { type, text } }
 
@@ -185,15 +194,24 @@
           info.appendChild(el('div', 'addon-title-os', p.title));
           if (p.preview) info.appendChild(el('div', 'addon-preview-note-os', 'Preview only: this product is not set up in Shopify yet'));
           info.appendChild(el('div', 'addon-price-os', formatPrice(p.price)));
-          var button = el('button', 'addon-btn-os', isEngravable(p) ? 'Choose your engraving' : 'Add');
-          button.type = 'button';
-          button.setAttribute('data-addon-toggle', '');
-          info.appendChild(button);
+          if (p.trunk) {
+            // A personalizer trunk: it needs its own personalizing, so it opens its page.
+            var link = el('a', 'addon-btn-os', 'View');
+            link.href = p.url;
+            link.target = '_blank';
+            link.rel = 'noopener';
+            info.appendChild(link);
+          } else {
+            var button = el('button', 'addon-btn-os', isEngravable(p) ? 'Choose your engraving' : 'Add');
+            button.type = 'button';
+            button.setAttribute('data-addon-toggle', '');
+            info.appendChild(button);
+          }
           main.appendChild(imgWrap);
           main.appendChild(info);
           card.appendChild(main);
 
-          if (isEngravable(p)) {
+          if (!p.trunk && isEngravable(p)) {
             card.setAttribute('data-engravable', 'true');
             var panel = el('div', 'addon-engrave-os');
             panel.setAttribute('data-addon-engrave', '');
@@ -423,6 +441,18 @@
             return getJson('/collections/' + encodeURIComponent(config.collection) + '/products.json?limit=' + encodeURIComponent(config.limit))
               .then(function (collectionData) { return usable((collectionData.products || []).map(fromCollection)); });
           })
+          .then(function (configured) {
+            // The other personalizer trunks are always offered too (not the one being personalized).
+            var handles = (config.trunkHandles || []).filter(function (h) { return h && h !== currentHandle; });
+            return Promise.all(handles.map(function (h) { return getJson('/products/' + encodeURIComponent(h) + '.js'); }))
+              .then(function (found) {
+                var trunks = found.filter(function (p) { return p && p.id && p.available !== false && String(p.id) !== String(productId); })
+                  .map(function (p) {
+                    return { id: p.id, handle: p.handle, title: p.title, price: p.price, featured_image: p.featured_image || (p.images && p.images[0]) || '', tags: [], variants: [], available: true, trunk: true, noCart: true, url: '/products/' + p.handle };
+                  });
+                return configured.concat(trunks);
+              });
+          })
           .then(function (list) {
             if (list.length || !config.previewWhenEmpty) return { list: list, preview: false };
             // Unpublished theme only, nothing set up yet: two clearly labelled example cards so
@@ -439,7 +469,7 @@
           .then(function (result) {
             var list = result.list;
             if (!list.length) { removeStep(); return; }
-            list.forEach(function (p) { products[String(p.id)] = p; });
+            list.forEach(function (p) { if (!p.trunk) products[String(p.id)] = p; });
             roots.forEach(function (root) {
               var track = root.querySelector('[data-addons-track]');
               var context = root.getAttribute('data-context') || 'x';
