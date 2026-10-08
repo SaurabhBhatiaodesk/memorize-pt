@@ -14,10 +14,10 @@
     {% render 'personalize-addons-os', part: 'markup', context: 'mobile', product: product %}
     {% render 'personalize-addons-os', part: 'assets', product: product %}      CSS + JS, render once
 
-  Cart wiring is not part of this yet: choices are kept inside the step only and
-  are NOT submitted with the trunk. window.PersonalizeAddons.getSelection()
-  returns what the customer picked (product id, handle, variant id, engraving),
-  ready for the cart step later.
+  Cart: customformSubmission (product sections) calls
+  window.PersonalizeAddons.getCartItems() and sends the picked products in the same
+  cart/add.js request as the trunk. The engraving is the "Engraving" line item
+  property. getSelection() returns the raw choices.
 
   Settings (edit below):
     addons_enabled        switch the whole step on/off
@@ -113,7 +113,7 @@
   </style>
   <script>
     (function () {
-      var noop = { validate: function () { return true; }, getSelection: function () { return []; }, reset: function () {} };
+      var noop = { validate: function () { return true; }, getSelection: function () { return []; }, getCartItems: function () { return []; }, reset: function () {} };
       window.PersonalizeAddons = noop;
       try {
         var configEl = document.getElementById('addons-config-os');
@@ -312,6 +312,23 @@
               var variant = (p.variants && p.variants[0]) || {};
               return { id: p.id, handle: p.handle, title: p.title, variantId: variant.id || null, engraving: state[id].engraving };
             });
+          },
+          // Items for the cart request, added next to the trunk by customformSubmission.
+          // The engraving travels as the "Engraving" line item property.
+          getCartItems: function () {
+            return Object.keys(state).map(function (id) {
+              var p = products[id];
+              if (!p) return null;
+              var variants = p.variants || [];
+              var variant = variants.filter(function (v) { return v.available !== false; })[0] || variants[0];
+              if (!variant || !variant.id) return null;
+              var item = { id: variant.id, quantity: 1, properties: {} };
+              if (isEngravable(p)) {
+                if (!hasEngraving(state[id])) return null;
+                item.properties['Engraving'] = state[id].engraving.text;
+              }
+              return item;
+            }).filter(Boolean);
           },
           reset: function () { state = {}; render(); }
         };
