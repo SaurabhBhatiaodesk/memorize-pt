@@ -28,8 +28,8 @@
 
   Review aid: on an UNPUBLISHED theme (Draft theme, preview link, editor) a "Lock" card with the
   engraving options (only the custom message for now: presets appear when they are configured) is shown until the real product exists
-  (?addons_demo=0 in the page address hides it). No price, never added to the cart, never shown on
-  the published theme.
+  (?addons_demo=0 in the page address hides it). Price only if demo_price is set, never added to the cart,
+  never shown on the published theme.
 
   Cart: customformSubmission (product sections) calls
   window.PersonalizeAddons.getCartItems() and sends the picked products (padlock with
@@ -50,7 +50,10 @@
     engraving_presets     the preset engraving messages, separated by | (empty until the client
                           gives them: then only the custom message field is shown)
     engraving_max_chars   limit for the custom message (0 = no limit until the client gives one)
-    These four can also be passed in the render call from personalize-it-popup-os.
+    demo_price            Draft theme only: the fee shown on the demo Lock card (e.g. 20), desktop and mobile,
+                          until the real lock product exists. Empty until the client gives the amount.
+                          The real product always shows its own Shopify price (that is what is charged).
+    These can also be passed in the render call from personalize-it-popup-os.
 
 {%- endcomment -%}
 
@@ -66,6 +69,7 @@
   assign engravable_tag = engravable_tag | default: 'engravable'
   assign engraving_presets = engraving_presets | default: ''
   assign engraving_max_chars = engraving_max_chars | default: 0
+  assign demo_price = demo_price | default: ''
   assign demo_image = '//memorizeyourlife.com/cdn/shop/files/memorize-lock-blue-rgb-900px-w-72ppi.png?v=1751344119'
 -%}
 
@@ -103,6 +107,7 @@
       "engravableTag": {{ engravable_tag | json }},
       "presets": {{ preset_list | json }},
       "maxChars": {{ engraving_max_chars | json }},
+      "demoPrice": {{ demo_price | json }},
       "currency": {{ cart.currency.symbol | default: '$' | json }},
       "allowDemo": {% if theme.role != 'main' %}true{% else %}false{% endif %},
       "demoImage": {{ demo_image | json }}
@@ -660,7 +665,8 @@
             // page address to hide it). It has no price and no variant, so it can never reach the cart.
             var demoOn = config.allowDemo && !/[?&]addons_demo=0(&|$)/.test(window.location.search);
             if (demoOn && !list.some(function (p) { return isEngravable(p); })) {
-              list = [{ id: 'demo-lock', handle: 'demo-lock', title: 'Lock', price: null, available: true, featured_image: config.demoImage || '', tags: [config.engravableTag || 'engravable'], variants: [], noCart: true }].concat(list);
+              var demoPrice = parseFloat(String(config.demoPrice || '').replace(/[^0-9.]/g, ''));
+              list = [{ id: 'demo-lock', handle: 'demo-lock', title: 'Lock', price: demoPrice > 0 ? Math.round(demoPrice * 100) : null, available: true, featured_image: config.demoImage || '', tags: [config.engravableTag || 'engravable'], variants: [], noCart: true }].concat(list);
             }
             return { list: list };
           })
