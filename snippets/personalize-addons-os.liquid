@@ -21,9 +21,10 @@
     {% render 'personalize-addons-os', part: 'markup', context: 'mobile', product: product %}
     {% render 'personalize-addons-os', part: 'assets', product: product %}      CSS + JS, render once
 
-  Review aid: on an unpublished theme, ?addons_demo=1 in the page address shows a demo lock
-  with the engraving options (3 example options + custom message). Not shown otherwise,
-  never on the published theme, and it can never reach the cart.
+  Review aid: on an UNPUBLISHED theme (Draft theme, preview link, editor) a "Lock" card with the
+  engraving options (3 example options + custom message) is shown until the real product exists
+  (?addons_demo=0 in the page address hides it). No price, never added to the cart, never shown on
+  the published theme.
 
   Cart: customformSubmission (product sections) calls
   window.PersonalizeAddons.getCartItems() and sends the picked products (padlock with
@@ -60,11 +61,20 @@
   assign engravable_tag = engravable_tag | default: 'engravable'
   assign engraving_presets = engraving_presets | default: ''
   assign engraving_max_chars = engraving_max_chars | default: 0
+  assign demo_image = '//memorizeyourlife.com/cdn/shop/files/memorize-lock-blue-rgb-900px-w-72ppi.png?v=1751344119'
 -%}
 
 {%- if part == 'markup' and addons_enabled and product != blank -%}
   <div class="addons-os" data-addons-os data-context="{{ context | escape }}" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle | escape }}">
-    <div class="addons-track-os" data-addons-track></div>
+    <div class="addons-viewport-os">
+      <button type="button" class="addon-arrow-os is-prev" data-addon-arrow="-1" aria-label="Previous product" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="addons-track-os" data-addons-track></div>
+      <button type="button" class="addon-arrow-os is-next" data-addon-arrow="1" aria-label="Next product" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
     <div class="addons-dots-os" data-addons-dots hidden></div>
     <div class="addons-engrave-area-os" data-addons-engrave-area></div>
     <div class="addon-error-os" data-addon-error hidden>Please choose an engraving or write your own message, or remove the item.</div>
@@ -85,7 +95,8 @@
       "presets": {{ preset_list | json }},
       "maxChars": {{ engraving_max_chars | json }},
       "currency": {{ cart.currency.symbol | default: '$' | json }},
-      "allowDemo": {% if theme.role != 'main' %}true{% else %}false{% endif %}
+      "allowDemo": {% if theme.role != 'main' %}true{% else %}false{% endif %},
+      "demoImage": {{ demo_image | json }}
     }
   </script>
   <style>
@@ -117,6 +128,19 @@
     }
     .addon-card-os:only-child { flex-basis: 100%; max-width: 100%; }
     .addon-card-os.is-selected { border-color: #274864; box-shadow: 0 0 0 1px #274864, 0 4px 14px rgba(39, 72, 100, .12); }
+    .addons-viewport-os { position: relative; }
+    .addon-arrow-os {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+      width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%;
+      background: #00334D; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 51, 77, .3); transition: opacity .2s ease;
+    }
+    .addon-arrow-os[hidden] { display: none; }
+    .addon-arrow-os svg { width: 16px; height: 16px; display: block; }
+    .addon-arrow-os.is-prev { left: 6px; }
+    .addon-arrow-os.is-next { right: 6px; }
+    .addon-arrow-os:disabled { opacity: 0; pointer-events: none; }
+    @media screen and (max-width: 767px) { .addon-arrow-os { display: none; } } /* phones swipe + dots */
     .addons-dots-os { display: flex; justify-content: center; gap: 8px; padding: 6px 0 4px; }
     .addons-dots-os[hidden] { display: none; }
     .addon-dot-os { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 999px; background: #c9d6e3; cursor: pointer; transition: width .25s ease, background .25s ease; }
@@ -289,6 +313,15 @@
           return panel;
         }
 
+        // Smooth scroll to a position; if the animation is skipped or interrupted, land on it anyway.
+        function goTo(track, left, done) {
+          track.scrollTo({ left: left, behavior: 'smooth' });
+          setTimeout(function () {
+            if (Math.abs(track.scrollLeft - left) > 4) { track.style.scrollBehavior = 'auto'; track.scrollLeft = left; track.style.scrollBehavior = ''; }
+            if (done) done();
+          }, 700);
+        }
+
         // Premium carousel: no scrollbar; small dots show the position and jump to a card.
         function buildDots(track, dots) {
           var cards = Array.prototype.slice.call(track.querySelectorAll('.addon-card-os'));
@@ -297,7 +330,7 @@
             var dot = el('button', 'addon-dot-os');
             dot.type = 'button';
             dot.setAttribute('aria-label', 'Go to product ' + (i + 1));
-            dot.addEventListener('click', function () { track.scrollTo({ left: card.offsetLeft - track.offsetLeft, behavior: 'smooth' }); });
+            dot.addEventListener('click', function () { goTo(track, card.offsetLeft - track.offsetLeft, refresh); });
             dots.appendChild(dot);
           });
           function sync() {
@@ -309,8 +342,30 @@
             if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 2) nearest = cards.length - 1;
             Array.prototype.forEach.call(dots.children, function (dot, i) { dot.classList.toggle('is-active', i === nearest); });
           }
-          track.addEventListener('scroll', function () { window.requestAnimationFrame(sync); });
-          sync();
+          var arrows = Array.prototype.slice.call(track.parentNode.querySelectorAll('[data-addon-arrow]'));
+          function currentIndex() {
+            var idx = 0, best = Infinity;
+            cards.forEach(function (card, i) {
+              var d = Math.abs((card.offsetLeft - track.offsetLeft) - track.scrollLeft);
+              if (d < best) { best = d; idx = i; }
+            });
+            return idx;
+          }
+          arrows.forEach(function (arrow) {
+            arrow.hidden = false;
+            arrow.addEventListener('click', function () {
+              var next = Math.max(0, Math.min(cards.length - 1, currentIndex() + Number(arrow.getAttribute('data-addon-arrow'))));
+              goTo(track, cards[next].offsetLeft - track.offsetLeft, refresh);
+            });
+          });
+          function syncArrows() {
+            var atStart = track.scrollLeft <= 2;
+            var atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+            arrows.forEach(function (arrow) { arrow.disabled = Number(arrow.getAttribute('data-addon-arrow')) < 0 ? atStart : atEnd; });
+          }
+          function refresh() { sync(); syncArrows(); }
+          track.addEventListener('scroll', function () { window.requestAnimationFrame(refresh); });
+          refresh();
         }
 
         function idOf(card) { return card.getAttribute('data-addon-id'); }
@@ -524,14 +579,14 @@
               });
           })
           .then(function (list) {
-            // Review aid, never shown to customers: on an unpublished theme (Draft / preview link) add
-            // ?addons_demo=1 to the page address to see how a lock with engraved message looks before the
-            // real product exists. It has no price and no variant, so it can never reach the cart.
-            var demoOn = config.allowDemo && /[?&]addons_demo=1(&|$)/.test(window.location.search);
+            // Review aid, never shown to customers: on an UNPUBLISHED theme (Draft / preview link) a lock card
+            // with the engraving options is shown until the real product exists (add ?addons_demo=0 to the
+            // page address to hide it). It has no price and no variant, so it can never reach the cart.
+            var demoOn = config.allowDemo && !/[?&]addons_demo=0(&|$)/.test(window.location.search);
             if (demoOn && !list.some(function (p) { return isEngravable(p); })) {
               if (!(config.presets || []).length) config.presets = ['Message option 1', 'Message option 2', 'Message option 3'];
               if (!config.maxChars) config.maxChars = 30;
-              list = [{ id: 'demo-lock', handle: 'demo-lock', title: 'Lock (demo)', price: null, available: true, featured_image: '', tags: [config.engravableTag || 'engravable'], variants: [], noCart: true }].concat(list);
+              list = [{ id: 'demo-lock', handle: 'demo-lock', title: 'Lock', price: null, available: true, featured_image: config.demoImage || '', tags: [config.engravableTag || 'engravable'], variants: [], noCart: true }].concat(list);
             }
             return { list: list };
           })
