@@ -3582,6 +3582,8 @@ $(document).on("click", ".sdev_radios_btn", function () {
   function closePopup() {
       document.body.classList.add('popup-closing');
       closePopupButton();
+      // A lock picked in the popup is not carried to the on-page Add To Cart button, so closing the popup clears it (and the fee in the button).
+      try { if (window.PersonalizeAddons) window.PersonalizeAddons.reset(); } catch (addonError) { console.warn('Add-ons were not reset', addonError); }
       setTimeout(() => {
           document.body.classList.remove('popup-visible');
           document.body.classList.remove('popup-closing');

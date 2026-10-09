@@ -239,6 +239,7 @@
         // Nothing to recommend: take the step out so the personalizer is unchanged.
         function removeStep() {
           document.querySelectorAll('[data-addons-step], [data-addons-message-step], .personalize-product-popup-addons-os').forEach(function (node) { node.remove(); });
+          refreshStepper();
         }
 
         function el(tag, className, text) {
@@ -426,7 +427,9 @@
           return Object.keys(state).some(function (id) { return products[id] && isEngravable(products[id]); });
         }
         function refreshStepper() {
-          // the step counter (x/N) follows the number of steps on the page
+          // The step counter (x/N) follows the number of steps on the page; changeContent(0) also keeps the
+          // position inside them (e.g. when the step the shopper is on has just been removed).
+          if (typeof changeContent === 'function') { try { changeContent(0); return; } catch (e) {} }
           if (typeof updateContent === 'function') { try { updateContent(); } catch (e) {} }
         }
         function syncMessageStep() {
