@@ -123,7 +123,7 @@
           "type": "collapsible-row",
           "settings": {
             "heading": "How do I place a return or exchange?",
-            "description": "<p>We thoughtfully style each trunk with details as chosen by you. Since every piece is unique, we cannot accept returns, cancellations, or exchanges.</p><p>While we cannot accept returns or exchanges, occasionally, a trunk is damaged in the shipping process. If this is your  situation, please send photos of the damage and the packaging materials within 3 days of receipt to <a href=\"mailto:hello@memorizeyourlife.com\">hello@memorizeyourlife.com</a>. <br/></p><p>Since each trunk is lovingly customized for you, we cannot accept returns or exchanges.</p>",
+            "description": "<p>We thoughtfully style each trunk with details as chosen by you. Since every piece is unique, we cannot accept returns, cancellations, or exchanges except in the case of damage.</p><p>While we cannot accept returns or exchanges, occasionally, a trunk is damaged in the shipping process. If this is your  situation, please send photos of the damage and the packaging materials within 5 days of receipt to <a href=\"mailto:hello@memorizeyourlife.com\">hello@memorizeyourlife.com</a>. <br/></p>",
             "page-content": "",
             "default-open": false
           }
@@ -212,7 +212,7 @@
           "type": "collapsible-row",
           "settings": {
             "heading": "Where should I display or store my Memorize Trunk?",
-            "description": "<p>For the best preservation, keep your trunk in a climate-controlled space like you would store other handmade keepsakes. Avoid damp environments where temperatures can vary dramatically, and humidity isn’t moderated.</p>",
+            "description": "<p>For the best preservation, keep your trunk in a climate-controlled space like you would store other handmade keepsakes. Avoid damp environments where temperatures can vary dramatically, and humidity isn’t moderated.</p><p>Your trunk is made for keepsakes, not for play. Please don’t let children sit, stand, or climb in or on it, and keep the lid closed and latched when it isn’t in use so no one can get shut inside.</p>",
             "page-content": "",
             "default-open": false
           }
@@ -225,6 +225,15 @@
             "page-content": "",
             "default-open": false
           }
+        },
+        "collapsible_row_Rp8mLq": {
+          "type": "collapsible-row",
+          "settings": {
+            "heading": "Does my trunk come with lifetime repairs?",
+            "description": "<p>Yes. For as long as you own your trunk, if a flaw in its materials or workmanship shows up, we’ll repair or replace it at no cost to you. Just email <a href=\"mailto:hello@memorizeyourlife.com\">hello@memorizeyourlife.com</a> with your order number and a few photos. <a href=\"/policies/refund-policy\">See what’s covered</a>.</p>",
+            "page-content": "",
+            "default-open": false
+          }
         }
       },
       "block_order": [
@@ -234,7 +243,8 @@
         "collapsible_row_GdrcpC",
         "collapsible_row_4PMDbh",
         "collapsible_row_te6n7g",
-        "collapsible_row_WQiGq9"
+        "collapsible_row_WQiGq9",
+        "collapsible_row_Rp8mLq"
       ],
       "custom_css": [
         ".collapsible-row--wrapper {border-top: 0px solid #8a0d66; border-bottom: 1px solid #8a0d66;}",
