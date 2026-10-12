@@ -2090,7 +2090,11 @@ label.radios--option-label.customText h3 {
           return { lines: typedLines, rendered: false };
         }
       };
-      const renderedPreview = getRenderedPreviewLines(textareaEl, textareaText);
+      // On mobile, export the customer's original words rather than Safari's
+      // visual line fragments, which can split one word/date across two lines.
+      const renderedPreview = type === 'mobile'
+        ? { lines: textareaText.split('\n'), rendered: true }
+        : getRenderedPreviewLines(textareaEl, textareaText);
 
       var trunkImg = new Image();
       trunkImg.crossOrigin = 'anonymous'; // This line solves CORS issues

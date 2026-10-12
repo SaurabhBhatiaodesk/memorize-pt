@@ -1946,7 +1946,11 @@ $(document).on("click", ".sdev_radios_btn", function () {
           return { lines: typedLines, rendered: false };
         }
       };
-      const renderedPreview = getRenderedPreviewLines(textareaEl, textareaText);
+      // Keep the original mobile text for the export. Safari's measured visual
+      // lines can split a word or a date at the wrap boundary.
+      const renderedPreview = type === 'mobile'
+        ? { lines: textareaText.split('\n'), rendered: true }
+        : getRenderedPreviewLines(textareaEl, textareaText);
 
       var trunkImg = new Image();
       trunkImg.crossOrigin = 'anonymous';
@@ -1989,23 +1993,23 @@ $(document).on("click", ".sdev_radios_btn", function () {
               );
               const maxWidth = renderedPreview.rendered ? Math.max(280, imageWidth) : 280;
 
-              // Character-level wrapping prevents long words/numbers without
-              // spaces from overflowing the exported embroidery image.
+              // Wrap only between words. A date and a word are each one token,
+              // so neither can be split in the saved mobile order image.
               const wrapCanvasLine = (line) => {
                   const wrapped = [];
                   let currentLine = '';
 
-                  Array.from(line).forEach((character) => {
-                      const testLine = currentLine + character;
+                  line.trim().split(/\s+/).filter(Boolean).forEach((word) => {
+                      const testLine = currentLine ? `${currentLine} ${word}` : word;
                       if (currentLine && ctx.measureText(testLine).width > maxWidth) {
-                          wrapped.push(currentLine.trimEnd());
-                          currentLine = character.trimStart();
+                          wrapped.push(currentLine);
+                          currentLine = word;
                       } else {
                           currentLine = testLine;
                       }
                   });
 
-                  wrapped.push(currentLine.trim());
+                  if (currentLine) wrapped.push(currentLine);
                   return wrapped;
               };
 

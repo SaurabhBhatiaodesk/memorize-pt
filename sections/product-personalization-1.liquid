@@ -2042,7 +2042,13 @@ document.addEventListener('change', function(event) {
           return { lines: typedLines, rendered: false };
         }
       };
-      const renderedPreview = getRenderedPreviewLines(textareaEl, textareaText);
+      // On mobile, never use browser line fragments for the order image. WebKit can
+      // report part of a word/date on the previous visual line, which made exports
+      // such as "P" + "ierce" or "0" + "9-12-2026". Canvas wraps the original
+      // customer text at spaces below, so each word and date remains intact.
+      const renderedPreview = type === 'mobile'
+        ? { lines: textareaText.split('\n'), rendered: true }
+        : getRenderedPreviewLines(textareaEl, textareaText);
 
       var trunkImg = new Image();
       trunkImg.crossOrigin = 'anonymous';
