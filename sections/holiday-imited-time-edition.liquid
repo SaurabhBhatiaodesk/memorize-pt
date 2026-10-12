@@ -2063,7 +2063,14 @@ label.radios--option-label.customText h3 {
             const rects = range.getClientRects();
             if (rects.length) {
               measured++;
-              const top = rects[0].top;
+              // WebKit (Safari / iPhone) can report an extra zero-width rect at the END of the previous line, before the real one,
+              // for the first character of a wrapped line or of a typed new line. Take the rect that holds the glyph (the widest),
+              // never blindly rects[0]: that put the first letter on the wrong line and split words ("P" + "ierce", "0" + "9-12-2026").
+              let characterRect = rects[rects.length - 1];
+              for (let rectIndex = 0; rectIndex < rects.length; rectIndex++) {
+                if (rects[rectIndex].width > characterRect.width) characterRect = rects[rectIndex];
+              }
+              const top = characterRect.top;
               if (currentTop !== null && top - currentTop > threshold) {
                 lines.push(current);
                 current = '';
