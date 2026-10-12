@@ -1642,7 +1642,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
         monogramEl = indexOnecontainer.querySelector('.monogram-text-display-os');
         trunkImgSrc   = trunkEl?.currentSrc || trunkEl?.src || '';
         fabricImgSrc  = fabricEl?.currentSrc || fabricEl?.src || '';
-        textareaText  = (textareaEl?.textContent || '').trim();
+        textareaText  = (textareaEl?.textContent || '').replace(/\u2060/g, '').trim();
         monogramText  = (monogramEl?.textContent || '').trim();
         if (textareaEl) textareaTextStyle = getComputedStyle(textareaEl);
         if (monogramEl) {
@@ -1750,7 +1750,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
             current += character;
           }
           lines.push(current);
-          const trimmed = lines.map((line) => line.trim());
+          const trimmed = lines.map((line) => line.replace(/\u2060/g, '').trim());
           while (trimmed.length && !trimmed[0]) trimmed.shift();
           while (trimmed.length && !trimmed[trimmed.length - 1]) trimmed.pop();
           if (!measured || !trimmed.length) return { lines: typedLines, rendered: false };
@@ -2327,7 +2327,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
         updateFontColor(textareaDisplay, currentFontColor);
         updateMonogramFontClass(monogramDisplay, currentSelectedFontFamily);
         updateFontColor(monogramDisplay, currentFontColor);
-        if (textFromTextarea) { textareaDisplay.textContent = textFromTextarea; } else { textareaDisplay.textContent = ''; }
+        if (textFromTextarea) { textareaDisplay.textContent = window.personalizeProtectPreviewTokens ? window.personalizeProtectPreviewTokens(textFromTextarea) : textFromTextarea; } else { textareaDisplay.textContent = ''; }
         if (monogramText.length > 0) {
             monogramDisplay.innerHTML = `${monogramText[0]}<span class="monogram-large-text-os">${monogramText[1]}</span>${monogramText[2] || ''}`;
         } else { monogramDisplay.innerHTML = ''; }
@@ -2353,7 +2353,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
       if (window.matchMedia('(max-width: 580px)').matches) {
         // Shorter text gets a bigger size; longer text steps down so it still
         // fits inside the trunk. Same size for every font.
-        const textLines = (element.innerText || element.textContent || '').split('\n').map((line) => line.trim());
+        const textLines = (element.innerText || element.textContent || '').replace(/\u2060/g, '').split('\n').map((line) => line.trim());
         const longestText = textLines.reduce((best, line) => (line.length > best.length ? line : best), '');
         const longestLine = longestText.length;
         if (element.classList.contains('textarea-text-display-os')) {
@@ -2492,6 +2492,26 @@ $(document).on("click", ".sdev_radios_btn", function () {
           const mobileLineHeights = { 'fancy': 31, 'amalfi': 36.3, 'fondly-yours': 34.48, 'signature': 35.94, 'casually-cool': 33.48, 'memorize': 35.48 };
           const lineHeightKey = Object.keys(mobileLineHeights).find((name) => element.closest('.' + name));
           if (lineHeightKey) renderedLineHeight = mobileLineHeights[lineHeightKey];
+        }
+
+        // A date or a word is never cut: when the longest word is wider than the line, shrink the text until it fits.
+        // (Text with a typed Return is already fitted line by line above.)
+        if (element.classList.contains('textarea-text-display-os') && !hasTypedLineBreak) {
+          const longestWord = textLines.join(' ').split(/\s+/).reduce((best, word) => (word.length > best.length ? word : best), '');
+          if (longestWord) {
+            const wordProbe = document.createElement('canvas').getContext('2d');
+            const wordStyle = window.getComputedStyle(element);
+            wordProbe.font = wordStyle.fontWeight + ' 100px ' + wordStyle.fontFamily;
+            const wordWidthPerPx = wordProbe.measureText(longestWord).width / 100;
+            const wordHost = (element.parentElement && element.parentElement.clientWidth) || 330;
+            if (wordWidthPerPx > 0) {
+              const wordFit = Math.max((wordHost * 0.66) / wordWidthPerPx, 12);
+              if (wordFit < renderedFontSize) {
+                renderedLineHeight *= wordFit / renderedFontSize;
+                renderedFontSize = wordFit;
+              }
+            }
+          }
         }
       }
 
@@ -2652,7 +2672,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
 
   function rescaleAllPersonalizationPreviews() {
       document.querySelectorAll('.textarea-text-display-os').forEach((display) => {
-          const textLength = display.textContent.length;
+          const textLength = display.textContent.replace(/\u2060/g, '').length;
           if (textLength) adjustFontSizeAndLineHeight0(null, display, textLength);
       });
 
@@ -3474,7 +3494,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
   function mobileupdateTextareaDisplay(textFromTextarea = '', monogramText = []) {
     mobileCustomImagesContainers.forEach(container => {
         const textareaDisplay = container.querySelector('.textarea-text-display-os');
-        if (textFromTextarea) { textareaDisplay.textContent = textFromTextarea; } else { textareaDisplay.textContent = ''; }
+        if (textFromTextarea) { textareaDisplay.textContent = window.personalizeProtectPreviewTokens ? window.personalizeProtectPreviewTokens(textFromTextarea) : textFromTextarea; } else { textareaDisplay.textContent = ''; }
     });
   }
 

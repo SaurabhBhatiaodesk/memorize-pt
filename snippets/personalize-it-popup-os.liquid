@@ -1686,4 +1686,17 @@
  
 </section>
 
+<script>
+  // Preview text on phones: a date or a word must never be cut in the middle; with too little room it moves
+  // whole to the next line. Browsers (WebKit above all) break after a hyphen or slash inside "09-12-2026".
+  // An invisible WORD JOINER (U+2060) after those characters makes such a token one unit. It lives only in the
+  // preview text; everything that reads the preview text back removes it again.
+  window.personalizeProtectPreviewTokens = function (text) {
+    return String(text == null ? '' : text).replace(/([^\s\u2060][-\u2010\u2013\u2014\/])(?=[^\s\u2060])/g, '$1\u2060');
+  };
+  window.personalizeCleanPreviewText = function (text) {
+    return String(text == null ? '' : text).replace(/\u2060/g, '');
+  };
+</script>
+
 {% render 'personalize-addons-os', part: 'assets', product: product %}

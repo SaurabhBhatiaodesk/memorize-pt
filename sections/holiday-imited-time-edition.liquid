@@ -1946,7 +1946,7 @@ label.radios--option-label.customText h3 {
       // Get images and text from the HTML structure
       {% comment %} var trunkImgSrc = document.querySelector('.main-trunk-image-os').src;
       var fabricImgSrc = document.querySelector('.main-fabric-image-os').src;
-      var textareaText = document.querySelector('.textarea-text-display-os').textContent.trim();
+      var textareaText = document.querySelector('.textarea-text-display-os').textContent.replace(/\u2060/g, '').trim();
       var monogramText = document.querySelector('.monogram-text-display-os').textContent.trim(); {% endcomment %}
 
 
@@ -1973,7 +1973,7 @@ label.radios--option-label.customText h3 {
         // use currentSrc/src for <img>; fall back to empty strings
         trunkImgSrc   = trunkEl?.currentSrc || trunkEl?.src || '';
         fabricImgSrc  = fabricEl?.currentSrc || fabricEl?.src || '';
-        textareaText  = (textareaEl?.textContent || '').trim();
+        textareaText  = (textareaEl?.textContent || '').replace(/\u2060/g, '').trim();
         monogramText  = (monogramEl?.textContent || '').trim();
 
         // computed styles (guard each element)
@@ -2081,7 +2081,7 @@ label.radios--option-label.customText h3 {
             current += character;
           }
           lines.push(current);
-          const trimmed = lines.map((line) => line.trim());
+          const trimmed = lines.map((line) => line.replace(/\u2060/g, '').trim());
           while (trimmed.length && !trimmed[0]) trimmed.shift();
           while (trimmed.length && !trimmed[trimmed.length - 1]) trimmed.pop();
           if (!measured || !trimmed.length) return { lines: typedLines, rendered: false };
@@ -3013,7 +3013,7 @@ label.radios--option-label.customText h3 {
 
       // Update the textarea display if input exists
       if (textFromTextarea) {
-          textareaDisplay.textContent = textFromTextarea;
+          textareaDisplay.textContent = window.personalizeProtectPreviewTokens ? window.personalizeProtectPreviewTokens(textFromTextarea) : textFromTextarea;
       } else {
           textareaDisplay.textContent = '';
       }
@@ -4641,7 +4641,7 @@ label.radios--option-label.customText h3 {
 
         // Update the textarea display if input exists
         if (textFromTextarea) {
-            textareaDisplay.textContent = textFromTextarea;
+            textareaDisplay.textContent = window.personalizeProtectPreviewTokens ? window.personalizeProtectPreviewTokens(textFromTextarea) : textFromTextarea;
         } else {
             textareaDisplay.textContent = ''; // Clear textarea display if no input
         }
