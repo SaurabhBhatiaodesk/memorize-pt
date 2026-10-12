@@ -848,6 +848,15 @@ label[data-item="swatch"]::after {
 .cart--item--image {
     width: 300px;
 }
+/* Phone: the personalizer preview text breaks only between words - a date or a word is never cut in the middle */
+@media screen and (max-width: 767px) {
+    body .custom-images-os h4.textarea-text-display-os {
+        word-break: normal;
+        overflow-wrap: break-word;
+        -webkit-hyphens: none;
+        hyphens: none;
+    }
+}
 /* The lock in the cart: same size box as the other product pictures (4:3), picture fitted inside */
 .cart--item--image-addon img {
     display: block;
