@@ -1922,7 +1922,9 @@ label.radios--option-label.customText h3 {
       var ctx = canvas.getContext('2d');
   
       // Get the device pixel ratio, defaulting to 1 if it's not available
-      const pixelRatio = window.devicePixelRatio || 1;
+      // The cart picture is shown up to ~540px wide (1080 device pixels on a 2x screen), so it is always made at 3x: the
+      // size no longer depends on the screen it is added from (a 1x screen gave a 450px picture that looked blurry in the cart).
+      const pixelRatio = 3;
   
       // Adjust canvas size for high-DPI devices (retina screens)
       var canvasWidth = canvas.width;
@@ -1934,6 +1936,8 @@ label.radios--option-label.customText h3 {
   
       // Scale the drawing context to handle the higher resolution
       ctx.scale(pixelRatio, pixelRatio);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
   
       // Ensure canvas element maintains the original size in the DOM
       canvas.style.width = `${canvasWidth}px`;
@@ -1959,6 +1963,15 @@ label.radios--option-label.customText h3 {
       let monogramText = '';
 
       let trunkEl, fabricEl, textareaEl, monogramEl;
+      // getComputedStyle() is LIVE. The cart picture is drawn after the images and fonts have loaded, by which time the popup has closed
+      // and the preview text was re-sized, so the picture got a smaller text (about 2/3) than the one the customer saw. Copy the values now.
+      const copyTextStyle = (element) => {
+        const live = window.getComputedStyle(element);
+        return {
+          fontWeight: live.fontWeight, fontSize: live.fontSize, fontFamily: live.fontFamily, color: live.color,
+          lineHeight: live.lineHeight, columnGap: live.columnGap, gap: live.gap
+        };
+      };
       let textareaTextStyle, monogramTextStyle, monogramLargeTextStyle;
 
       
@@ -1985,13 +1998,13 @@ label.radios--option-label.customText h3 {
 
         // computed styles (guard each element)
         if (textareaEl) {
-          textareaTextStyle = getComputedStyle(textareaEl);
+          textareaTextStyle = copyTextStyle(textareaEl);
         }
         if (monogramEl) {
-          monogramTextStyle = getComputedStyle(monogramEl);
+          monogramTextStyle = copyTextStyle(monogramEl);
           const monogramLargeEl = monogramEl.querySelector('.monogram-large-text-os');
           if (monogramLargeEl) {
-            monogramLargeTextStyle = getComputedStyle(monogramLargeEl);
+            monogramLargeTextStyle = copyTextStyle(monogramLargeEl);
           }
         }
       }
@@ -2009,7 +2022,7 @@ label.radios--option-label.customText h3 {
       // Layout width (CSS px), not the on-screen rect: a CSS-scaled popup shrinks the
       // rect but not the font sizes.
       const previewTrunkWidth = previewTrunkCssWidth || previewTrunkRectWidth || imageWidth;
-      const previewToCanvasScale = Math.max(1, Math.min(2.5, imageWidth / previewTrunkWidth));
+      const previewToCanvasScale = Math.max(0.5, Math.min(2.5, imageWidth / previewTrunkWidth));
 
       const scaledFontValue = (styleValue) => {
         const size = parseFloat(styleValue);
