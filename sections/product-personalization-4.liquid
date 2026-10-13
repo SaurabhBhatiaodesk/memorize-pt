@@ -1789,12 +1789,16 @@ $(document).on("click", ".sdev_radios_btn", function () {
         return;
       }
 
-      const pixelRatio = window.devicePixelRatio || 1;
+      // The cart picture is shown up to ~540px wide (1080 device pixels on a 2x screen), so it is always made at 3x: the
+      // size no longer depends on the screen it is added from (a 1x screen gave a 450px picture that looked blurry in the cart).
+      const pixelRatio = 3;
       var canvasWidth = canvas.width;
       var canvasHeight = canvas.height;
       canvas.width = canvasWidth * pixelRatio;
       canvas.height = canvasHeight * pixelRatio;
       ctx.scale(pixelRatio, pixelRatio);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
       canvas.style.width = `${canvasWidth}px`;
       canvas.style.height = `${canvasHeight}px`;
   
@@ -1808,6 +1812,15 @@ $(document).on("click", ".sdev_radios_btn", function () {
       let textareaText = '';
       let monogramText = '';
       let trunkEl, fabricEl, textareaEl, monogramEl;
+      // getComputedStyle() is LIVE. The cart picture is drawn after the images and fonts have loaded, by which time the popup has closed
+      // and the preview text was re-sized, so the picture got a smaller text (about 2/3) than the one the customer saw. Copy the values now.
+      const copyTextStyle = (element) => {
+        const live = window.getComputedStyle(element);
+        return {
+          fontWeight: live.fontWeight, fontSize: live.fontSize, fontFamily: live.fontFamily, color: live.color,
+          lineHeight: live.lineHeight, columnGap: live.columnGap, gap: live.gap
+        };
+      };
       let textareaTextStyle, monogramTextStyle, monogramLargeTextStyle;
 
       if (!indexOnecontainer) {
@@ -1830,11 +1843,11 @@ $(document).on("click", ".sdev_radios_btn", function () {
           if (!typedEmbroideryText) textareaText = '';
         }
         monogramText  = (monogramEl?.textContent || '').trim();
-        if (textareaEl) textareaTextStyle = getComputedStyle(textareaEl);
+        if (textareaEl) textareaTextStyle = copyTextStyle(textareaEl);
         if (monogramEl) {
-          monogramTextStyle = getComputedStyle(monogramEl);
+          monogramTextStyle = copyTextStyle(monogramEl);
           const monogramLargeEl = monogramEl.querySelector('.monogram-large-text-os');
-          if (monogramLargeEl) monogramLargeTextStyle = getComputedStyle(monogramLargeEl);
+          if (monogramLargeEl) monogramLargeTextStyle = copyTextStyle(monogramLargeEl);
         }
       }
   
@@ -1854,9 +1867,12 @@ $(document).on("click", ".sdev_radios_btn", function () {
         );
       });
 
+      // The scale must come from the SAME preview the text size was read from (indexOnecontainer -> trunkEl). It used to take
+      // the first visible preview in the page, the product page image, whose trunk is much wider than the popup's, so the
+      // text on the cart picture came out about a third smaller than the text the customer saw in the preview.
       const visiblePreviewTrunk =
-        visiblePreviewContainer?.querySelector('.main-trunk-image-os') ||
-        trunkEl;
+        trunkEl ||
+        visiblePreviewContainer?.querySelector('.main-trunk-image-os');
 
       // Use the layout width (CSS px), not the on-screen rect: the popup can be
       // CSS-scaled (transform: scale(0.8) on shorter screens), which shrinks the
