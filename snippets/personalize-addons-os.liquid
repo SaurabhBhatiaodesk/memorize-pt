@@ -1,8 +1,8 @@
 {%- comment -%}
   Personalizer step "Don't forget to add": Shopify's recommended (complementary)
   products for the trunk being personalized, side by side in a scrolling row.
-  A product with the handle / tag set below gets an engraving choice (3 preset
-  messages or a custom message).
+  A product with the handle / tag set below gets an engraving choice: a dropdown with the preset
+  messages (engraving_presets). Without presets it falls back to a free-text message box.
 
   What is shown, in this order:
     A. add-on products set up in Shopify (below), with an engraving choice for the padlock;
@@ -22,9 +22,10 @@
     {% render 'personalize-addons-os', part: 'markup', context: 'mobile-message', product: product %}   mobile step 2: add your message
     {% render 'personalize-addons-os', part: 'assets', product: product %}      CSS + JS, render once
 
-  Desktop: once the message is written (Enter, or leaving the box) the message box folds away and the
-  card shows the message; "Engrave It" opens the box again to change it. The fee of the picked lock
+  Desktop: the dropdown stays visible once an engraving is chosen (with the free-text fallback the message
+  box folds away after Enter / leaving the box and "Engrave It" opens it again). The fee of the picked lock
   is added to the Add To Cart total (getTotalCents + the personalize-addons:change event).
+  The card has no white box around it: it sits on the popup background like the other steps.
 
   Mobile: two stepper steps. Step 1 shows the lock; "Engrave It" picks it and goes to step 2, "add your
   message". Step 2 is only part of the stepper while the lock is picked (it leaves the page otherwise, so
@@ -53,12 +54,15 @@
     engravable_handle     or the product with this handle (default 'lock'). A product that is UNLISTED in Shopify
                           (hidden from search, collections and recommendations, still sold) is found by this
                           handle: /products/<handle>.js
-    engraving_presets     the preset engraving messages, separated by | (empty until the client
-                          gives them: then only the custom message field is shown)
+    engraving_presets     the engraving choices of the dropdown, separated by | (client, 13 Oct: For all your
+                          tomorrows | Love always | Blank; one set font). "Blank" is a lock without a message;
+                          it travels as the "Engraving" property like the others. Empty = free-text box.
+    lock_description      the short description under the lock's price (empty until the client gives it: then
+                          nothing is shown)
     engraving_max_chars   limit for the custom message (0 = no limit until the client gives one)
-    demo_price            Draft theme only: the fee shown on the demo Lock card (e.g. 20), desktop and mobile,
-                          until the real lock product exists. 20 for now (given by the team, not yet confirmed
-                          by the client); empty = no price shown.
+    demo_price            Draft theme only: the fee shown on the demo Lock card (e.g. 35), desktop and mobile,
+                          until the real lock product exists. 35 = the client's price, engraving included;
+                          empty = no price shown.
                           The real product always shows its own Shopify price (that is what is charged).
     These can also be passed in the render call from personalize-it-popup-os.
 
@@ -74,9 +78,10 @@
   assign addon_exclude_handles = 'holiday-limited-time-edition,custom-embroidery,memorize-trunks-egift-card'
   assign engravable_handle = engravable_handle | default: 'lock'
   assign engravable_tag = engravable_tag | default: 'engravable'
-  assign engraving_presets = engraving_presets | default: ''
+  assign engraving_presets = engraving_presets | default: 'For all your tomorrows|Love always|Blank'
+  assign lock_description = lock_description | default: ''
   assign engraving_max_chars = engraving_max_chars | default: 0
-  assign demo_price = demo_price | default: '20'
+  assign demo_price = demo_price | default: '35'
   assign demo_image = '//memorizeyourlife.com/cdn/shop/files/memorize-lock-blue-rgb-900px-w-72ppi.png?v=1751344119'
 -%}
 
@@ -114,6 +119,7 @@
       "engravableTag": {{ engravable_tag | json }},
       "presets": {{ preset_list | json }},
       "maxChars": {{ engraving_max_chars | json }},
+      "description": {{ lock_description | json }},
       "demoPrice": {{ demo_price | json }},
       "currency": {{ cart.currency.symbol | default: '$' | json }},
       "allowDemo": {% if theme.role != 'main' %}true{% else %}false{% endif %},
@@ -135,20 +141,19 @@
       -ms-overflow-style: none;
     }
     .addons-track-os::-webkit-scrollbar { display: none; width: 0; height: 0; }
+    /* No white box: the lock sits on the popup background like the other steps. */
     .addon-card-os {
       flex: 0 0 86%;
       max-width: 86%;
       scroll-snap-align: start;
-      border: 1px solid #dde6ef;
-      border-radius: 12px;
-      padding: 14px;
+      border: 0;
+      border-radius: 0;
+      padding: 0;
       box-sizing: border-box;
-      background: #fff;
-      box-shadow: 0 2px 10px rgba(39, 72, 100, .06);
-      transition: border-color .2s ease, box-shadow .2s ease;
+      background: transparent;
+      box-shadow: none;
     }
     .addon-card-os:only-child { flex-basis: 100%; max-width: 100%; }
-    .addon-card-os.is-selected { border-color: #274864; box-shadow: 0 0 0 1px #274864, 0 4px 14px rgba(39, 72, 100, .12); }
     .addons-viewport-os { position: relative; }
     .addon-arrow-os {
       position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
@@ -172,6 +177,7 @@
     .addon-info-os { flex: 1 1 auto; min-width: 0; }
     .addon-title-os { font-size: 17px; line-height: 22px; color: #274864; margin-bottom: 8px; }
     .addon-price-os { font-size: 16px; font-weight: 600; color: #274864; margin: -2px 0 10px; }
+    .addon-desc-os { font-size: 14px; line-height: 20px; color: #274864; margin: -4px 0 10px; }
     .addon-saved-os { margin-top: 8px; font-size: 14px; line-height: 18px; color: #274864; word-break: break-word; }
     .addon-saved-os[hidden] { display: none; }
     .addon-btn-os {
@@ -190,7 +196,7 @@
     .addon-card-os.is-selected .addon-btn-os { background: #fff; color: #274864; }
     a.addon-btn-os { display: inline-block; text-decoration: none; text-align: center; line-height: 20px; box-sizing: border-box; }
     .addons-engrave-area-os { margin-top: 4px; }
-    .addon-engrave-os { margin: 0 2px 8px; padding: 14px; border: 1px solid #274864; border-radius: 6px; background: #fff; box-sizing: border-box; }
+    .addon-engrave-os { margin: 12px 2px 8px; padding: 0; border: 0; background: transparent; box-sizing: border-box; }
     .addon-engrave-os[hidden], .addon-custom-os[hidden], .addon-error-os[hidden] { display: none; }
     .addon-engrave-title-os { margin: 0 0 12px; font-size: 16px; line-height: 20px; color: #00334D; text-transform: uppercase; }
     /* Option buttons look like the personalizer own ones (Words/Numbers, fonts) */
@@ -203,6 +209,14 @@
     .addon-custom-head-os { display: flex; justify-content: space-between; flex-wrap: wrap; padding-bottom: 8px; font-size: 14px; line-height: 18px; color: #274864; }
     .addon-custom-input-os { width: 100%; box-sizing: border-box; border: 1px solid #274864; border-radius: 8px; padding: 12px; font-size: 16px; margin: 0; }
     .addon-custom-input-os[readonly] { background: #f4f7fa; cursor: default; }
+    /* The engraving dropdown looks like the personalizer's own input boxes */
+    .addon-select-os {
+      display: block; width: 100%; box-sizing: border-box; min-height: 44px; margin: 0 0 4px; padding: 10px 40px 10px 12px;
+      border: 1px solid #274864; border-radius: 8px; color: #274864; font-size: 16px; line-height: 22px; cursor: pointer;
+      -webkit-appearance: none; -moz-appearance: none; appearance: none;
+      background: #fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1.5l6 6 6-6' fill='none' stroke='%23274864' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat right 14px center;
+    }
+    .addon-select-os:focus { outline: 2px solid #274864; outline-offset: 2px; }
     .addon-count-os[hidden] { display: none; }
     .addon-count-os { font-size: 14px; line-height: 18px; color: #274864; }
     .addon-remove-os { background: none; border: 0; padding: 8px 0 0; color: #5b7088; text-decoration: underline; cursor: pointer; font-size: 13px; }
@@ -232,6 +246,9 @@
         if (!configEl || !roots.length) return;
         var config = JSON.parse(configEl.textContent);
         var productId = roots[0].getAttribute('data-product-id');
+        if ((config.presets || []).some(function (t) { return String(t).trim(); })) {
+          document.querySelectorAll('[data-addon-error]').forEach(function (node) { node.textContent = 'Please choose an engraving, or remove the lock.'; });
+        }
         var currentHandle = roots[0].getAttribute('data-product-handle') || '';
         var products = {};     // id -> product data
         var state = {};        // id -> { engraving: null | { type, text } }
@@ -255,6 +272,8 @@
         function isEngravable(p) {
           return (!!config.engravableHandle && p.handle === config.engravableHandle) || (!!config.engravableTag && Array.isArray(p.tags) && p.tags.indexOf(config.engravableTag) !== -1);
         }
+        // The engraving choices of the dropdown (none = the free-text box).
+        function presetList() { return (config.presets || []).map(function (t) { return String(t).trim(); }).filter(Boolean); }
         function imageUrl(src) {
           if (!src) return '';
           if (/^data:/.test(src)) return src;
@@ -277,6 +296,7 @@
           var info = el('div', 'addon-info-os');
           info.appendChild(el('div', 'addon-title-os', p.title));
           if (p.price !== null && p.price !== undefined) info.appendChild(el('div', 'addon-price-os', formatPrice(p.price)));
+          if (isEngravable(p) && String(config.description || '').trim()) info.appendChild(el('div', 'addon-desc-os', String(config.description).trim()));
           var button = el('button', 'addon-btn-os', isEngravable(p) ? 'Engrave It' : 'Add');
           button.type = 'button';
           button.setAttribute('data-addon-toggle', '');
@@ -300,24 +320,24 @@
           panel.setAttribute('data-addon-id', String(p.id));
           panel.hidden = true;
           panel.appendChild(el('h4', 'addon-engrave-title-os', 'ADD YOUR MESSAGE'));
-          var presets = (config.presets || []).map(function (t) { return String(t).trim(); }).filter(Boolean);
+          var presets = presetList();
           var limit = Number(config.maxChars) || 0;
           if (presets.length) {
-            var choices = el('div', 'addon-choices-os');
+            // A dropdown, not a free-text box: the engraving is one of the given messages.
+            var select = el('select', 'addon-select-os');
+            select.setAttribute('data-addon-select', '');
+            select.setAttribute('aria-label', 'Choose your engraving');
+            var first = el('option', '', 'Choose your engraving');
+            first.value = '';
+            first.disabled = true;
+            first.selected = true;
+            select.appendChild(first);
             presets.forEach(function (text) {
-              var choice = el('button', 'addon-choice-os', text);
-              choice.type = 'button';
-              choice.setAttribute('value', 'preset');
-              choice.setAttribute('data-addon-engraving', '');
-              choice.setAttribute('data-text', text);
-              choices.appendChild(choice);
+              var option = el('option', '', text);
+              option.value = text;
+              select.appendChild(option);
             });
-            var customChoice = el('button', 'addon-choice-os', 'Write my own message');
-            customChoice.type = 'button';
-            customChoice.setAttribute('value', 'custom');
-            customChoice.setAttribute('data-addon-engraving', '');
-            choices.appendChild(customChoice);
-            panel.appendChild(choices);
+            panel.appendChild(select);
           }
           var custom = el('div', 'addon-custom-os');
           custom.setAttribute('data-addon-custom', '');
@@ -339,7 +359,7 @@
           input.setAttribute('data-addon-custom-input', '');
           custom.appendChild(head);
           custom.appendChild(input);
-          panel.appendChild(custom);
+          if (!presets.length) panel.appendChild(custom);
           var remove = el('button', 'addon-remove-os', 'Remove');
           remove.type = 'button';
           remove.setAttribute('data-addon-remove', '');
@@ -467,13 +487,8 @@
             var s = state[idOf(panel)];
             // desktop: the box folds away once the message is written; the button opens it again
             panel.hidden = !s || (s.collapsed && contextOf(panel) === 'desktop');
-            panel.querySelectorAll('[data-addon-engraving]').forEach(function (choice) {
-              var isCustom = choice.getAttribute('value') === 'custom';
-              var on = !!(s && s.engraving && ((isCustom && s.engraving.type === 'custom') ||
-                (!isCustom && s.engraving.type === 'preset' && s.engraving.text === choice.getAttribute('data-text'))));
-              choice.classList.toggle('is-selected', on);
-              choice.setAttribute('aria-pressed', on ? 'true' : 'false');
-            });
+            var dropdown = panel.querySelector('[data-addon-select]');
+            if (dropdown) dropdown.value = (s && s.engraving && s.engraving.text) ? s.engraving.text : '';
             var type = s && s.engraving && s.engraving.type;
             var custom = panel.querySelector('[data-addon-custom]');
             if (custom) custom.hidden = !type;
@@ -514,6 +529,7 @@
         }
         // Desktop: fold the message box away once there is a message.
         function collapse(id) {
+          if (presetList().length) return; // the dropdown stays visible
           if (state[id] && hasEngraving(state[id]) && !state[id].collapsed) { state[id].collapsed = true; render(); }
         }
 
@@ -532,7 +548,7 @@
           if (remove || (toggle && state[id] && !engravable)) { delete state[id]; }
           else if (toggle && state[id] && engravable && state[id].collapsed) { state[id].collapsed = false; reopened = true; }
           else if (!state[id]) {
-            var hasPresets = (config.presets || []).some(function (t) { return String(t).trim(); });
+            var hasPresets = presetList().length > 0;
             state[id] = { engraving: (engravable && !hasPresets) ? { type: 'custom', text: '' } : null };
           }
           render();
@@ -549,28 +565,15 @@
           }
         });
 
-        document.addEventListener('click', function (event) {
-          var target = event.target;
-          if (!target || !target.closest) return;
-          var choice = target.closest('[data-addon-engraving]');
-          if (!choice) return;
-          var card = cardOf(choice);
+        // The engraving dropdown: the chosen message is the engraving ("Blank" = a lock without a message).
+        document.addEventListener('change', function (event) {
+          var dropdown = event.target;
+          if (!dropdown || !dropdown.matches || !dropdown.matches('[data-addon-select]')) return;
+          var card = cardOf(dropdown);
           if (!card || !state[idOf(card)]) return;
-          var isCustom = choice.getAttribute('value') === 'custom';
-          if (isCustom) {
-            var typed = card.querySelector('[data-addon-custom-input]');
-            var before = state[idOf(card)].engraving;
-            // coming from a preset the box starts empty; coming from custom text it keeps what was typed
-            state[idOf(card)].engraving = { type: 'custom', text: (before && before.type === 'custom' && typed) ? typed.value.trim() : '' };
-          } else {
-            state[idOf(card)].engraving = { type: 'preset', text: choice.getAttribute('data-text') };
-          }
+          var chosen = String(dropdown.value || '').trim();
+          state[idOf(card)].engraving = chosen ? { type: 'preset', text: chosen } : null;
           render();
-          if (!isCustom && contextOf(card) === 'desktop') collapse(idOf(card));
-          if (isCustom) {
-            var field = card.querySelector('[data-addon-custom-input]');
-            if (field && field.offsetParent !== null) field.focus();
-          }
         });
 
         document.addEventListener('input', function (event) {
