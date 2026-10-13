@@ -840,7 +840,10 @@
             var visibleList = list.filter(isEngravable).slice(0, 1);
             if (!visibleList.length) { removeStep(); return; }
             if (usesDropdown(visibleList[0])) {
-              document.querySelectorAll('[data-addon-error]').forEach(function (node) { node.textContent = 'Please choose an engraving, or remove the lock.'; });
+              // through roots: the mobile message step is out of the page until the lock is picked
+              roots.forEach(function (root) {
+                root.querySelectorAll('[data-addon-error]').forEach(function (node) { node.textContent = 'Please choose an engraving, or remove the lock.'; });
+              });
             }
             roots.forEach(function (root) {
               var context = root.getAttribute('data-context') || 'x';
