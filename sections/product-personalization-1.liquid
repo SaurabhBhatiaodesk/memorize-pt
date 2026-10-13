@@ -1921,6 +1921,13 @@ document.addEventListener('change', function(event) {
         trunkImgSrc   = trunkEl?.currentSrc || trunkEl?.src || '';
         fabricImgSrc  = fabricEl?.currentSrc || fabricEl?.src || '';
         textareaText  = (textareaEl?.textContent || '').replace(/\u2060/g, '').trim();
+        // Until something is typed the preview shows the placeholder "Text Goes Here.". A trunk added with no embroidery
+        // must not get it printed on its cart picture (it looked like embroidery on an order with no embroidery charge).
+        if (textareaText === 'Text Goes Here.') {
+          const typedEmbroideryText = [document.querySelector('.printing-textarea-os'), document.querySelector('.mobile-wordNumber-os textarea')]
+            .some((field) => field && String(field.value || '').trim());
+          if (!typedEmbroideryText) textareaText = '';
+        }
         monogramText  = (monogramEl?.textContent || '').trim();
         if (textareaEl) textareaTextStyle = getComputedStyle(textareaEl);
         if (monogramEl) {
