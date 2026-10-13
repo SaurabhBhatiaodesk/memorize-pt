@@ -63,9 +63,9 @@
     engraving_presets     optional: engraving choices for a lock WITHOUT variants, separated by | (shown as a
                           dropdown too). Empty (the default) = the product's variants, else the free-text box.
     engraving_max_chars   limit for the custom message (0 = no limit until the client gives one)
-    demo_price            Draft theme only: the fee shown on the demo Lock card (e.g. 20), desktop and mobile,
-                          until the real lock product exists. 20 for now (given by the team, not yet confirmed
-                          by the client); empty = no price shown.
+    demo_price            Draft theme only: a fee to show on the demo Lock card, desktop and mobile, while the real
+                          lock product cannot be read (e.g. it is a DRAFT in Shopify). Empty by default = the demo
+                          card shows no price: the price always comes from the Shopify product, never from the theme.
                           The real product always shows its own Shopify price (that is what is charged).
     These can also be passed in the render call from personalize-it-popup-os.
 
@@ -83,7 +83,7 @@
   assign engravable_tag = engravable_tag | default: 'engravable'
   assign engraving_presets = engraving_presets | default: ''
   assign engraving_max_chars = engraving_max_chars | default: 0
-  assign demo_price = demo_price | default: '20'
+  assign demo_price = demo_price | default: ''
   assign demo_image = '//memorizeyourlife.com/cdn/shop/files/memorize-lock-blue-rgb-900px-w-72ppi.png?v=1751344119'
 -%}
 
