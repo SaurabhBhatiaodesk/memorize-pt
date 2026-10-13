@@ -2926,10 +2926,14 @@ $(document).on("click", ".sdev_radios_btn", function () {
 
       if (textareaDisplay.classList.contains("flourish")) {
 
-        fontSize = textLength > 28 ? 48.20 : 48.20;
+        // Longer text (over 28 characters) steps down like every other font. It used to stay at 48.20, so a two-line message in
+        // Flourish came out about 40% wider than the same message in the other fonts (374px against 211-328px on the 465px preview)
+        // and ran past the lid. 34.16 is the average of the other script fonts' long-text sizes (same width as the others); the
+        // line height keeps Flourish's own ratio.
+        fontSize = textLength > 28 ? 34.16 : 48.20;
         // Desktop: 69.7433 x 0.75 = 52.3075px (client approved). Mobile uses the
         // same ratio (x 0.55 x 0.75 = 28.77px) so wrapped lines are not spaced apart.
-        lineHeight = 69.7433;
+        lineHeight = textLength > 28 ? 49.43 : 69.7433;
 
 
       } else if (textareaDisplay.classList.contains("signature")) {
