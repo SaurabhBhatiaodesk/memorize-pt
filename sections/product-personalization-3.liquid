@@ -2507,7 +2507,17 @@ $(document).on("click", ".sdev_radios_btn", function () {
           var Base64ToShopifyURL;
 
           try {
-            base64ImageURL = canvas.toDataURL('image/png');
+            // The cart picture is exactly what the preview shows: the trunk image box (a square), nothing else. The
+            // 800x600 canvas around it was white margin, which made the trunk and the text tiny in the cart.
+            const artworkCanvas = document.createElement('canvas');
+            const artworkLeft = Math.round(((canvasWidth - imageWidth) / 2) * pixelRatio);
+            const artworkTop = Math.round(100 * pixelRatio);
+            const artworkWidth = Math.round(imageWidth * pixelRatio);
+            const artworkHeight = Math.round(imageHeight * pixelRatio);
+            artworkCanvas.width = artworkWidth;
+            artworkCanvas.height = artworkHeight;
+            artworkCanvas.getContext('2d').drawImage(canvas, artworkLeft, artworkTop, artworkWidth, artworkHeight, 0, 0, artworkWidth, artworkHeight);
+            base64ImageURL = artworkCanvas.toDataURL('image/png');
           } catch (error) {
             console.error('Canvas export failed. Check image CORS settings.', error);
             submitWithoutImage('canvas export failed');
