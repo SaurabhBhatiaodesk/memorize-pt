@@ -2645,7 +2645,8 @@ $(document).on("click", ".sdev_radios_btn", function () {
 
       // Every font is sized so the text LOOKS the same size. Fonts differ a lot (Signature and Casually Cool are small at the same
       // px, Letter Jacket, Western and Vintage are big), so each size below was set from the font's measured width and letter height:
-      // sqrt(line width x (x-height + capital height) / 2) is the same for every font within about 3% (it was within about 20%).
+      // width^0.75 x ((x-height + capital height) / 2)^0.25 is the same for every font within about 6% (it was within about 20%),
+      // so the line LENGTH, which is what the eye compares first, is about equal. Vintage is the widest font and sits on the median.
       // Short text is up to 28 characters, long text more. Change a font here and the product page image and the cart follow.
       let fontSize = 0;
       let lineHeight = 0;
@@ -2657,82 +2658,82 @@ $(document).on("click", ".sdev_radios_btn", function () {
         // Flourish came out about 40% wider than the same message in the other fonts (374px against 211-328px on the 465px preview)
         // and ran past the lid. 34.16 is the average of the other script fonts' long-text sizes (same width as the others); the
         // line height keeps Flourish's own ratio.
-        fontSize = textLength > 28 ? 34.36 : 49.43;
+        fontSize = textLength > 28 ? 34.40 : 49.90;
         // Desktop: 69.7433 x 0.75 = 52.3075px (client approved). Mobile uses the
         // same ratio (x 0.55 x 0.75 = 28.77px) so wrapped lines are not spaced apart.
-        lineHeight = textLength > 28 ? 49.71 : 71.52;
+        lineHeight = textLength > 28 ? 49.77 : 72.20;
 
 
       } else if (textareaDisplay.classList.contains("signature")) {
 
-        fontSize = textLength > 28 ? 38.21 : 52.42;
-        lineHeight = textLength > 28 ? 35.66 : 43.69;
+        fontSize = textLength > 28 ? 40.35 : 54.47;
+        lineHeight = textLength > 28 ? 37.66 : 45.40;
 
 
       } else if (textareaDisplay.classList.contains("fancy")) {
 
-        fontSize = textLength > 28 ? 37.98 : 52.79;
-        lineHeight = textLength > 28 ? 34.81 : 45.99;
+        fontSize = textLength > 28 ? 39.45 : 54.30;
+        lineHeight = textLength > 28 ? 36.16 : 47.31;
 
 
       } else if (textareaDisplay.classList.contains("amalfi")) {
 
-        fontSize = textLength > 28 ? 35.15 : 51.33;
-        lineHeight = textLength > 28 ? 35.15 : 45.62;
+        fontSize = textLength > 28 ? 33.88 : 50.24;
+        lineHeight = textLength > 28 ? 33.88 : 44.65;
 
 
       } else if (textareaDisplay.classList.contains("fondly-yours")) {
 
-        fontSize = textLength > 28 ? 33.58 : 46.96;
-        lineHeight = textLength > 28 ? 33.58 : 43.71;
+        fontSize = textLength > 28 ? 34.56 : 48.05;
+        lineHeight = textLength > 28 ? 34.56 : 44.72;
 
 
       } else if (textareaDisplay.classList.contains("casually-cool")) {
 
-        fontSize = textLength > 28 ? 38.24 : 52.93;
-        lineHeight = textLength > 28 ? 38.24 : 40.97;
+        fontSize = textLength > 28 ? 37.86 : 51.80;
+        lineHeight = textLength > 28 ? 37.86 : 40.09;
 
 
       } else if (textareaDisplay.classList.contains("memorize")) {
 
-        fontSize = textLength > 28 ? 34.58 : 48.44;
-        lineHeight = textLength > 28 ? 37.05 : 58.51;
+        fontSize = textLength > 28 ? 36.34 : 50.64;
+        lineHeight = textLength > 28 ? 38.93 : 61.17;
 
 
       } else if (textareaDisplay.classList.contains("headliner")) {
 
-        fontSize = textLength > 28 ? 30.24 : 44.42;
-        lineHeight = textLength > 28 ? 36.73 : 47.38;
+        fontSize = textLength > 28 ? 28.98 : 43.36;
+        lineHeight = textLength > 28 ? 35.20 : 46.25;
 
 
       } else if (textareaDisplay.classList.contains("letter-jacket")) {
 
-        fontSize = textLength > 28 ? 25.35 : 37.05;
-        lineHeight = textLength > 28 ? 30.10 : 43.23;
+        fontSize = textLength > 28 ? 25.84 : 38.38;
+        lineHeight = textLength > 28 ? 30.69 : 44.78;
 
 
       } else if (textareaDisplay.classList.contains("vintage")) {
 
-        fontSize = textLength > 28 ? 27.75 : 40.96;
-        lineHeight = textLength > 28 ? 31.71 : 43.69;
+        fontSize = textLength > 28 ? 24.92 : 37.56;
+        lineHeight = textLength > 28 ? 28.48 : 40.07;
 
 
       } else if (textareaDisplay.classList.contains("western")) {
 
-        fontSize = textLength > 28 ? 28.23 : 41.46;
-        lineHeight = textLength > 28 ? 33.52 : 44.92;
+        fontSize = textLength > 28 ? 28.25 : 42.27;
+        lineHeight = textLength > 28 ? 33.55 : 45.79;
 
 
       } else if (textareaDisplay.classList.contains("royal")) {
 
-        fontSize = textLength > 28 ? 30.21 : 44.37;
-        lineHeight = textLength > 28 ? 35.88 : 48.07;
+        fontSize = textLength > 28 ? 29.31 : 43.85;
+        lineHeight = textLength > 28 ? 34.81 : 47.51;
 
 
       } else {
 
-        fontSize = textLength > 28 ? 27.75 : 40.96;
-        lineHeight = textLength > 28 ? 31.71 : 43.69;
+        fontSize = textLength > 28 ? 24.92 : 37.56;
+        lineHeight = textLength > 28 ? 28.48 : 40.07;
 
       }
 
