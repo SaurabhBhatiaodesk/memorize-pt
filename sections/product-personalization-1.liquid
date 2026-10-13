@@ -2942,6 +2942,47 @@ document.addEventListener('change', function(event) {
 
       element.style.fontSize = `${renderedFontSize}px`;
       element.style.lineHeight = `${renderedLineHeight}px`;
+      syncPreviewSizesToPopup();
+  }
+
+  // ONE source of truth for the size of the personalizer text: the popup preview (what the customer designs in, and
+  // what the cart picture copies). Every other preview (the product page image, thumbnails) gets the same size
+  // RELATIVE to its own trunk image, so a font only has to be tuned once and the product page, the personalizer and
+  // the cart always show the same design. Sizes are layout pixels (CSS transforms of the popup do not matter).
+  function syncPreviewSizesToPopup() {
+    const ratios = (syncPreviewSizesToPopup.ratios = syncPreviewSizesToPopup.ratios || {});
+    const selectors = ['.textarea-text-display-os', '.monogram-text-display-os', '.monogram-large-text-os'];
+    const layoutWidth = (container) => {
+      const trunk = container && container.querySelector('.main-trunk-image-os');
+      const width = trunk ? parseFloat(window.getComputedStyle(trunk).width) : 0;
+      return Number.isFinite(width) ? width : 0;
+    };
+    const popup = document.querySelector('.personalize-product-popup-section-os');
+    const popupContainer = popup
+      ? Array.from(popup.querySelectorAll('.custom-images-os')).find((container) => layoutWidth(container) > 0)
+      : null;
+
+    selectors.forEach((selector) => {
+      const reference = popupContainer && popupContainer.querySelector(selector);
+      const referenceWidth = layoutWidth(popupContainer);
+      if (reference && referenceWidth && reference.textContent.trim() && parseFloat(reference.style.fontSize) > 0) {
+        ratios[selector] = {
+          font: parseFloat(reference.style.fontSize) / referenceWidth,
+          line: (parseFloat(reference.style.lineHeight) || 0) / referenceWidth
+        };
+      }
+      const ratio = ratios[selector];
+      if (!ratio) return;
+
+      document.querySelectorAll('.custom-images-os').forEach((container) => {
+        if (container === popupContainer) return;
+        const target = container.querySelector(selector);
+        const width = layoutWidth(container);
+        if (!target || !width || !target.textContent.trim()) return;
+        target.style.fontSize = `${ratio.font * width}px`;
+        if (ratio.line) target.style.lineHeight = `${ratio.line * width}px`;
+      });
+    });
   }
 
   function adjustFontSizeAndLineHeight0(monogramDisplay, textareaDisplay, textLength) {
