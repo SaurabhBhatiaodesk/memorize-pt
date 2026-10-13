@@ -848,6 +848,23 @@ label[data-item="swatch"]::after {
 .cart--item--image {
     width: 300px;
 }
+/* Wide screens: the cart picture is shown about as large as the preview on the product page, so the text on it reads the same */
+@media only screen and (min-width: 1024px) {
+    .cart--root[data-view="desktop"] .cart--item--image {
+        width: 460px;
+    }
+    .cart--root[data-view="desktop"] .cart--item--image-addon img {
+        max-width: 460px;
+    }
+}
+@media only screen and (min-width: 1280px) {
+    .cart--root[data-view="desktop"] .cart--item--image {
+        width: 540px;
+    }
+    .cart--root[data-view="desktop"] .cart--item--image-addon img {
+        max-width: 540px;
+    }
+}
 /* Phone: the personalizer preview text breaks only between words - a date or a word is never cut in the middle */
 @media screen and (max-width: 767px) {
     body .custom-images-os h4.textarea-text-display-os {
