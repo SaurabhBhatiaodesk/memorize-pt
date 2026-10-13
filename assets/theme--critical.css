@@ -3974,13 +3974,14 @@ img {
     color: #000;
     text-align: center;
     justify-content: center;
-    word-wrap: break-word;
+    word-wrap: normal;
     display: flex;
     align-items: center;
     gap: 4px;
-    word-break: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
+    word-break: normal;
+    overflow-wrap: normal;
+    -webkit-hyphens: manual;
+    hyphens: manual;
     white-space: pre-wrap;
 }
 .custom-images-os.main-product-image-container .textarea-text-display-os {

@@ -58,6 +58,14 @@
     {%- endif -%}
 
     <link href="{{ "theme--critical.css" | asset_url }}" rel="stylesheet" media="all">
+    <script>
+      // Preserve date units in the visual preview without changing cart/order text.
+      window.personalizeProtectPreviewTokens = function (value) {
+        return String(value || '').replace(/\b\d{1,4}(?:-\d{1,2}){1,2}\b/g, function (date) {
+          return date.replace(/-/g, String.fromCharCode(0x2011));
+        });
+      };
+    </script>
     <link href="{{ "theme--async.css" | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
 
     <!-- HC - 08 Mar '24 - cart lightbox -->

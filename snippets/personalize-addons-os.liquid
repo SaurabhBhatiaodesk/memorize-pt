@@ -1,8 +1,14 @@
 {%- comment -%}
   Personalizer step "Don't forget to add": Shopify's recommended (complementary)
   products for the trunk being personalized, side by side in a scrolling row.
-  A product with the handle / tag set below gets an engraving choice: a dropdown with the preset
-  messages (engraving_presets). Without presets it falls back to a free-text message box.
+  A product with the handle / tag set below gets an engraving choice. The lock is a Shopify product and
+  everything about it comes from the product (nothing about it is written in this file):
+    - its variants are the engraving choices: with two or more variants the engraving is a dropdown of the
+      variant titles (e.g. the product option "Engraving"); the chosen variant is the cart line, so its own
+      price is what is charged and shown;
+    - its description (plain text) is shown under the price;
+    - its photo is the picture of the card.
+  A product with a single variant keeps the free-text message box.
 
   What is shown, in this order:
     A. add-on products set up in Shopify (below), with an engraving choice for the padlock;
@@ -22,7 +28,7 @@
     {% render 'personalize-addons-os', part: 'markup', context: 'mobile-message', product: product %}   mobile step 2: add your message
     {% render 'personalize-addons-os', part: 'assets', product: product %}      CSS + JS, render once
 
-  Desktop: the dropdown stays visible once an engraving is chosen (with the free-text fallback the message
+  Desktop: the dropdown stays visible once an engraving is chosen (with the free-text box the message
   box folds away after Enter / leaving the box and "Engrave It" opens it again). The fee of the picked lock
   is added to the Add To Cart total (getTotalCents + the personalize-addons:change event).
   The card has no white box around it: it sits on the popup background like the other steps.
@@ -54,15 +60,12 @@
     engravable_handle     or the product with this handle (default 'lock'). A product that is UNLISTED in Shopify
                           (hidden from search, collections and recommendations, still sold) is found by this
                           handle: /products/<handle>.js
-    engraving_presets     the engraving choices of the dropdown, separated by | (client, 13 Oct: For all your
-                          tomorrows | Love always | Blank; one set font). "Blank" is a lock without a message;
-                          it travels as the "Engraving" property like the others. Empty = free-text box.
-    lock_description      the short description under the lock's price (empty until the client gives it: then
-                          nothing is shown)
+    engraving_presets     optional: engraving choices for a lock WITHOUT variants, separated by | (shown as a
+                          dropdown too). Empty (the default) = the product's variants, else the free-text box.
     engraving_max_chars   limit for the custom message (0 = no limit until the client gives one)
-    demo_price            Draft theme only: the fee shown on the demo Lock card (e.g. 35), desktop and mobile,
-                          until the real lock product exists. 35 = the client's price, engraving included;
-                          empty = no price shown.
+    demo_price            Draft theme only: the fee shown on the demo Lock card (e.g. 20), desktop and mobile,
+                          until the real lock product exists. 20 for now (given by the team, not yet confirmed
+                          by the client); empty = no price shown.
                           The real product always shows its own Shopify price (that is what is charged).
     These can also be passed in the render call from personalize-it-popup-os.
 
@@ -78,10 +81,9 @@
   assign addon_exclude_handles = 'holiday-limited-time-edition,custom-embroidery,memorize-trunks-egift-card'
   assign engravable_handle = engravable_handle | default: 'lock'
   assign engravable_tag = engravable_tag | default: 'engravable'
-  assign engraving_presets = engraving_presets | default: 'For all your tomorrows|Love always|Blank'
-  assign lock_description = lock_description | default: ''
+  assign engraving_presets = engraving_presets | default: ''
   assign engraving_max_chars = engraving_max_chars | default: 0
-  assign demo_price = demo_price | default: '35'
+  assign demo_price = demo_price | default: '20'
   assign demo_image = '//memorizeyourlife.com/cdn/shop/files/memorize-lock-blue-rgb-900px-w-72ppi.png?v=1751344119'
 -%}
 
@@ -119,7 +121,6 @@
       "engravableTag": {{ engravable_tag | json }},
       "presets": {{ preset_list | json }},
       "maxChars": {{ engraving_max_chars | json }},
-      "description": {{ lock_description | json }},
       "demoPrice": {{ demo_price | json }},
       "currency": {{ cart.currency.symbol | default: '$' | json }},
       "allowDemo": {% if theme.role != 'main' %}true{% else %}false{% endif %},
@@ -177,7 +178,7 @@
     .addon-info-os { flex: 1 1 auto; min-width: 0; }
     .addon-title-os { font-size: 17px; line-height: 22px; color: #274864; margin-bottom: 8px; }
     .addon-price-os { font-size: 16px; font-weight: 600; color: #274864; margin: -2px 0 10px; }
-    .addon-desc-os { font-size: 14px; line-height: 20px; color: #274864; margin: -4px 0 10px; }
+    .addon-desc-os { font-size: 14px; line-height: 20px; color: #274864; margin: -4px 0 10px; white-space: pre-line; }
     .addon-saved-os { margin-top: 8px; font-size: 14px; line-height: 18px; color: #274864; word-break: break-word; }
     .addon-saved-os[hidden] { display: none; }
     .addon-btn-os {
@@ -246,9 +247,6 @@
         if (!configEl || !roots.length) return;
         var config = JSON.parse(configEl.textContent);
         var productId = roots[0].getAttribute('data-product-id');
-        if ((config.presets || []).some(function (t) { return String(t).trim(); })) {
-          document.querySelectorAll('[data-addon-error]').forEach(function (node) { node.textContent = 'Please choose an engraving, or remove the lock.'; });
-        }
         var currentHandle = roots[0].getAttribute('data-product-handle') || '';
         var products = {};     // id -> product data
         var state = {};        // id -> { engraving: null | { type, text } }
@@ -272,8 +270,40 @@
         function isEngravable(p) {
           return (!!config.engravableHandle && p.handle === config.engravableHandle) || (!!config.engravableTag && Array.isArray(p.tags) && p.tags.indexOf(config.engravableTag) !== -1);
         }
-        // The engraving choices of the dropdown (none = the free-text box).
+        // Optional engraving choices from the theme settings, for a lock without variants (none = the free-text box).
         function presetList() { return (config.presets || []).map(function (t) { return String(t).trim(); }).filter(Boolean); }
+        // Cents of a variant: the product JSON gives cents (3500), the collection JSON dollars ("35.00").
+        function variantCents(v) {
+          var raw = v ? v.price : 0;
+          if (typeof raw === 'string' && /[.]/.test(raw)) return Math.round(parseFloat(raw) * 100) || 0;
+          return Number(raw) || 0;
+        }
+        function variantLabel(v) { return String((v && (v.title || v.option1)) || '').trim(); }
+        // The engraving choices of a lock that has variants: one per variant, named like the variant. A product with a
+        // single variant ("Default Title") has none: it keeps the free-text box.
+        function engravingVariants(p) {
+          if (!p || p.noCart || !isEngravable(p)) return [];
+          var list = (p.variants || []).filter(function (v) { return v && v.id; });
+          if (list.length < 2) return [];
+          var named = list.every(function (v) { var label = variantLabel(v); return label && label !== 'Default Title'; });
+          return named ? list : [];
+        }
+        function usesDropdown(p) { return engravingVariants(p).length > 0 || presetList().length > 0; }
+        // The variant the shopper chose in the dropdown (null for a preset / free text).
+        function chosenVariant(p, st) {
+          var vid = st && st.engraving && st.engraving.variantId;
+          if (!vid || !p) return null;
+          return (p.variants || []).filter(function (v) { return String(v.id) === String(vid); })[0] || null;
+        }
+        function feeCents(p, st) { var v = chosenVariant(p, st); return v ? variantCents(v) : (Number(p.price) || 0); }
+        // The product description as plain text: tags are dropped (parsed in an inert document, nothing runs or loads).
+        function plainText(html) {
+          var text = String(html || '').replace(/<\/(p|div|li|h[1-6])>|<br\s*\/?>/gi, '\n');
+          var doc = new DOMParser().parseFromString(text, 'text/html');
+          Array.prototype.forEach.call(doc.querySelectorAll('script, style, template, noscript'), function (node) { node.remove(); });
+          var body = doc.body;
+          return String(body ? body.textContent : '').replace(/[ \t\f\v\u00a0]+/g, ' ').replace(/ ?\n ?/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+        }
         function imageUrl(src) {
           if (!src) return '';
           if (/^data:/.test(src)) return src;
@@ -296,7 +326,8 @@
           var info = el('div', 'addon-info-os');
           info.appendChild(el('div', 'addon-title-os', p.title));
           if (p.price !== null && p.price !== undefined) info.appendChild(el('div', 'addon-price-os', formatPrice(p.price)));
-          if (isEngravable(p) && String(config.description || '').trim()) info.appendChild(el('div', 'addon-desc-os', String(config.description).trim()));
+          var description = isEngravable(p) ? plainText(p.description) : '';
+          if (description) info.appendChild(el('div', 'addon-desc-os', description));
           var button = el('button', 'addon-btn-os', isEngravable(p) ? 'Engrave It' : 'Add');
           button.type = 'button';
           button.setAttribute('data-addon-toggle', '');
@@ -320,10 +351,11 @@
           panel.setAttribute('data-addon-id', String(p.id));
           panel.hidden = true;
           panel.appendChild(el('h4', 'addon-engrave-title-os', 'ADD YOUR MESSAGE'));
-          var presets = presetList();
+          var variants = engravingVariants(p);
+          var presets = variants.length ? [] : presetList();
           var limit = Number(config.maxChars) || 0;
-          if (presets.length) {
-            // A dropdown, not a free-text box: the engraving is one of the given messages.
+          if (variants.length || presets.length) {
+            // A dropdown, not a free-text box: the engraving is one of the product's variants (or one of the given presets).
             var select = el('select', 'addon-select-os');
             select.setAttribute('data-addon-select', '');
             select.setAttribute('aria-label', 'Choose your engraving');
@@ -332,11 +364,23 @@
             first.disabled = true;
             first.selected = true;
             select.appendChild(first);
-            presets.forEach(function (text) {
-              var option = el('option', '', text);
-              option.value = text;
-              select.appendChild(option);
-            });
+            if (variants.length) {
+              variants.forEach(function (v) {
+                var option = el('option', '', variantLabel(v));
+                option.value = String(v.id);
+                option.setAttribute('data-text', variantLabel(v));
+                option.setAttribute('data-variant-id', String(v.id));
+                option.disabled = v.available === false;
+                select.appendChild(option);
+              });
+            } else {
+              presets.forEach(function (text) {
+                var option = el('option', '', text);
+                option.value = text;
+                option.setAttribute('data-text', text);
+                select.appendChild(option);
+              });
+            }
             panel.appendChild(select);
           }
           var custom = el('div', 'addon-custom-os');
@@ -359,7 +403,7 @@
           input.setAttribute('data-addon-custom-input', '');
           custom.appendChild(head);
           custom.appendChild(input);
-          if (!presets.length) panel.appendChild(custom);
+          if (!variants.length && !presets.length) panel.appendChild(custom);
           var remove = el('button', 'addon-remove-os', 'Remove');
           remove.type = 'button';
           remove.setAttribute('data-addon-remove', '');
@@ -469,6 +513,10 @@
             var selected = !!state[idOf(card)];
             var engravable = card.getAttribute('data-engravable') === 'true';
             card.classList.toggle('is-selected', selected);
+            // the price of the chosen variant (the lock's own price until one is chosen)
+            var priceNode = card.querySelector('.addon-price-os');
+            var cardProduct = products[idOf(card)];
+            if (priceNode && cardProduct && cardProduct.price !== null && cardProduct.price !== undefined) priceNode.textContent = formatPrice(feeCents(cardProduct, state[idOf(card)]));
             var toggle = card.querySelector('[data-addon-toggle]');
             if (toggle) {
               toggle.textContent = engravable ? 'Engrave It' : (selected ? 'Added' : 'Add');
@@ -488,7 +536,12 @@
             // desktop: the box folds away once the message is written; the button opens it again
             panel.hidden = !s || (s.collapsed && contextOf(panel) === 'desktop');
             var dropdown = panel.querySelector('[data-addon-select]');
-            if (dropdown) dropdown.value = (s && s.engraving && s.engraving.text) ? s.engraving.text : '';
+            if (dropdown) {
+              var wanted = (s && s.engraving && s.engraving.text) ? s.engraving.text : '';
+              var matched = '';
+              Array.prototype.forEach.call(dropdown.options, function (option) { if (option.value && option.getAttribute('data-text') === wanted) matched = option.value; });
+              dropdown.value = matched;
+            }
             var type = s && s.engraving && s.engraving.type;
             var custom = panel.querySelector('[data-addon-custom]');
             if (custom) custom.hidden = !type;
@@ -523,13 +576,13 @@
           Object.keys(state).forEach(function (id) {
             var p = products[id];
             if (!p || (isEngravable(p) && !hasEngraving(state[id]))) return;
-            sum += Number(p.price) || 0;
+            sum += feeCents(p, state[id]);
           });
           return sum;
         }
         // Desktop: fold the message box away once there is a message.
         function collapse(id) {
-          if (presetList().length) return; // the dropdown stays visible
+          if (usesDropdown(products[id])) return; // the dropdown stays visible
           if (state[id] && hasEngraving(state[id]) && !state[id].collapsed) { state[id].collapsed = true; render(); }
         }
 
@@ -548,8 +601,7 @@
           if (remove || (toggle && state[id] && !engravable)) { delete state[id]; }
           else if (toggle && state[id] && engravable && state[id].collapsed) { state[id].collapsed = false; reopened = true; }
           else if (!state[id]) {
-            var hasPresets = presetList().length > 0;
-            state[id] = { engraving: (engravable && !hasPresets) ? { type: 'custom', text: '' } : null };
+            state[id] = { engraving: (engravable && !usesDropdown(products[id])) ? { type: 'custom', text: '' } : null };
           }
           render();
           syncMessageStep();
@@ -565,14 +617,16 @@
           }
         });
 
-        // The engraving dropdown: the chosen message is the engraving ("Blank" = a lock without a message).
+        // The engraving dropdown: the chosen variant (or preset) is the engraving.
         document.addEventListener('change', function (event) {
           var dropdown = event.target;
           if (!dropdown || !dropdown.matches || !dropdown.matches('[data-addon-select]')) return;
           var card = cardOf(dropdown);
           if (!card || !state[idOf(card)]) return;
-          var chosen = String(dropdown.value || '').trim();
-          state[idOf(card)].engraving = chosen ? { type: 'preset', text: chosen } : null;
+          var option = dropdown.options[dropdown.selectedIndex];
+          var chosenText = option && option.value ? String(option.getAttribute('data-text') || '').trim() : '';
+          var chosenVariantId = option && option.getAttribute('data-variant-id');
+          state[idOf(card)].engraving = chosenText ? (chosenVariantId ? { type: 'variant', text: chosenText, variantId: chosenVariantId } : { type: 'preset', text: chosenText }) : null;
           render();
         });
 
@@ -632,7 +686,7 @@
           getSelection: function () {
             return Object.keys(state).map(function (id) {
               var p = products[id] || {};
-              var variant = (p.variants && p.variants[0]) || {};
+              var variant = chosenVariant(p, state[id]) || (p.variants && p.variants[0]) || {};
               return { id: p.id, handle: p.handle, title: p.title, variantId: variant.id || null, engraving: state[id].engraving };
             });
           },
@@ -643,7 +697,7 @@
               var p = products[id];
               if (!p || p.noCart) return null;
               var variants = p.variants || [];
-              var variant = variants.filter(function (v) { return v.available !== false; })[0] || variants[0];
+              var variant = chosenVariant(p, state[id]) || variants.filter(function (v) { return v.available !== false; })[0] || variants[0];
               if (!variant || !variant.id) return null;
               var item = { id: variant.id, quantity: 1, properties: {} };
               if (isEngravable(p)) {
@@ -721,7 +775,7 @@
         // Collection products come in the storefront format (price as "35.00" dollars,
         // images[], no 'available'): bring them to the shape used above.
         function fromCollection(p) {
-          var variants = (p.variants || []).map(function (v) { return { id: v.id, available: v.available !== false, price: v.price }; });
+          var variants = (p.variants || []).map(function (v) { return { id: v.id, title: v.title, available: v.available !== false, price: v.price }; });
           var first = variants.filter(function (v) { return v.available; })[0] || variants[0] || {};
           var tags = Array.isArray(p.tags) ? p.tags : String(p.tags || '').split(',').map(function (t) { return t.trim(); });
           return {
@@ -729,6 +783,7 @@
             available: variants.some(function (v) { return v.available; }),
             price: Math.round(parseFloat(first.price || 0) * 100),
             featured_image: (p.images && p.images[0] && p.images[0].src) || '',
+            description: p.body_html || '',
             variants: variants
           };
         }
@@ -761,8 +816,8 @@
             if (!config.engravableHandle || list.some(function (p) { return isEngravable(p); })) return list;
             return getJson('/products/' + encodeURIComponent(config.engravableHandle) + '.js').then(function (p) {
               if (!p || !p.id || p.available === false) return list;
-              var variants = (p.variants || []).map(function (v) { return { id: v.id, available: v.available !== false, price: v.price }; });
-              return [{ id: p.id, handle: p.handle, title: p.title, price: p.price, featured_image: p.featured_image || (p.images && p.images[0]) || '', tags: Array.isArray(p.tags) ? p.tags : [], variants: variants, available: true }].concat(list);
+              var variants = (p.variants || []).map(function (v) { return { id: v.id, title: v.title || v.option1, available: v.available !== false, price: v.price }; });
+              return [{ id: p.id, handle: p.handle, title: p.title, price: p.price, featured_image: p.featured_image || (p.images && p.images[0]) || '', description: p.description || '', tags: Array.isArray(p.tags) ? p.tags : [], variants: variants, available: true }].concat(list);
             });
           })
           .then(function (list) {
@@ -784,6 +839,9 @@
             // Other trunk recommendations remain available in Shopify but are not rendered here.
             var visibleList = list.filter(isEngravable).slice(0, 1);
             if (!visibleList.length) { removeStep(); return; }
+            if (usesDropdown(visibleList[0])) {
+              document.querySelectorAll('[data-addon-error]').forEach(function (node) { node.textContent = 'Please choose an engraving, or remove the lock.'; });
+            }
             roots.forEach(function (root) {
               var context = root.getAttribute('data-context') || 'x';
               // desktop: card + message; mobile step 1: the card only; mobile step 2: the message only
