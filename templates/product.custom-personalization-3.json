@@ -189,7 +189,7 @@
           "type": "custom-fabric",
           "settings": {
             "fabric-label": "Bordeaux Chateau",
-            "fabric-image": "shopify://shop_images/Revised_Bordeaux_Chateau.png",
+            "fabric-image": "shopify://shop_images/Bordeaux_Chateau_V2.png",
             "fabric-swatch-image": "shopify://shop_images/2026_Swatch_Bordeaux_Chateau.png"
           }
         },
