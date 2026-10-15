@@ -2167,32 +2167,29 @@ document.addEventListener('change', function(event) {
               // the visible glyph box is centered in the box, not its top.
               const scaledFontPx = parseFloat(scaledFontValue(textareaTextStyle.fontSize));
 
-              // Fixed: word-wrap can turn ONE logical line (no \n typed)
-              // into TWO OR MORE rendered lines once it hits maxWidth — but
-              // the height/centering math below was computed BEFORE
-              // wrapping happened, using lines.length (always 1 for
-              // un-wrapped input). That under-counted the real block height
-              // whenever text wrapped, cramming the wrapped lines into the
-              // space meant for one line and making the exported text look
-              // smaller/tighter than the live preview (which lets the
-              // browser wrap and center normally). Wrap FIRST, then measure
-              // and center using the real line count.
-              const wrappedLines = [];
-              lines.forEach((line) => {
-                  const words = line.split(' ');
-                  let lineText = '';
-                  words.forEach((word, wordIndex) => {
-                      const testLine = lineText + word + ' ';
-                      const testWidth = ctx.measureText(testLine).width;
-                      if (testWidth > maxWidth && wordIndex > 0) {
-                          wrappedLines.push(lineText.trim());
-                          lineText = word + ' ';
-                      } else {
-                          lineText = testLine;
-                      }
-                  });
-                  wrappedLines.push(lineText.trim());
-              });
+              // The browser already tells us where the live preview wrapped.
+              // Keep those exact lines for the cart artwork. Re-wrapping
+              // them in canvas was the source of the cart mismatch: the
+              // preview could show "Gayle & Matte March" on one line while
+              // the cart split it into two or three lines.
+              let wrappedLines = renderedPreview.rendered ? lines.slice() : [];
+              if (!wrappedLines.length) {
+                lines.forEach((line) => {
+                    const words = line.split(' ');
+                    let lineText = '';
+                    words.forEach((word, wordIndex) => {
+                        const testLine = lineText + word + ' ';
+                        const testWidth = ctx.measureText(testLine).width;
+                        if (testWidth > maxWidth && wordIndex > 0) {
+                            wrappedLines.push(lineText.trim());
+                            lineText = word + ' ';
+                        } else {
+                            lineText = testLine;
+                        }
+                    });
+                    wrappedLines.push(lineText.trim());
+                });
+              }
 
               const sampleMetrics = ctx.measureText(wrappedLines[0] || 'M');
               const lineAscent = sampleMetrics.actualBoundingBoxAscent || scaledFontPx * 0.75;
