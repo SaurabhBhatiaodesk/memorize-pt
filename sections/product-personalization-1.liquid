@@ -3161,6 +3161,20 @@ document.addEventListener('change', function(event) {
         fontSize += mobileIncrease;
         lineHeight += mobileIncrease;
       } else if (!window.matchMedia('(max-width: 767px)').matches) {
+        // A CSS pixel is not optically equal across these typefaces: Chancery
+        // and the light script faces draw noticeably smaller than the block
+        // fonts. Keep the artwork balanced on desktop without affecting the
+        // approved mobile proportions.
+        const desktopOpticalScale = textareaDisplay.classList.contains('royal') ? 1.12
+          : textareaDisplay.classList.contains('amalfi') ? 1.06
+          : textareaDisplay.classList.contains('fancy') ? 1.05
+          : textareaDisplay.classList.contains('fondly-yours') ? 1.04
+          : textareaDisplay.classList.contains('signature') ? 1.03
+          : textareaDisplay.classList.contains('memorize') ? 1.02
+          : 1;
+        fontSize *= desktopOpticalScale;
+        lineHeight *= desktopOpticalScale;
+
         // Keep two-line desktop artwork legible without changing the approved
         // mobile sizing. The increase is applied before the shared artwork
         // scale, so every font gets the same rendered two-pixel boost.
