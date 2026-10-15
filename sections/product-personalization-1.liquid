@@ -1987,6 +1987,27 @@ document.addEventListener('change', function(event) {
       const previewToCanvasScale =
         imageWidth / previewTrunkWidth;
 
+      // Capture the text position from the exact preview the customer sees.
+      // The image artwork is not identical across trunk sizes, so a fixed
+      // canvas rectangle can make otherwise centred embroidery look too high
+      // or low in the cart. Ratios remain accurate even when the popup is
+      // visually scaled by CSS.
+      const previewTrunkRect = visiblePreviewTrunk?.getBoundingClientRect?.();
+      const previewTextRect = textareaEl?.getBoundingClientRect?.();
+      let previewTextCenterX = canvasWidth / 2;
+      let previewTextCenterY = 100 + imageHeight * 0.35;
+      let previewTextMaxWidth = imageWidth * 0.62;
+      if (previewTrunkRect?.width > 0 && previewTrunkRect.height > 0 && previewTextRect?.width > 0) {
+        const centerXRatio = (previewTextRect.left + previewTextRect.width / 2 - previewTrunkRect.left) / previewTrunkRect.width;
+        const centerYRatio = (previewTextRect.top + previewTextRect.height / 2 - previewTrunkRect.top) / previewTrunkRect.height;
+        const widthRatio = previewTextRect.width / previewTrunkRect.width;
+        if (centerXRatio > 0 && centerXRatio < 1) {
+          previewTextCenterX = (canvasWidth - imageWidth) / 2 + centerXRatio * imageWidth;
+        }
+        if (centerYRatio > 0.1 && centerYRatio < 0.9) previewTextCenterY = 100 + centerYRatio * imageHeight;
+        if (widthRatio > 0 && widthRatio <= 1) previewTextMaxWidth = widthRatio * imageWidth;
+      }
+
       const scaledFontValue = (styleValue) => {
         const size = parseFloat(styleValue);
         return `${(Number.isFinite(size) ? size : 0) * previewToCanvasScale}px`;
@@ -2132,9 +2153,7 @@ document.addEventListener('change', function(event) {
               ctx.fillStyle = textareaTextStyle.color;
               const lines = renderedPreview.lines;
               const lineHeight = scaledLineHeightValue(textareaTextStyle.lineHeight, textareaTextStyle.fontSize);
-              const maxWidth = renderedPreview.rendered ? Math.max(250, imageWidth) : 250;
-              const redBoxTop = 125;
-              const redBoxHeight = 280;
+              const maxWidth = renderedPreview.rendered ? previewTextMaxWidth : Math.min(250, previewTextMaxWidth);
 
               // Fixed: fillText's y argument is the BASELINE, not the top of
               // the text block. The old code computed a "content-top" style
@@ -2179,10 +2198,9 @@ document.addEventListener('change', function(event) {
               const lineAscent = sampleMetrics.actualBoundingBoxAscent || scaledFontPx * 0.75;
               const lineDescent = sampleMetrics.actualBoundingBoxDescent || scaledFontPx * 0.25;
               const totalTextHeight = (wrappedLines.length - 1) * lineHeight + lineAscent + lineDescent;
-              const blockTop = redBoxTop + (redBoxHeight - totalTextHeight) / 2;
-              let currentYPosition = blockTop + lineAscent;
+              let currentYPosition = previewTextCenterY - totalTextHeight / 2 + lineAscent;
               wrappedLines.forEach((lineText) => {
-                  ctx.fillText(lineText, (canvasWidth - ctx.measureText(lineText).width) / 2, currentYPosition);
+                  ctx.fillText(lineText, previewTextCenterX - ctx.measureText(lineText).width / 2, currentYPosition);
                   currentYPosition += lineHeight;
               });
           } else if (monogramText.length === 3) {
