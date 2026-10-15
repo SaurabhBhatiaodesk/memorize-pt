@@ -3171,6 +3171,9 @@ document.addEventListener('change', function(event) {
           const desktopIncrease = 2 / 0.75;
           fontSize += desktopIncrease;
           lineHeight += desktopIncrease;
+          // Several script fonts have a compact built-in line box. Do not let
+          // two lines overlap after the desktop size increase.
+          lineHeight = Math.max(lineHeight, fontSize * 1.15);
         }
       }
 
