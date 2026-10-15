@@ -3161,17 +3161,23 @@ document.addEventListener('change', function(event) {
         fontSize += mobileIncrease;
         lineHeight += mobileIncrease;
       } else if (!window.matchMedia('(max-width: 767px)').matches) {
-        // A CSS pixel is not optically equal across these typefaces: Chancery
-        // and the light script faces draw noticeably smaller than the block
-        // fonts. Keep the artwork balanced on desktop without affecting the
-        // approved mobile proportions.
-        const desktopOpticalScale = textareaDisplay.classList.contains('royal') ? 1.12
-          : textareaDisplay.classList.contains('amalfi') ? 1.06
-          : textareaDisplay.classList.contains('fancy') ? 1.05
-          : textareaDisplay.classList.contains('fondly-yours') ? 1.04
-          : textareaDisplay.classList.contains('signature') ? 1.03
-          : textareaDisplay.classList.contains('memorize') ? 1.02
-          : 1;
+        // These fonts have radically different x-heights and stroke weights.
+        // Calibrate the desktop artwork by visible ink size, rather than CSS
+        // pixels, so each option feels equally prominent on the trunk lid.
+        // Mobile deliberately retains its approved sizing.
+        const desktopOpticalScale = textareaDisplay.classList.contains('vintage') ? 1.15
+          : textareaDisplay.classList.contains('headliner') ? 1.05
+          : textareaDisplay.classList.contains('letter-jacket') ? 1.14
+          : textareaDisplay.classList.contains('western') ? 1.06
+          : textareaDisplay.classList.contains('royal') ? 1.10
+          : textareaDisplay.classList.contains('fondly-yours') ? 0.96
+          : textareaDisplay.classList.contains('signature') ? 0.85
+          : textareaDisplay.classList.contains('amalfi') ? 0.90
+          : textareaDisplay.classList.contains('fancy') ? 0.88
+          : textareaDisplay.classList.contains('memorize') ? 0.88
+          : textareaDisplay.classList.contains('casually-cool') ? 0.92
+          : textareaDisplay.classList.contains('flourish') ? 0.92
+          : 1.15;
         fontSize *= desktopOpticalScale;
         lineHeight *= desktopOpticalScale;
 
