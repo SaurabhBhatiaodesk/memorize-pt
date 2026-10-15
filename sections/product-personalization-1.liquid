@@ -3160,6 +3160,18 @@ document.addEventListener('change', function(event) {
         const mobileIncrease = 2 / (getPersonalizationPreviewScale(textareaDisplay) * 0.75);
         fontSize += mobileIncrease;
         lineHeight += mobileIncrease;
+      } else if (!window.matchMedia('(max-width: 767px)').matches) {
+        // Keep two-line desktop artwork legible without changing the approved
+        // mobile sizing. The increase is applied before the shared artwork
+        // scale, so every font gets the same rendered two-pixel boost.
+        const textRange = document.createRange();
+        textRange.selectNodeContents(textareaDisplay);
+        const renderedLineCount = textRange.getClientRects().length;
+        if (renderedLineCount > 1) {
+          const desktopIncrease = 2 / 0.75;
+          fontSize += desktopIncrease;
+          lineHeight += desktopIncrease;
+        }
       }
 
       setScaledPreviewSize(textareaDisplay, fontSize, lineHeight);

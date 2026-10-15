@@ -38,7 +38,7 @@
           {%- assign property_size = item.properties | size -%}
              {% if property_size > 0 %}
               {% for property in item.properties %}
-                {% if property.first contains '_image' %}
+                {% if property.first == 'image' or property.first contains '_image' %}
                   {% if property.last != blank %}
                      {% assign preview_image = property.last %}
                         {% assign flag = true %}
@@ -86,7 +86,7 @@
           {% comment %}{% if property_size > 0 %}
             <ul>
               {% for property in item.properties %}
-                {% if property.first contains '_image' %}
+                {% if property.first == 'image' or property.first contains '_image' %}
                   {% if property.last != blank %}<a href="{{ property.last }}" >Preview image</a>{% endif %}
                   <img src="{{ property.last }}">
                   {% elsif property.last != blank %}
@@ -107,7 +107,7 @@
                   {% continue %}
                 {% endif %}
                 
-                {% if property.first contains '_image' %}
+                {% if property.first == 'image' or property.first contains '_image' %}
                   {% if property.last != blank %}
                     <li class="preview-image-popup-list-os">
                       <div class="cart-image-preview-os" onclick="showPopup(this)">Preview image</div>
@@ -275,7 +275,7 @@
         {% comment %}{% if property_size > 0 %}
           <ul>
             {% for property in item.properties %}
-              {% if property.first contains '_image' %}
+              {% if property.first == 'image' or property.first contains '_image' %}
 
                 <li class="preview-image-popup-list-os">
                   <div class="cart-image-preview-os" onclick="showPopup(this)">Preview image</div>
@@ -305,7 +305,7 @@
                 {% continue %}
               {% endif %}
               
-              {% if property.first contains '_image' %}
+              {% if property.first == 'image' or property.first contains '_image' %}
                 {% if property.last != blank %}
                   <li class="preview-image-popup-list-os">
                     <div class="cart-image-preview-os" onclick="showPopup(this)">Preview image</div>
