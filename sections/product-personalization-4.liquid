@@ -2036,7 +2036,10 @@ $(document).on("click", ".sdev_radios_btn", function () {
                   return wrapped;
               };
 
-              const lines = requestedLines.flatMap(wrapCanvasLine);
+              // Preserve the exact visual lines from the live personalizer.
+              // Canvas wrapping is only a fallback when browser measurement
+              // is unavailable.
+              const lines = renderedPreview.rendered ? requestedLines.slice() : requestedLines.flatMap(wrapCanvasLine);
               let totalTextHeight = 0;
               for (let i = 0; i < lines.length; i++) totalTextHeight += lineHeight;
               const redBoxTop = 125;
