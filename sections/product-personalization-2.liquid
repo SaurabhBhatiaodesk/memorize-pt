@@ -1702,6 +1702,33 @@ $(document).on("click", ".sdev_radios_btn", function () {
       const previewToCanvasScale =
         imageWidth / previewTrunkWidth;
 
+      // The cart image must be a rendering of this exact preview, including
+      // the mobile popup layout. Map the text box from the visible trunk to
+      // the canvas rather than placing it in a fixed, assumed box.
+      const previewTrunkRect = visiblePreviewTrunk?.getBoundingClientRect?.();
+      const previewTextRect = textareaEl?.getBoundingClientRect?.();
+      let previewTextCenterX = canvasWidth / 2;
+      let previewTextCenterY = 100 + imageHeight * 0.35;
+      let previewTextMaxWidth = imageWidth * 0.62;
+
+      if (
+        previewTrunkRect?.width > 0 &&
+        previewTrunkRect.height > 0 &&
+        previewTextRect?.width > 0
+      ) {
+        const centerXRatio = (
+          previewTextRect.left + previewTextRect.width / 2 - previewTrunkRect.left
+        ) / previewTrunkRect.width;
+        const centerYRatio = (
+          previewTextRect.top + previewTextRect.height / 2 - previewTrunkRect.top
+        ) / previewTrunkRect.height;
+        const widthRatio = previewTextRect.width / previewTrunkRect.width;
+
+        previewTextCenterX = (canvasWidth - imageWidth) / 2 + centerXRatio * imageWidth;
+        previewTextCenterY = 100 + centerYRatio * imageHeight;
+        previewTextMaxWidth = widthRatio * imageWidth;
+      }
+
       const scaledFontValue = (styleValue) => {
         const size = parseFloat(styleValue);
         return `${(Number.isFinite(size) ? size : 0) * previewToCanvasScale}px`;
@@ -1819,9 +1846,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
                 textareaTextStyle.lineHeight,
                 textareaTextStyle.fontSize
               );
-              const maxWidth = renderedPreview.rendered ? Math.max(250, imageWidth) : 250;
-              const redBoxTop = 125;
-              const redBoxHeight = 280;
+              const maxWidth = previewTextMaxWidth;
 
               // Wrap only between words. A date and a word are each one token,
               // so neither can be split in the saved mobile order image.
@@ -1843,10 +1868,12 @@ $(document).on("click", ".sdev_radios_btn", function () {
                   return wrapped;
               };
 
-              // Preserve the exact visual lines from the live personalizer.
-              // Canvas wrapping is only a fallback when browser measurement
-              // is unavailable.
-              const lines = renderedPreview.rendered ? requestedLines.slice() : requestedLines.flatMap(wrapCanvasLine);
+              // Desktop can use the browser's measured visual lines. On
+              // mobile, re-wrap at words inside the actual preview width so
+              // Safari cannot split a word or date at a visual line boundary.
+              const lines = renderedPreview.rendered && type !== 'mobile'
+                ? requestedLines.slice()
+                : requestedLines.flatMap(wrapCanvasLine);
 
               // Fixed: fillText's y argument is the BASELINE, not the top of
               // the text block. The old code computed a "content-top" style
@@ -1862,11 +1889,10 @@ $(document).on("click", ".sdev_radios_btn", function () {
               const lineAscent = sampleMetrics.actualBoundingBoxAscent || scaledFontPx * 0.75;
               const lineDescent = sampleMetrics.actualBoundingBoxDescent || scaledFontPx * 0.25;
               const totalTextHeight = (lines.length - 1) * lineHeight + lineAscent + lineDescent;
-              const blockTop = redBoxTop + (redBoxHeight - totalTextHeight) / 2;
-              let currentYPosition = blockTop + lineAscent;
+              let currentYPosition = previewTextCenterY - totalTextHeight / 2 + lineAscent;
               for (let i = 0; i < lines.length; i++) {
                   const lineText = lines[i];
-                  ctx.fillText(lineText, (canvasWidth - ctx.measureText(lineText).width) / 2, currentYPosition);
+                  ctx.fillText(lineText, previewTextCenterX - ctx.measureText(lineText).width / 2, currentYPosition);
                   currentYPosition += lineHeight;
               }
           } else if (monogramText.length === 3) {
