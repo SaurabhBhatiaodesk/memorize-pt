@@ -52,7 +52,9 @@
       ],
       "name": "Design With Gayle",
       "settings": {
+        "portrait_image": "shopify://shop_images/7.png",
         "portrait_alt": "Gayle from Memorize Trunks",
+        "pattern_image": "shopify://shop_images/countryside-club-swatch.png",
         "pattern_size": 370,
         "eyebrow": "Design With Gayle",
         "heading": "Let's design your trunk together.",
