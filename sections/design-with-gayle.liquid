@@ -100,8 +100,9 @@
 <style>
   #gayle-design-{{ section.id }} {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     width: 100%;
+    min-width: 0;
     color: var(--gayle-ink);
     background: var(--gayle-bg);
     margin-top: {{ section.settings.margin_top }}px;
@@ -118,8 +119,8 @@
     align-items: center;
     justify-content: center;
     min-width: 0;
-    min-height: 770px;
-    padding: 75px 9%;
+    min-height: clamp(540px, 43vw, 770px);
+    padding: clamp(36px, 5vw, 75px) 9%;
     background: var(--gayle-pattern-base);
     overflow: hidden;
   }
@@ -159,13 +160,15 @@
   #gayle-design-{{ section.id }} .gayle-design__content {
     display: flex;
     align-items: center;
-    padding: var(--gayle-top) clamp(35px, 7.1vw, 115px) var(--gayle-bottom);
+    min-width: 0;
+    padding: var(--gayle-top) clamp(28px, 5vw, 100px) var(--gayle-bottom);
     background: var(--gayle-bg);
   }
 
   #gayle-design-{{ section.id }} .gayle-design__content-inner {
     width: 100%;
-    max-width: var(--max-width--large);
+    max-width: min(100%, var(--max-width--large, 585px), 585px);
+    min-width: 0;
     margin: 0 auto;
   }
 
@@ -180,7 +183,7 @@
   }
 
   #gayle-design-{{ section.id }} .gayle-design__heading {
-    max-width:540px;
+    max-width: 100%;
     margin: 0 0 20px;
     color: var(--gayle-ink);
     font-family: var(--font-heading-family, Georgia, serif);
@@ -210,7 +213,7 @@
 
   #gayle-design-{{ section.id }} .gayle-design__question {
     display: grid;
-    grid-template-columns: 23px 1fr;
+    grid-template-columns: 23px minmax(0, 1fr);
     align-items: start;
     gap: 15px;
   }
@@ -344,6 +347,84 @@
     #gayle-design-{{ section.id }} .gayle-design__button {
       padding: 13px 22px;
       font-size: 12px;
+    }
+  }
+
+  /* Responsive tablet: preserve design without squeezing either column */
+  @media (min-width: 750px) and (max-width: 950px) {
+    #gayle-design-{{ section.id }} {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__media {
+      min-height: 0;
+      padding: 48px 8%;
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__content {
+      padding: 48px 28px;
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__heading {
+      font-size: clamp(30px, 3.7vw, 42px);
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__intro,
+    #gayle-design-{{ section.id }} .gayle-design__closing,
+    #gayle-design-{{ section.id }} .gayle-design__question-text {
+      font-size: 16px;
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__actions {
+      gap: 14px;
+    }
+  }
+
+  /* Phones: prevent any fixed-width content or action overflow */
+  @media (max-width: 749px) {
+    #gayle-design-{{ section.id }} .gayle-design__content-inner {
+      max-width: min(100%, 585px);
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__portrait-frame {
+      width: min(100%, 360px);
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__actions {
+      width: 100%;
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__question-text,
+    #gayle-design-{{ section.id }} .gayle-design__intro,
+    #gayle-design-{{ section.id }} .gayle-design__closing {
+      overflow-wrap: anywhere;
+    }
+  }
+
+  @media (max-width: 390px) {
+    #gayle-design-{{ section.id }} .gayle-design__media {
+      padding: 30px 9%;
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__content {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__heading {
+      font-size: clamp(30px, 8.5vw, 36px);
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__actions {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 16px;
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__button,
+    #gayle-design-{{ section.id }} .gayle-design__email {
+      width: 100%;
+      text-align: center;
     }
   }
 </style>
