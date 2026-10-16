@@ -69,7 +69,11 @@
         "content_background": "#fffbf8",
         "pattern_background": "#e9f3f1",
         "accent_color": "#920968",
-        "padding_top": 70,
+        "margin_top": 20,
+        "margin_bottom": 0,
+        "mobile_margin_top": 0,
+        "mobile_margin_bottom": 0,
+        "padding_top": 65,
         "padding_bottom": 65,
         "mobile_padding_top": 45,
         "mobile_padding_bottom": 55
