@@ -104,6 +104,8 @@
     width: 100%;
     color: var(--gayle-ink);
     background: var(--gayle-bg);
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
   }
 
   #gayle-design-{{ section.id }} * {
@@ -298,6 +300,8 @@
   @media (max-width: 749px) {
     #gayle-design-{{ section.id }} {
       grid-template-columns: 1fr;
+      margin-top: {{ section.settings.mobile_margin_top }}px;
+      margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
     }
 
     #gayle-design-{{ section.id }} .gayle-design__media {
@@ -464,6 +468,50 @@
       "id": "accent_color",
       "label": "Accent and button color",
       "default": "#920968"
+    },
+    {
+      "type": "header",
+      "content": "Section margins"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Desktop top margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Desktop bottom margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_top",
+      "label": "Mobile top margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_bottom",
+      "label": "Mobile bottom margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
     },
     {
       "type": "range",
