@@ -62,7 +62,7 @@
         "closing": "<p>The right answer is different for every future trunk owner, and helping you find yours is my favorite part of what I do.</p>",
         "signature": "Warmly, Gayle",
         "booking_label": "Book an Appointment",
-        "booking_url": "",
+        "booking_url": "shopify://pages/contact",
         "email_label": "Or email Gayle",
         "email_address": "",
         "text_color": "#07354a",
