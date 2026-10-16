@@ -1,0 +1,564 @@
+{% comment %}
+  Design With Gayle — standalone section.
+  Upload Gayle's original portrait and the floral pattern via Theme Editor.
+{% endcomment %}
+
+<section
+  id="gayle-design-{{ section.id }}"
+  class="gayle-design"
+  style="
+    --gayle-ink: {{ section.settings.text_color }};
+    --gayle-bg: {{ section.settings.content_background }};
+    --gayle-accent: {{ section.settings.accent_color }};
+    --gayle-pattern-base: {{ section.settings.pattern_background }};
+    --gayle-top: {{ section.settings.padding_top }}px;
+    --gayle-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="gayle-design__media">
+    {% if section.settings.pattern_image != blank %}
+      <div class="gayle-design__pattern" aria-hidden="true" style="background-image: url('{{ section.settings.pattern_image | image_url: width: 1400 }}');"></div>
+    {% endif %}
+
+    <div class="gayle-design__portrait-frame">
+      {% if section.settings.portrait_image != blank %}
+        {{
+          section.settings.portrait_image
+          | image_url: width: 1100
+          | image_tag:
+            class: 'gayle-design__portrait',
+            loading: 'lazy',
+            widths: '360, 540, 720, 900, 1100',
+            sizes: '(max-width: 749px) 80vw, 34vw',
+            alt: section.settings.portrait_alt
+        }}
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'gayle-design__portrait gayle-design__placeholder' }}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="gayle-design__content">
+    <div class="gayle-design__content-inner">
+      {% if section.settings.eyebrow != blank %}
+        <p class="gayle-design__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="gayle-design__heading">{{ section.settings.heading | escape }}</h2>
+      {% endif %}
+
+      {% if section.settings.intro != blank %}
+        <div class="gayle-design__intro rte">{{ section.settings.intro }}</div>
+      {% endif %}
+
+      <div class="gayle-design__questions">
+        {% for block in section.blocks %}
+          {% if block.type == 'question' %}
+            <div class="gayle-design__question" {{ block.shopify_attributes }}>
+              <span class="gayle-design__question-icon" aria-hidden="true">
+                {% case block.settings.icon %}
+                  {% when 'thread' %}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8M8 20h8M9 4v16M15 4v16M9 8h6M9 12h6M9 16h6"/></svg>
+                  {% when 'letter' %}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M5 5h14M12 5v14M8 19h8"/></svg>
+                  {% when 'message' %}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a8 8 0 0 1-8 8 8.4 8.4 0 0 1-4-.9L3 20l1.5-4.4a8 8 0 1 1 15.5-4.1Z"/></svg>
+                {% endcase %}
+              </span>
+              <div class="gayle-design__question-text">{{ block.settings.text | escape }}</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if section.settings.closing != blank %}
+        <div class="gayle-design__closing rte">{{ section.settings.closing }}</div>
+      {% endif %}
+
+      {% if section.settings.signature != blank %}
+        <p class="gayle-design__signature">{{ section.settings.signature | escape }}</p>
+      {% endif %}
+
+      <div class="gayle-design__actions">
+        {% if section.settings.booking_url != blank %}
+          <a href="{{ section.settings.booking_url }}" class="gayle-design__button">
+            {{ section.settings.booking_label | escape }}
+          </a>
+        {% endif %}
+
+        {% if section.settings.email_address != blank %}
+          <a href="mailto:{{ section.settings.email_address | strip | escape }}" class="gayle-design__email">
+            {{ section.settings.email_label | escape }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #gayle-design-{{ section.id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    color: var(--gayle-ink);
+    background: var(--gayle-bg);
+  }
+
+  #gayle-design-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 770px;
+    padding: 75px 9%;
+    background: var(--gayle-pattern-base);
+    overflow: hidden;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__pattern {
+    position: absolute;
+    inset: 0;
+    background-position: center;
+    background-repeat: repeat;
+    background-size: {{ section.settings.pattern_size }}px auto;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__portrait-frame {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 480px);
+    padding: 12px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .035);
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__portrait {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 455 / 575;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 2px;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__placeholder {
+    background: #eee;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__content {
+    display: flex;
+    align-items: center;
+    padding: var(--gayle-top) clamp(35px, 7.1vw, 115px) var(--gayle-bottom);
+    background: var(--gayle-bg);
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__content-inner {
+    width: 100%;
+    max-width: 585px;
+    margin: 0 auto;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__eyebrow {
+    margin: 0 0 22px;
+    color: var(--gayle-accent);
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__heading {
+    max-width: 570px;
+    margin: 0 0 26px;
+    color: var(--gayle-ink);
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-size: clamp(36px, 3.4vw, 56px);
+    font-weight: 500;
+    letter-spacing: -.035em;
+    line-height: 1.07;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__intro,
+  #gayle-design-{{ section.id }} .gayle-design__closing {
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: clamp(16px, 1.17vw, 19px);
+    line-height: 1.7;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__intro p,
+  #gayle-design-{{ section.id }} .gayle-design__closing p {
+    margin: 0;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__questions {
+    display: grid;
+    gap: 15px;
+    margin: 27px 0 28px;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__question {
+    display: grid;
+    grid-template-columns: 23px 1fr;
+    align-items: start;
+    gap: 15px;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__question-icon {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    width: 23px;
+    padding-top: 4px;
+    color: var(--gayle-ink);
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__question-icon svg {
+    display: block;
+    width: 21px;
+    height: 21px;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__question-text {
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: clamp(16px, 1.16vw, 19px);
+    line-height: 1.58;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__signature {
+    margin: 27px 0 27px;
+    color: var(--gayle-ink);
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-style: italic;
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 26px;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 62px;
+    padding: 15px 34px;
+    border-radius: 11px;
+    background: var(--gayle-accent);
+    color: #fff;
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: opacity .2s ease;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__button:hover {
+    color: #fff;
+    opacity: .87;
+  }
+
+  #gayle-design-{{ section.id }} .gayle-design__email {
+    color: var(--gayle-ink);
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: 16px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  @media (max-width: 1100px) {
+    #gayle-design-{{ section.id }} .gayle-design__media {
+      min-height: 650px;
+      padding: 50px 8%;
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__content {
+      padding-right: 36px;
+      padding-left: 36px;
+    }
+  }
+
+  @media (max-width: 749px) {
+    #gayle-design-{{ section.id }} {
+      grid-template-columns: 1fr;
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__media {
+      min-height: 0;
+      padding: 48px 12%;
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__portrait-frame {
+      max-width: 360px;
+      padding: 10px;
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__content {
+      padding: {{ section.settings.mobile_padding_top }}px 24px {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__eyebrow {
+      margin-bottom: 16px;
+      font-size: 12px;
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__heading {
+      margin-bottom: 22px;
+      font-size: clamp(34px, 9vw, 46px);
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__questions {
+      gap: 13px;
+      margin: 22px 0;
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__actions {
+      gap: 18px;
+    }
+
+    #gayle-design-{{ section.id }} .gayle-design__button {
+      min-height: 54px;
+      padding: 13px 22px;
+      font-size: 12px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Design With Gayle",
+  "tag": "section",
+  "class": "shopify-section-gayle-design",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "portrait_image",
+      "label": "Gayle portrait"
+    },
+    {
+      "type": "text",
+      "id": "portrait_alt",
+      "label": "Portrait alt text",
+      "default": "Gayle from Memorize Trunks"
+    },
+    {
+      "type": "image_picker",
+      "id": "pattern_image",
+      "label": "Floral pattern background"
+    },
+    {
+      "type": "range",
+      "id": "pattern_size",
+      "label": "Background pattern tile size",
+      "min": 150,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "default": 370
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Design With Gayle"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Let's design your trunk together."
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro text",
+      "default": "<p>Book an appointment with me, and we'll design your trunk together, starting with the questions I hear most:</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "closing",
+      "label": "Closing text",
+      "default": "<p>The right answer is different for every future trunk owner, and helping you find yours is my favorite part of what I do.</p>"
+    },
+    {
+      "type": "text",
+      "id": "signature",
+      "label": "Signature",
+      "default": "Warmly, Gayle"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "booking_label",
+      "label": "Appointment button text",
+      "default": "Book an Appointment"
+    },
+    {
+      "type": "url",
+      "id": "booking_url",
+      "label": "Appointment booking link"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email link text",
+      "default": "Or email Gayle"
+    },
+    {
+      "type": "text",
+      "id": "email_address",
+      "label": "Gayle email address"
+    },
+    {
+      "type": "header",
+      "content": "Colors and spacing"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#07354a"
+    },
+    {
+      "type": "color",
+      "id": "content_background",
+      "label": "Right background",
+      "default": "#fffbf8"
+    },
+    {
+      "type": "color",
+      "id": "pattern_background",
+      "label": "Left background fallback",
+      "default": "#e9f3f1"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent and button color",
+      "default": "#920968"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 20,
+      "max": 160,
+      "step": 5,
+      "unit": "px",
+      "default": 65
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 20,
+      "max": 160,
+      "step": 5,
+      "unit": "px",
+      "default": 65
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 55
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question point",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "thread", "label": "Thread" },
+            { "value": "letter", "label": "Letter" },
+            { "value": "message", "label": "Message" }
+          ],
+          "default": "thread"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Point text",
+          "default": "Which thread color goes with your fabric, whether you want a tone on tone look or a pop of color"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Design With Gayle",
+      "blocks": [
+        {
+          "type": "question",
+          "settings": {
+            "icon": "thread",
+            "text": "Which thread color goes with your fabric, whether you want a tone on tone look or a pop of color"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "icon": "letter",
+            "text": "Whether to embroider first names or a last name"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "icon": "message",
+            "text": "Any other questions about memory keeping you might have"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
