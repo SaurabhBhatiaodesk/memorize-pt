@@ -1,1 +1,117 @@
-{"sections":{"main":{"type":"page","settings":{"show-title":false,"background-color":"none","light-text":false,"container-width":"4","spacing-above":false,"spacing-below":true}},"16324378141979f11c":{"type":"featured-text","custom_css":[],"settings":{"selector":"","top-border":false,"spacing-above":true,"spacing-below":true,"background-color":"none","light-text":false,"heading-type":"section-heading","container-width":"4","overline":"","heading":"Contact Us","description":"<p>Every message tells a story—and we’d love to<em><strong> read yours<\/strong><\/em>. Reach out with questions, inspiration, or meaningful moments.<\/p>","link-url":"\/","link-text":""}},"1632180071f18cee62":{"type":"contact","settings":{"top-border":false,"spacing-above":false,"spacing-below":true,"background-color":"none","light-text":false,"container-width":"2","heading":"","store-address":"","store-hours":"","show-social-sharing":true}}},"order":["main","16324378141979f11c","1632180071f18cee62"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "page",
+      "settings": {
+        "show-title": false,
+        "background-color": "none",
+        "light-text": false,
+        "container-width": "4",
+        "spacing-above": false,
+        "spacing-below": true
+      }
+    },
+    "design_with_gayle_jnQUpA": {
+      "type": "design-with-gayle",
+      "blocks": {
+        "question_wiXTyB": {
+          "type": "question",
+          "settings": {
+            "icon": "thread",
+            "text": "Which thread color goes with your fabric, whether you want a tone on tone look or a pop of color"
+          }
+        },
+        "question_eYLaw8": {
+          "type": "question",
+          "settings": {
+            "icon": "letter",
+            "text": "Whether to embroider first names or a last name"
+          }
+        },
+        "question_LE4n9F": {
+          "type": "question",
+          "settings": {
+            "icon": "message",
+            "text": "Any other questions about memory keeping you might have"
+          }
+        }
+      },
+      "block_order": [
+        "question_wiXTyB",
+        "question_eYLaw8",
+        "question_LE4n9F"
+      ],
+      "name": "Design With Gayle",
+      "settings": {
+        "portrait_alt": "Gayle from Memorize Trunks",
+        "pattern_size": 370,
+        "eyebrow": "Design With Gayle",
+        "heading": "Let's design your trunk together.",
+        "intro": "<p>Book an appointment with me, and we'll design your trunk together, starting with the questions I hear most:</p>",
+        "closing": "<p>The right answer is different for every future trunk owner, and helping you find yours is my favorite part of what I do.</p>",
+        "signature": "Warmly, Gayle",
+        "booking_label": "Book an Appointment",
+        "booking_url": "",
+        "email_label": "Or email Gayle",
+        "email_address": "",
+        "text_color": "#07354a",
+        "content_background": "#fffbf8",
+        "pattern_background": "#e9f3f1",
+        "accent_color": "#920968",
+        "padding_top": 65,
+        "padding_bottom": 65,
+        "mobile_padding_top": 45,
+        "mobile_padding_bottom": 55
+      }
+    },
+    "16324378141979f11c": {
+      "type": "featured-text",
+      "custom_css": [],
+      "settings": {
+        "selector": "",
+        "top-border": false,
+        "spacing-above": true,
+        "spacing-below": true,
+        "background-color": "none",
+        "light-text": false,
+        "heading-type": "section-heading",
+        "container-width": "4",
+        "overline": "",
+        "heading": "Contact Us",
+        "description": "<p>Every message tells a story—and we’d love to<em><strong> read yours</strong></em>. Reach out with questions, inspiration, or meaningful moments.</p>",
+        "link-url": "/",
+        "link-text": ""
+      }
+    },
+    "1632180071f18cee62": {
+      "type": "contact",
+      "settings": {
+        "top-border": false,
+        "spacing-above": false,
+        "spacing-below": true,
+        "background-color": "none",
+        "light-text": false,
+        "container-width": "2",
+        "heading": "",
+        "store-address": "",
+        "store-hours": "",
+        "show-social-sharing": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "design_with_gayle_jnQUpA",
+    "16324378141979f11c",
+    "1632180071f18cee62"
+  ]
+}
