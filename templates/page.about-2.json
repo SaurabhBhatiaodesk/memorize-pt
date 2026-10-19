@@ -74,6 +74,45 @@
         "mobile-text-alignment": "bottom"
       }
     },
+    "image_with_text_zNhEMy": {
+      "type": "image-with-text",
+      "custom_css": [
+        ".featured-content--root[data-text-position=\"left\"] .featured-content--image {min-width: 60%;}",
+        ",.featured-content--root[data-text-position=\"right\"] {min-width: 40%;}",
+        ".featured-content--image .featured-content--container {align-items: stretch !important;}"
+      ],
+      "settings": {
+        "top-border": false,
+        "spacing-above": true,
+        "spacing-below": true,
+        "background-color": "none",
+        "container-width": "4",
+        "light-text": false,
+        "overlap": false,
+        "text-position": "left",
+        "heading-type": "section-heading",
+        "text-horizontal-alignment": "center",
+        "text-vertical-alignment": "center",
+        "text-width": "medium",
+        "text-style": "none",
+        "text-background-color": "transparent",
+        "image-display-type": "medium",
+        "aspect-ratio": 56,
+        "overlay-style": "darken-bottom",
+        "parallax-enabled": false,
+        "image": "shopify://shop_images/Memorize-Custom-Styled-Trunks-Our-Story-Slonim-family.jpg",
+        "overline": "",
+        "title": "How It Started",
+        "description": "<p>It started with a soccer jersey. My daughter’s first, stained with grass and sweat and pride and shoved into the back of her closet. It didn’t feel right.</p><p>That’s what inspired Memorize! Legacy doesn’t have one look—so we offer a range of fabric aesthetics, with quilted interiors and tailored construction that gives memories the care, structure, and finish they deserve. Every time you tuck something inside your memory box—a baby bracelet, a love note, a first-day outfit—your heart swells with joy.</p><p><em>XO, &nbsp;<br/>Gayle, founder & lifelong memory keeper</em></p>",
+        "link-url": "",
+        "link-text": "",
+        "mobile-overlay": false,
+        "mobile-hide-description": false,
+        "mobile-image-display-type": "medium",
+        "mobile-aspect-ratio": 134,
+        "mobile-text-alignment": "center"
+      }
+    },
     "featured_text_Kfmr6K": {
       "type": "featured-text",
       "disabled": true,
@@ -148,45 +187,6 @@
         "overline": "",
         "heading": "Our Promises to You",
         "mobile-width": "1"
-      }
-    },
-    "image_with_text_zNhEMy": {
-      "type": "image-with-text",
-      "custom_css": [
-        ".featured-content--root[data-text-position=\"left\"] .featured-content--image {min-width: 60%;}",
-        ",.featured-content--root[data-text-position=\"right\"] {min-width: 40%;}",
-        ".featured-content--image .featured-content--container {align-items: stretch !important;}"
-      ],
-      "settings": {
-        "top-border": false,
-        "spacing-above": true,
-        "spacing-below": true,
-        "background-color": "accent-3",
-        "container-width": "4",
-        "light-text": false,
-        "overlap": false,
-        "text-position": "left",
-        "heading-type": "section-heading",
-        "text-horizontal-alignment": "center",
-        "text-vertical-alignment": "center",
-        "text-width": "medium",
-        "text-style": "none",
-        "text-background-color": "transparent",
-        "image-display-type": "medium",
-        "aspect-ratio": 56,
-        "overlay-style": "darken-bottom",
-        "parallax-enabled": false,
-        "image": "shopify://shop_images/Memorize-Custom-Styled-Trunks-Our-Story-Slonim-family.jpg",
-        "overline": "",
-        "title": "How It Started",
-        "description": "<p>It started with a soccer jersey. My daughter’s first, stained with grass and sweat and pride and shoved into the back of her closet. It didn’t feel right.</p><p>That’s what inspired Memorize! Legacy doesn’t have one look—so we offer a range of fabric aesthetics, with quilted interiors and tailored construction that gives memories the care, structure, and finish they deserve. Every time you tuck something inside your memory box—a baby bracelet, a love note, a first-day outfit—your heart swells with joy.</p><p><em>XO,  <br/>Gayle, founder & lifelong memory keeper</em></p>",
-        "link-url": "",
-        "link-text": "",
-        "mobile-overlay": false,
-        "mobile-hide-description": false,
-        "mobile-image-display-type": "medium",
-        "mobile-aspect-ratio": 134,
-        "mobile-text-alignment": "center"
       }
     },
     "image_with_text_3WrzTf": {
@@ -342,9 +342,9 @@
     "main",
     "featured_text_i6g3jg",
     "image_with_text_WqQdX6",
+    "image_with_text_zNhEMy",
     "featured_text_Kfmr6K",
     "testimonials_3k3RA8",
-    "image_with_text_zNhEMy",
     "image_with_text_3WrzTf",
     "image_with_text_A9dFb4",
     "image_with_text_HEW7D3",
