@@ -76,54 +76,13 @@
     },
     "what_will_you_keep_YBzcbm": {
       "type": "what-will-you-keep",
-      "blocks": {
-        "trunk_card_NR9etF": {
-          "type": "trunk_card",
-          "settings": {
-            "title": "Baby trunks",
-            "description": "Teeny tiny socks, the hospital bracelet, the favorite stuffy",
-            "button_label": "Design your trunk",
-            "button_link": ""
-          }
-        },
-        "trunk_card_yg8RW7": {
-          "type": "trunk_card",
-          "settings": {
-            "title": "Wedding trunks",
-            "description": "Love letters, the invitation suite, the shoes that danced you into forever",
-            "button_label": "Design your trunk",
-            "button_link": ""
-          }
-        },
-        "trunk_card_9MUAY3": {
-          "type": "trunk_card",
-          "settings": {
-            "title": "Graduation trunks",
-            "description": "The diploma, the pennant and pompoms, the handwritten cards",
-            "button_label": "Design your trunk",
-            "button_link": ""
-          }
-        },
-        "trunk_card_Tp6iia": {
-          "type": "trunk_card",
-          "settings": {
-            "title": "Family trunks",
-            "description": "Communion crosses, Kiddush cups, grandma's recipe book",
-            "button_label": "Design your trunk",
-            "button_link": ""
-          }
-        }
-      },
-      "block_order": [
-        "trunk_card_NR9etF",
-        "trunk_card_yg8RW7",
-        "trunk_card_9MUAY3",
-        "trunk_card_Tp6iia"
-      ],
       "name": "What Will You Keep",
       "settings": {
         "heading": "What Will You Keep?",
         "subtitle": "Every milestone deserves a home.",
+        "collection": "trunks",
+        "products_limit": 4,
+        "button_label": "Design your trunk",
         "background_color": "#fffbf8",
         "card_background": "#f5eaf1",
         "heading_color": "#07354a",
