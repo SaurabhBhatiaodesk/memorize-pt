@@ -309,6 +309,63 @@
         "mobile_margin_bottom": 0
       }
     },
+    "memorize_personal_gallery_xqYGXX": {
+      "type": "memorize-personal-gallery",
+      "blocks": {
+        "gallery_item_W6XN9U": {
+          "type": "gallery_item",
+          "settings": {
+            "caption": "Signature Quilted Interior",
+            "link": ""
+          }
+        },
+        "gallery_item_P8qBJq": {
+          "type": "gallery_item",
+          "settings": {
+            "caption": "Custom Embroidery From 12 Fonts + 18 Thread Colors",
+            "link": ""
+          }
+        },
+        "gallery_item_C7UAUU": {
+          "type": "gallery_item",
+          "settings": {
+            "caption": "Personally Overseen By Our Founder",
+            "link": ""
+          }
+        },
+        "gallery_item_wcxKG9": {
+          "type": "gallery_item",
+          "settings": {
+            "caption": "Refined Tailoring",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "gallery_item_W6XN9U",
+        "gallery_item_P8qBJq",
+        "gallery_item_C7UAUU",
+        "gallery_item_wcxKG9"
+      ],
+      "name": "Memorize Personal Gallery",
+      "settings": {
+        "heading": "Not Just Personalized. Personal.",
+        "description": "<p>Every trunk is personally overseen by our founder, Gayle, who spent more than 20 years in product development before she built her first trunk.</p>",
+        "background_color": "#fffbf8",
+        "heading_color": "#07354a",
+        "text_color": "#07354a",
+        "content_width": 1200,
+        "card_gap": 24,
+        "padding_top": 72,
+        "padding_bottom": 72,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 48,
+        "mobile_margin_top": 0,
+        "mobile_margin_bottom": 0
+      }
+    },
     "grid-with-overlay": {
       "type": "grid-with-overlay",
       "blocks": {
@@ -387,6 +444,7 @@
         "overlay-block-2",
         "image_jktKFg"
       ],
+      "disabled": true,
       "custom_css": [
         ".featured-grid--root[data-text-position=\"center\"] .featured-grid--item--text {justify-content: flex-end;}"
       ],
@@ -498,6 +556,7 @@
     "170807718425857c80",
     "3475ea34-adea-4119-9e8c-3ad11c89bb66",
     "memorize_legacy_fabrics_ea7VB7",
+    "memorize_personal_gallery_xqYGXX",
     "grid-with-overlay",
     "08b1b747-95f6-4cb0-a1cc-eab87e962b2c",
     "164016757166a86406"
