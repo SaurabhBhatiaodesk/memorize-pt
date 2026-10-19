@@ -1,0 +1,360 @@
+{% comment %}
+  Gayle Founder Story — image and text section.
+  Add to sections/gayle-founder-story.liquid.
+{% endcomment %}
+
+<section
+  id="gayle-story-{{ section.id }}"
+  class="gayle-story"
+  style="
+    --gs-bg: {{ section.settings.background_color }};
+    --gs-text: {{ section.settings.text_color }};
+    --gs-muted: {{ section.settings.caption_color }};
+    --gs-width: {{ section.settings.content_width }}px;
+    --gs-gap: {{ section.settings.column_gap }}px;
+  "
+>
+  <div class="gayle-story__inner">
+    <div class="gayle-story__media">
+      {% if section.settings.image != blank %}
+        {{
+          section.settings.image
+          | image_url: width: 1200
+          | image_tag:
+            class: 'gayle-story__image',
+            loading: 'lazy',
+            widths: '320, 480, 640, 800, 1000, 1200',
+            sizes: '(max-width: 749px) calc(100vw - 32px), (max-width: 990px) 46vw, 36vw',
+            alt: section.settings.image_alt
+        }}
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'gayle-story__image gayle-story__placeholder' }}
+      {% endif %}
+    </div>
+
+    <div class="gayle-story__content">
+      {% if section.settings.story != blank %}
+        <div class="gayle-story__body rte">
+          {{ section.settings.story }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.signature != blank %}
+        <p class="gayle-story__signature">{{ section.settings.signature | escape }}</p>
+      {% endif %}
+
+      {% if section.settings.signature_caption != blank %}
+        <p class="gayle-story__caption">{{ section.settings.signature_caption | escape }}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  #gayle-story-{{ section.id }} {
+    width: 100%;
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+    padding: {{ section.settings.padding_top }}px 24px {{ section.settings.padding_bottom }}px;
+    background: var(--gs-bg);
+    color: var(--gs-text);
+  }
+
+  #gayle-story-{{ section.id }} *,
+  #gayle-story-{{ section.id }} *::before,
+  #gayle-story-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #gayle-story-{{ section.id }} .gayle-story__inner {
+    width: 100%;
+    max-width: var(--gs-width);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    column-gap: var(--gs-gap);
+  }
+
+  #gayle-story-{{ section.id }} .gayle-story__media {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 9px;
+  }
+
+  #gayle-story-{{ section.id }} .gayle-story__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 387 / 417;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  #gayle-story-{{ section.id }} .gayle-story__placeholder {
+    background: #e9e5e2;
+  }
+
+  #gayle-story-{{ section.id }} .gayle-story__content {
+    min-width: 0;
+  }
+
+  #gayle-story-{{ section.id }} .gayle-story__body {
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: clamp(14px, 1.08vw, 17px);
+    font-weight: 400;
+    line-height: 1.8;
+    letter-spacing: 0;
+    color: var(--gs-text);
+  }
+
+  #gayle-story-{{ section.id }} .gayle-story__body p {
+    margin: 0 0 17px;
+  }
+
+  #gayle-story-{{ section.id }} .gayle-story__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  #gayle-story-{{ section.id }} .gayle-story__signature {
+    margin: 22px 0 0;
+    color: var(--gs-text);
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-size: clamp(22px, 2vw, 27px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.25;
+  }
+
+  #gayle-story-{{ section.id }} .gayle-story__caption {
+    margin: 2px 0 0;
+    color: var(--gs-muted);
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 990px) {
+    #gayle-story-{{ section.id }} .gayle-story__inner {
+      column-gap: min(var(--gs-gap), 35px);
+    }
+
+    #gayle-story-{{ section.id }} .gayle-story__body {
+      font-size: 14px;
+      line-height: 1.7;
+    }
+  }
+
+  @media (max-width: 749px) {
+    #gayle-story-{{ section.id }} {
+      margin-top: {{ section.settings.mobile_margin_top }}px;
+      margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
+      padding: {{ section.settings.mobile_padding_top }}px 16px {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    #gayle-story-{{ section.id }} .gayle-story__inner {
+      grid-template-columns: 1fr;
+      gap: 28px;
+      max-width: 560px;
+    }
+
+    #gayle-story-{{ section.id }} .gayle-story__image {
+      aspect-ratio: 387 / 417;
+    }
+
+    #gayle-story-{{ section.id }} .gayle-story__body {
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    #gayle-story-{{ section.id }} .gayle-story__signature {
+      margin-top: 20px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Gayle Founder Story",
+  "tag": "section",
+  "class": "shopify-section-gayle-story",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Story image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Gayle selecting fabrics for Memorize Trunks"
+    },
+    {
+      "type": "header",
+      "content": "Story content"
+    },
+    {
+      "type": "richtext",
+      "id": "story",
+      "label": "Story paragraphs",
+      "default": "<p>After more than 20 years in product development, including L’Oréal and Bath &amp; Body Works, I knew that trust is built through the smallest details. Every material, every design decision, every choice matters. I found my first fabrics at Mood in New York City. Then I met with cut-and-sew factories and upholsterers until I found one that could tailor the interiors the way I envisioned.</p><p>The result was a new approach to memory keeping: steel exteriors paired with signature machine-quilted fabric interiors that bring both softness and structure. And because legacy doesn’t have one look, neither do our fabrics. From modern classic to grand millennial, French country to coastal and Americana, our collection is designed to reflect your style, your story, and the memories that matter to you.</p><p>Every Memorize Trunk is made to order, tailored in New York, and personally overseen by me.</p>"
+    },
+    {
+      "type": "text",
+      "id": "signature",
+      "label": "Signature",
+      "default": "XO, Gayle"
+    },
+    {
+      "type": "text",
+      "id": "signature_caption",
+      "label": "Signature caption",
+      "default": "Founder & Lifelong Memory Keeper"
+    },
+    {
+      "type": "header",
+      "content": "Colors and layout"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fffbf8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#07354a"
+    },
+    {
+      "type": "color",
+      "id": "caption_color",
+      "label": "Caption color",
+      "default": "#597486"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Max content width",
+      "min": 800,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Desktop column gap",
+      "min": 20,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Desktop spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Top margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Bottom margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Mobile spacing"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Top padding (mobile)",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Bottom padding (mobile)",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_top",
+      "label": "Top margin (mobile)",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_bottom",
+      "label": "Bottom margin (mobile)",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gayle Founder Story"
+    }
+  ]
+}
+{% endschema %}
