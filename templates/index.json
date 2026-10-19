@@ -261,6 +261,7 @@
     },
     "3475ea34-adea-4119-9e8c-3ad11c89bb66": {
       "type": "featured-text",
+      "disabled": true,
       "custom_css": [
         "p {min-height: 35px;}"
       ],
@@ -275,9 +276,37 @@
         "container-width": "3",
         "overline": "",
         "heading": "Legacy Doesn't Have One Look",
-        "description": "<p>Our fabrics — across a wide range of aesthetics — are machine-quilted for both softness and structure, then tailored into a keepsake trunk that’s as thoughtfully designed as the treasures it holds. </p><p><em>“Every stitch in these trunks was inspired by my love for my daughter’s knitted baby hats, handwritten cards, and her first soccer jersey.” — Gayle, Founder</em></p>",
+        "description": "<p>Our fabrics — across a wide range of aesthetics — are machine-quilted for both softness and structure, then tailored into a keepsake trunk that’s as thoughtfully designed as the treasures it holds.&nbsp;</p><p><em>“Every stitch in these trunks was inspired by my love for my daughter’s knitted baby hats, handwritten cards, and her first soccer jersey.” — Gayle, Founder</em></p>",
         "link-url": "/",
         "link-text": ""
+      }
+    },
+    "memorize_legacy_fabrics_ea7VB7": {
+      "type": "memorize-legacy-fabrics",
+      "name": "Memorize Legacy Fabrics",
+      "settings": {
+        "heading": "Legacy Doesn't Have One Look",
+        "description": "<p>Neither do our fabrics. Choose from more than 45 options ranging from modern classic to grand millennial, French country to coastal to Americana. Our collection is designed to reflect your style and each one is quilted for softness and structure, then tailored into your trunk.</p>",
+        "quote": "<p>\"That's a lot to choose from. Tell me who the trunk is for, and I'll help you narrow it down. I love helping select the right embroidery thread color for a tone-on-tone look OR a pop of color.\"</p>",
+        "attribution": "Gayle, Founder & Lifelong Memory Keeper",
+        "button_text": "Email Gayle",
+        "email": "hello@memorizeyourlife.com",
+        "pattern_image": "shopify://shop_images/Seaside-Chateau.png",
+        "pattern_size": 900,
+        "pattern_opacity": 100,
+        "background_color": "#edf3f1",
+        "card_background": "#fffbf8",
+        "text_color": "#07354a",
+        "divider_color": "#efdce4",
+        "content_width": 1200,
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "mobile_padding_top": 24,
+        "mobile_padding_bottom": 24,
+        "mobile_margin_top": 0,
+        "mobile_margin_bottom": 0
       }
     },
     "grid-with-overlay": {
@@ -468,6 +497,7 @@
     "featured-text",
     "170807718425857c80",
     "3475ea34-adea-4119-9e8c-3ad11c89bb66",
+    "memorize_legacy_fabrics_ea7VB7",
     "grid-with-overlay",
     "08b1b747-95f6-4cb0-a1cc-eab87e962b2c",
     "164016757166a86406"
