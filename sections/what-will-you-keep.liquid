@@ -32,34 +32,49 @@
     <div class="trunk-keep__grid">
       {% for block in section.blocks %}
         {% if block.type == 'trunk_card' %}
+          {% assign selected_collection = block.settings.collection %}
+          {% assign card_image = block.settings.image %}
+          {% assign card_title = block.settings.title %}
+          {% assign card_url = block.settings.button_link %}
+
+          {% if selected_collection != blank %}
+            {% assign card_title = selected_collection.title %}
+            {% assign card_url = selected_collection.url %}
+            {% if selected_collection.image != blank %}
+              {% assign card_image = selected_collection.image %}
+            {% elsif selected_collection.products.first.featured_image != blank %}
+              {% assign card_image = selected_collection.products.first.featured_image %}
+            {% endif %}
+          {% endif %}
+
           <article class="trunk-keep__card" {{ block.shopify_attributes }}>
             <div class="trunk-keep__image-wrap">
-              {% if block.settings.image != blank %}
+              {% if card_image != blank %}
                 {{
-                  block.settings.image
+                  card_image
                   | image_url: width: 900
                   | image_tag:
                     class: 'trunk-keep__image',
                     loading: 'lazy',
                     widths: '240, 360, 480, 640, 900',
                     sizes: '(max-width: 600px) 85vw, (max-width: 990px) 45vw, 22vw',
-                    alt: block.settings.title
+                    alt: card_title
                 }}
               {% else %}
                 {{ 'product-1' | placeholder_svg_tag: 'trunk-keep__image trunk-keep__placeholder' }}
               {% endif %}
             </div>
 
-            {% if block.settings.title != blank %}
-              <h3 class="trunk-keep__card-title">{{ block.settings.title | escape }}</h3>
+            {% if card_title != blank %}
+              <h3 class="trunk-keep__card-title">{{ card_title | escape }}</h3>
             {% endif %}
 
             {% if block.settings.description != blank %}
               <p class="trunk-keep__description">{{ block.settings.description | escape }}</p>
             {% endif %}
 
-            {% if block.settings.button_link != blank and block.settings.button_label != blank %}
-              <a class="trunk-keep__button" href="{{ block.settings.button_link }}">
+            {% if card_url != blank and block.settings.button_label != blank %}
+              <a class="trunk-keep__button" href="{{ card_url }}">
                 {{ block.settings.button_label | escape }}
               </a>
             {% endif %}
@@ -402,14 +417,19 @@
       "limit": 8,
       "settings": [
         {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select collection"
+        },
+        {
           "type": "image_picker",
           "id": "image",
-          "label": "Card image"
+          "label": "Fallback image (if collection has no image)"
         },
         {
           "type": "text",
           "id": "title",
-          "label": "Card title",
+          "label": "Fallback title (if no collection selected)",
           "default": "Baby trunks"
         },
         {
@@ -427,7 +447,7 @@
         {
           "type": "url",
           "id": "button_link",
-          "label": "Button link"
+          "label": "Fallback link (if no collection selected)"
         }
       ]
     }
