@@ -29,59 +29,47 @@
       <p class="trunk-keep__subtitle">{{ section.settings.subtitle | escape }}</p>
     {% endif %}
 
-    <div class="trunk-keep__grid">
-      {% for block in section.blocks %}
-        {% if block.type == 'trunk_card' %}
-          {% assign selected_collection = block.settings.collection %}
-          {% assign card_image = block.settings.image %}
-          {% assign card_title = block.settings.title %}
-          {% assign card_url = block.settings.button_link %}
-
-          {% if selected_collection != blank %}
-            {% assign card_title = selected_collection.title %}
-            {% assign card_url = selected_collection.url %}
-            {% if selected_collection.image != blank %}
-              {% assign card_image = selected_collection.image %}
-            {% elsif selected_collection.products.first.featured_image != blank %}
-              {% assign card_image = selected_collection.products.first.featured_image %}
-            {% endif %}
-          {% endif %}
-
-          <article class="trunk-keep__card" {{ block.shopify_attributes }}>
+    {% assign selected_collection = section.settings.collection %}
+    {% if selected_collection != blank %}
+      <div class="trunk-keep__grid">
+        {% for product in selected_collection.products limit: section.settings.products_limit %}
+          <article class="trunk-keep__card">
             <div class="trunk-keep__image-wrap">
-              {% if card_image != blank %}
+              {% if product.featured_image != blank %}
                 {{
-                  card_image
+                  product.featured_image
                   | image_url: width: 900
                   | image_tag:
                     class: 'trunk-keep__image',
                     loading: 'lazy',
                     widths: '240, 360, 480, 640, 900',
                     sizes: '(max-width: 600px) 85vw, (max-width: 990px) 45vw, 22vw',
-                    alt: card_title
+                    alt: product.title
                 }}
               {% else %}
                 {{ 'product-1' | placeholder_svg_tag: 'trunk-keep__image trunk-keep__placeholder' }}
               {% endif %}
             </div>
 
-            {% if card_title != blank %}
-              <h3 class="trunk-keep__card-title">{{ card_title | escape }}</h3>
+            <h3 class="trunk-keep__card-title">{{ product.title | escape }}</h3>
+
+            {% if product.description != blank %}
+              <p class="trunk-keep__description">
+                {{ product.description | strip_html | truncate: 105 | escape }}
+              </p>
             {% endif %}
 
-            {% if block.settings.description != blank %}
-              <p class="trunk-keep__description">{{ block.settings.description | escape }}</p>
-            {% endif %}
-
-            {% if card_url != blank and block.settings.button_label != blank %}
-              <a class="trunk-keep__button" href="{{ card_url }}">
-                {{ block.settings.button_label | escape }}
-              </a>
-            {% endif %}
+            <a class="trunk-keep__button" href="{{ product.url }}">
+              {{ section.settings.button_label | escape }}
+            </a>
           </article>
-        {% endif %}
-      {% endfor %}
-    </div>
+        {% else %}
+          <p class="trunk-keep__empty">No products found in this collection.</p>
+        {% endfor %}
+      </div>
+    {% elsif request.design_mode %}
+      <p class="trunk-keep__empty">Select a collection in the section settings to display its products.</p>
+    {% endif %}
   </div>
 </section>
 
@@ -251,6 +239,12 @@
       font-size: 14px;
     }
   }
+  #trunk-keep-{{ section.id }} .trunk-keep__empty {
+    grid-column: 1 / -1;
+    padding: 24px;
+    text-align: center;
+    color: var(--tk-body);
+  }
 </style>
 
 {% schema %}
@@ -274,6 +268,26 @@
       "id": "subtitle",
       "label": "Subtitle",
       "default": "Every milestone deserves a home."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "label": "Products to show",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Product button text",
+      "default": "Design your trunk"
     },
     {
       "type": "header",
@@ -410,81 +424,10 @@
       "default": 0
     }
   ],
-  "blocks": [
-    {
-      "type": "trunk_card",
-      "name": "Trunk card",
-      "limit": 8,
-      "settings": [
-        {
-          "type": "collection",
-          "id": "collection",
-          "label": "Select collection"
-        },
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Fallback image (if collection has no image)"
-        },
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Fallback title (if no collection selected)",
-          "default": "Baby trunks"
-        },
-        {
-          "type": "textarea",
-          "id": "description",
-          "label": "Description",
-          "default": "Keepsakes and memories to treasure for years."
-        },
-        {
-          "type": "text",
-          "id": "button_label",
-          "label": "Button text",
-          "default": "Design your trunk"
-        },
-        {
-          "type": "url",
-          "id": "button_link",
-          "label": "Fallback link (if no collection selected)"
-        }
-      ]
-    }
-  ],
+  "blocks": [],
   "presets": [
     {
-      "name": "What Will You Keep",
-      "blocks": [
-        {
-          "type": "trunk_card",
-          "settings": {
-            "title": "Baby trunks",
-            "description": "Teeny tiny socks, the hospital bracelet, the favorite stuffy"
-          }
-        },
-        {
-          "type": "trunk_card",
-          "settings": {
-            "title": "Wedding trunks",
-            "description": "Love letters, the invitation suite, the shoes that danced you into forever"
-          }
-        },
-        {
-          "type": "trunk_card",
-          "settings": {
-            "title": "Graduation trunks",
-            "description": "The diploma, the pennant and pompoms, the handwritten cards"
-          }
-        },
-        {
-          "type": "trunk_card",
-          "settings": {
-            "title": "Family trunks",
-            "description": "Communion crosses, Kiddush cups, grandma's recipe book"
-          }
-        }
-      ]
+      "name": "What Will You Keep"
     }
   ]
 }
