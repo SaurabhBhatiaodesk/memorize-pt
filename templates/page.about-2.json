@@ -74,32 +74,6 @@
         "mobile-text-alignment": "bottom"
       }
     },
-    "what_will_you_keep_YBzcbm": {
-      "type": "what-will-you-keep",
-      "name": "What Will You Keep",
-      "settings": {
-        "heading": "What Will You Keep?",
-        "subtitle": "Every milestone deserves a home.",
-        "collection": "trunks",
-        "products_limit": 4,
-        "button_label": "Design your trunk",
-        "background_color": "#fffbf8",
-        "card_background": "#f5eaf1",
-        "heading_color": "#07354a",
-        "text_color": "#07354a",
-        "button_background": "#920968",
-        "button_text_color": "#ffffff",
-        "content_width": 1200,
-        "padding_top": 72,
-        "padding_bottom": 80,
-        "margin_top": 0,
-        "margin_bottom": 0,
-        "mobile_padding_top": 40,
-        "mobile_padding_bottom": 48,
-        "mobile_margin_top": 0,
-        "mobile_margin_bottom": 0
-      }
-    },
     "image_with_text_zNhEMy": {
       "type": "image-with-text",
       "disabled": true,
@@ -363,19 +337,45 @@
         "mobile-aspect-ratio": 134,
         "mobile-text-alignment": "center"
       }
+    },
+    "what_will_you_keep_YBzcbm": {
+      "type": "what-will-you-keep",
+      "name": "What Will You Keep",
+      "settings": {
+        "heading": "What Will You Keep?",
+        "subtitle": "Every milestone deserves a home.",
+        "collection": "trunks",
+        "products_limit": 4,
+        "button_label": "Design your trunk",
+        "background_color": "#fffbf8",
+        "card_background": "#f5eaf1",
+        "heading_color": "#07354a",
+        "text_color": "#07354a",
+        "button_background": "#920968",
+        "button_text_color": "#ffffff",
+        "content_width": 1200,
+        "padding_top": 72,
+        "padding_bottom": 80,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 48,
+        "mobile_margin_top": 0,
+        "mobile_margin_bottom": 0
+      }
     }
   },
   "order": [
     "main",
     "featured_text_i6g3jg",
     "image_with_text_WqQdX6",
-    "what_will_you_keep_YBzcbm",
     "image_with_text_zNhEMy",
     "featured_text_Kfmr6K",
     "testimonials_3k3RA8",
     "image_with_text_3WrzTf",
     "image_with_text_A9dFb4",
     "image_with_text_HEW7D3",
-    "image_with_text_9bpQgf"
+    "image_with_text_9bpQgf",
+    "what_will_you_keep_YBzcbm"
   ]
 }
