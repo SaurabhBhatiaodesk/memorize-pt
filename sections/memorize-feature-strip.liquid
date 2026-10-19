@@ -1,0 +1,303 @@
+{% comment %}
+  Memorize feature strip — customizable messages and diamond separators.
+{% endcomment %}
+
+<section
+  id="memorize-feature-strip-{{ section.id }}"
+  class="memorize-feature-strip"
+  style="
+    --mfs-background: {{ section.settings.background_color }};
+    --mfs-text: {{ section.settings.text_color }};
+    --mfs-divider: {{ section.settings.divider_color }};
+    --mfs-width: {{ section.settings.content_width }}px;
+    --mfs-padding-top: {{ section.settings.padding_top }}px;
+    --mfs-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --mfs-margin-top: {{ section.settings.margin_top }}px;
+    --mfs-margin-bottom: {{ section.settings.margin_bottom }}px;
+    --mfs-font-size: {{ section.settings.font_size }}px;
+    --mfs-gap: {{ section.settings.item_gap }}px;
+  "
+>
+  <div class="memorize-feature-strip__inner">
+    {% for block in section.blocks %}
+      {% if block.type == 'feature' and block.settings.text != blank %}
+        {% unless forloop.first %}
+          <span class="memorize-feature-strip__diamond" aria-hidden="true"></span>
+        {% endunless %}
+
+        <span class="memorize-feature-strip__item" {{ block.shopify_attributes }}>
+          {{ block.settings.text | escape }}
+        </span>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+  #memorize-feature-strip-{{ section.id }} {
+    width: 100%;
+    margin-top: var(--mfs-margin-top);
+    margin-bottom: var(--mfs-margin-bottom);
+    padding: var(--mfs-padding-top) 20px var(--mfs-padding-bottom);
+    background: var(--mfs-background);
+    color: var(--mfs-text);
+  }
+
+  #memorize-feature-strip-{{ section.id }} *,
+  #memorize-feature-strip-{{ section.id }} *::before,
+  #memorize-feature-strip-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    column-gap: var(--mfs-gap);
+    row-gap: 12px;
+    width: 100%;
+    max-width: min(var(--mfs-width), var(--max-width--large, 100%));
+    margin: 0 auto;
+  }
+
+  #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__item {
+    color: var(--mfs-text);
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: var(--mfs-font-size);
+    font-weight: 400;
+    letter-spacing: .17em;
+    line-height: 1.5;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__diamond {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    flex: 0 0 5px;
+    background: var(--mfs-divider);
+    transform: rotate(45deg);
+  }
+
+  @media (max-width: 749px) {
+    #memorize-feature-strip-{{ section.id }} {
+      margin-top: {{ section.settings.mobile_margin_top }}px;
+      margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
+      padding: {{ section.settings.mobile_padding_top }}px 14px {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__inner {
+      column-gap: 12px;
+      row-gap: 10px;
+    }
+
+    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__item {
+      font-size: {{ section.settings.mobile_font_size }}px;
+      letter-spacing: .12em;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Memorize Feature Strip",
+  "tag": "section",
+  "class": "shopify-section-memorize-feature-strip",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f6ebf2"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#07354a"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Diamond color",
+      "default": "#07354a"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Maximum content width",
+      "min": 800,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "label": "Spacing between items",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Desktop font size",
+      "min": 8,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "mobile_font_size",
+      "label": "Mobile font size",
+      "min": 8,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Desktop top margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Desktop bottom margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_top",
+      "label": "Mobile top margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_bottom",
+      "label": "Mobile bottom margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature text",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Feature text",
+          "default": "Tailored in New York"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Memorize Feature Strip",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Tailored in New York"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Signature Quilted Fabrics"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Fabrics For Every Style"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Quality Guaranteed"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
