@@ -1,0 +1,472 @@
+{% comment %}
+  What Will You Keep? — editable trunk category cards.
+  Add this file to sections/what-will-you-keep.liquid.
+{% endcomment %}
+
+<section
+  id="trunk-keep-{{ section.id }}"
+  class="trunk-keep"
+  style="
+    --tk-bg: {{ section.settings.background_color }};
+    --tk-card-bg: {{ section.settings.card_background }};
+    --tk-heading: {{ section.settings.heading_color }};
+    --tk-body: {{ section.settings.text_color }};
+    --tk-button: {{ section.settings.button_background }};
+    --tk-button-text: {{ section.settings.button_text_color }};
+    --tk-width: {{ section.settings.content_width }}px;
+    --tk-top: {{ section.settings.padding_top }}px;
+    --tk-bottom: {{ section.settings.padding_bottom }}px;
+    --tk-margin-top: {{ section.settings.margin_top }}px;
+    --tk-margin-bottom: {{ section.settings.margin_bottom }}px;
+  "
+>
+  <div class="trunk-keep__inner">
+    {% if section.settings.heading != blank %}
+      <h2 class="trunk-keep__heading">{{ section.settings.heading | escape }}</h2>
+    {% endif %}
+
+    {% if section.settings.subtitle != blank %}
+      <p class="trunk-keep__subtitle">{{ section.settings.subtitle | escape }}</p>
+    {% endif %}
+
+    <div class="trunk-keep__grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'trunk_card' %}
+          <article class="trunk-keep__card" {{ block.shopify_attributes }}>
+            <div class="trunk-keep__image-wrap">
+              {% if block.settings.image != blank %}
+                {{
+                  block.settings.image
+                  | image_url: width: 900
+                  | image_tag:
+                    class: 'trunk-keep__image',
+                    loading: 'lazy',
+                    widths: '240, 360, 480, 640, 900',
+                    sizes: '(max-width: 600px) 85vw, (max-width: 990px) 45vw, 22vw',
+                    alt: block.settings.title
+                }}
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag: 'trunk-keep__image trunk-keep__placeholder' }}
+              {% endif %}
+            </div>
+
+            {% if block.settings.title != blank %}
+              <h3 class="trunk-keep__card-title">{{ block.settings.title | escape }}</h3>
+            {% endif %}
+
+            {% if block.settings.description != blank %}
+              <p class="trunk-keep__description">{{ block.settings.description | escape }}</p>
+            {% endif %}
+
+            {% if block.settings.button_link != blank and block.settings.button_label != blank %}
+              <a class="trunk-keep__button" href="{{ block.settings.button_link }}">
+                {{ block.settings.button_label | escape }}
+              </a>
+            {% endif %}
+          </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  #trunk-keep-{{ section.id }} {
+    width: 100%;
+    margin-top: var(--tk-margin-top);
+    margin-bottom: var(--tk-margin-bottom);
+    padding: var(--tk-top) 20px var(--tk-bottom);
+    background: var(--tk-bg);
+    color: var(--tk-body);
+  }
+
+  #trunk-keep-{{ section.id }} *,
+  #trunk-keep-{{ section.id }} *::before,
+  #trunk-keep-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #trunk-keep-{{ section.id }} .trunk-keep__inner {
+    width: 100%;
+    max-width: min(var(--tk-width), var(--max-width--large, 100%));
+    margin-inline: auto;
+  }
+
+  #trunk-keep-{{ section.id }} .trunk-keep__heading {
+    margin: 0;
+    color: var(--tk-heading);
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-weight: 500;
+    font-size: clamp(28px, 2.7vw, 39px);
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  #trunk-keep-{{ section.id }} .trunk-keep__subtitle {
+    margin: 8px 0 30px;
+    color: #597486;
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-style: italic;
+    font-size: clamp(14px, 1.2vw, 17px);
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  #trunk-keep-{{ section.id }} .trunk-keep__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    align-items: stretch;
+  }
+
+  #trunk-keep-{{ section.id }} .trunk-keep__card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 12px 12px 18px;
+    border-radius: 15px;
+    background: var(--tk-card-bg);
+  }
+
+  #trunk-keep-{{ section.id }} .trunk-keep__image-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 9px;
+    background: #ece7e8;
+  }
+
+  #trunk-keep-{{ section.id }} .trunk-keep__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #trunk-keep-{{ section.id }} .trunk-keep__card-title {
+    margin: 14px 4px 7px;
+    color: var(--tk-heading);
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-size: clamp(18px, 1.5vw, 23px);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  #trunk-keep-{{ section.id }} .trunk-keep__description {
+    flex: 1;
+    margin: 0 4px 17px;
+    color: var(--tk-body);
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  #trunk-keep-{{ section.id }} .trunk-keep__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    min-height: 38px;
+    max-width: 100%;
+    margin: auto 4px 0;
+    padding: 10px 17px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--tk-button);
+    color: var(--tk-button-text);
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: opacity .2s ease;
+  }
+
+  #trunk-keep-{{ section.id }} .trunk-keep__button:hover {
+    color: var(--tk-button-text);
+    opacity: .87;
+  }
+
+  #trunk-keep-{{ section.id }} .trunk-keep__button:focus-visible {
+    outline: 2px solid var(--tk-heading);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 990px) {
+    #trunk-keep-{{ section.id }} .trunk-keep__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    #trunk-keep-{{ section.id }} .trunk-keep__card-title {
+      font-size: 22px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    #trunk-keep-{{ section.id }} {
+      margin-top: {{ section.settings.mobile_margin_top }}px;
+      margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
+      padding: {{ section.settings.mobile_padding_top }}px 16px {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    #trunk-keep-{{ section.id }} .trunk-keep__subtitle {
+      margin-bottom: 22px;
+    }
+
+    #trunk-keep-{{ section.id }} .trunk-keep__grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    #trunk-keep-{{ section.id }} .trunk-keep__card {
+      padding: 12px 12px 17px;
+    }
+
+    #trunk-keep-{{ section.id }} .trunk-keep__card-title {
+      font-size: 22px;
+    }
+
+    #trunk-keep-{{ section.id }} .trunk-keep__description {
+      font-size: 14px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "What Will You Keep",
+  "tag": "section",
+  "class": "shopify-section-trunk-keep",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What Will You Keep?"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Every milestone deserves a home."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#fffbf8"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#f5eaf1"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#07354a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Description color",
+      "default": "#07354a"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#920968"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Layout and spacing"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Max content width",
+      "min": 800,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Desktop top margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Desktop bottom margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_top",
+      "label": "Mobile top margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_bottom",
+      "label": "Mobile bottom margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trunk_card",
+      "name": "Trunk card",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Card title",
+          "default": "Baby trunks"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Keepsakes and memories to treasure for years."
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button text",
+          "default": "Design your trunk"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "What Will You Keep",
+      "blocks": [
+        {
+          "type": "trunk_card",
+          "settings": {
+            "title": "Baby trunks",
+            "description": "Teeny tiny socks, the hospital bracelet, the favorite stuffy"
+          }
+        },
+        {
+          "type": "trunk_card",
+          "settings": {
+            "title": "Wedding trunks",
+            "description": "Love letters, the invitation suite, the shoes that danced you into forever"
+          }
+        },
+        {
+          "type": "trunk_card",
+          "settings": {
+            "title": "Graduation trunks",
+            "description": "The diploma, the pennant and pompoms, the handwritten cards"
+          }
+        },
+        {
+          "type": "trunk_card",
+          "settings": {
+            "title": "Family trunks",
+            "description": "Communion crosses, Kiddush cups, grandma's recipe book"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
