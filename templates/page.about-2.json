@@ -20,30 +20,6 @@
         "spacing-below": true
       }
     },
-    "gayle_founder_story_4zJBfq": {
-      "type": "gayle-founder-story",
-      "name": "Gayle Founder Story",
-      "settings": {
-        "image": "shopify://shop_images/4_af11e6d0-ab46-4c19-b458-f3c97fb2acbb.png",
-        "image_alt": "Gayle selecting fabrics for Memorize Trunks",
-        "story": "<p>After more than 20 years in product development, including L’Oréal and Bath & Body Works, I knew that trust is built through the smallest details. Every material, every design decision, every choice matters. I found my first fabrics at Mood in New York City. Then I met with cut-and-sew factories and upholsterers until I found one that could tailor the interiors the way I envisioned.</p><p>The result was a new approach to memory keeping: steel exteriors paired with signature machine-quilted fabric interiors that bring both softness and structure. And because legacy doesn’t have one look, neither do our fabrics. From modern classic to grand millennial, French country to coastal and Americana, our collection is designed to reflect your style, your story, and the memories that matter to you.</p><p>Every Memorize Trunk is made to order, tailored in New York, and personally overseen by me.</p>",
-        "signature": "XO, Gayle",
-        "signature_caption": "Founder & Lifelong Memory Keeper",
-        "background_color": "#fffbf8",
-        "text_color": "#07354a",
-        "caption_color": "#597486",
-        "content_width": 1300,
-        "column_gap": 60,
-        "padding_top": 72,
-        "padding_bottom": 72,
-        "margin_top": 0,
-        "margin_bottom": 0,
-        "mobile_padding_top": 40,
-        "mobile_padding_bottom": 40,
-        "mobile_margin_top": 0,
-        "mobile_margin_bottom": 0
-      }
-    },
     "featured_text_i6g3jg": {
       "type": "featured-text",
       "disabled": true,
@@ -361,6 +337,30 @@
         "mobile-image-display-type": "original",
         "mobile-aspect-ratio": 134,
         "mobile-text-alignment": "center"
+      }
+    },
+    "gayle_founder_story_4zJBfq": {
+      "type": "gayle-founder-story",
+      "name": "Gayle Founder Story",
+      "settings": {
+        "image": "shopify://shop_images/4_af11e6d0-ab46-4c19-b458-f3c97fb2acbb.png",
+        "image_alt": "Gayle selecting fabrics for Memorize Trunks",
+        "story": "<p>After more than 20 years in product development, including L’Oréal and Bath & Body Works, I knew that trust is built through the smallest details. Every material, every design decision, every choice matters. I found my first fabrics at Mood in New York City. Then I met with cut-and-sew factories and upholsterers until I found one that could tailor the interiors the way I envisioned.</p><p>The result was a new approach to memory keeping: steel exteriors paired with signature machine-quilted fabric interiors that bring both softness and structure. And because legacy doesn’t have one look, neither do our fabrics. From modern classic to grand millennial, French country to coastal and Americana, our collection is designed to reflect your style, your story, and the memories that matter to you.</p><p>Every Memorize Trunk is made to order, tailored in New York, and personally overseen by me.</p>",
+        "signature": "XO, Gayle",
+        "signature_caption": "Founder & Lifelong Memory Keeper",
+        "background_color": "#fffbf8",
+        "text_color": "#07354a",
+        "caption_color": "#597486",
+        "content_width": 1300,
+        "column_gap": 60,
+        "padding_top": 72,
+        "padding_bottom": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 0,
+        "mobile_margin_top": 0,
+        "mobile_margin_bottom": 0
       }
     },
     "what_will_you_keep_YBzcbm": {
