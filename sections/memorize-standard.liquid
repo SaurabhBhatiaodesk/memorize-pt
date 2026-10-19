@@ -1,0 +1,401 @@
+{% comment %}
+  The Memorize Standard — editable four-card section.
+{% endcomment %}
+
+<section
+  id="memorize-standard-{{ section.id }}"
+  class="memorize-standard"
+  style="
+    --ms-bg: {{ section.settings.background_color }};
+    --ms-text: {{ section.settings.text_color }};
+    --ms-border: {{ section.settings.border_color }};
+    --ms-width: {{ section.settings.content_width }}px;
+    --ms-padding-top: {{ section.settings.padding_top }}px;
+    --ms-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --ms-margin-top: {{ section.settings.margin_top }}px;
+    --ms-margin-bottom: {{ section.settings.margin_bottom }}px;
+  "
+>
+  <div class="memorize-standard__inner">
+    {% if section.settings.watermark_image != blank %}
+      <div class="memorize-standard__watermark" aria-hidden="true">
+        {{
+          section.settings.watermark_image
+          | image_url: width: 700
+          | image_tag:
+            loading: 'lazy',
+            widths: '200, 400, 700',
+            class: 'memorize-standard__watermark-image',
+            alt: ''
+        }}
+      </div>
+    {% endif %}
+
+    {% if section.settings.heading != blank %}
+      <h2 class="memorize-standard__heading">
+        {{ section.settings.heading | escape }}
+      </h2>
+    {% endif %}
+
+    <div class="memorize-standard__grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'standard_card' %}
+          <div class="memorize-standard__card" {{ block.shopify_attributes }}>
+            {% if block.settings.title != blank %}
+              <h3 class="memorize-standard__card-title">
+                {{ block.settings.title | escape | newline_to_br }}
+              </h3>
+            {% endif %}
+
+            {% if block.settings.description != blank %}
+              <div class="memorize-standard__description rte">
+                {{ block.settings.description }}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  #memorize-standard-{{ section.id }} {
+    width: 100%;
+    margin-top: var(--ms-margin-top);
+    margin-bottom: var(--ms-margin-bottom);
+    padding: var(--ms-padding-top) 20px var(--ms-padding-bottom);
+    background: var(--ms-bg);
+    color: var(--ms-text);
+  }
+
+  #memorize-standard-{{ section.id }} *,
+  #memorize-standard-{{ section.id }} *::before,
+  #memorize-standard-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #memorize-standard-{{ section.id }} .memorize-standard__inner {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    max-width: var(--ms-width);
+    margin: 0 auto;
+  }
+
+  #memorize-standard-{{ section.id }} .memorize-standard__watermark {
+    position: absolute;
+    z-index: -1;
+    top: -28px;
+    left: 18%;
+    width: min(28%, 270px);
+    opacity: {{ section.settings.watermark_opacity | divided_by: 100.0 }};
+    pointer-events: none;
+  }
+
+  #memorize-standard-{{ section.id }} .memorize-standard__watermark-image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  #memorize-standard-{{ section.id }} .memorize-standard__heading {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 28px;
+    color: var(--ms-text);
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-weight: 500;
+    font-size: clamp(25px, 2.45vw, 35px);
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  #memorize-standard-{{ section.id }} .memorize-standard__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    align-items: stretch;
+  }
+
+  #memorize-standard-{{ section.id }} .memorize-standard__card {
+    min-width: 0;
+    min-height: 225px;
+    padding: 23px 17px 20px;
+    border: 1px solid var(--ms-border);
+    border-radius: 13px;
+    background: transparent;
+    text-align: center;
+  }
+
+  #memorize-standard-{{ section.id }} .memorize-standard__card-title {
+    margin: 0 0 18px;
+    color: var(--ms-text);
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-size: clamp(18px, 1.55vw, 23px);
+    font-weight: 500;
+    line-height: 1.22;
+  }
+
+  #memorize-standard-{{ section.id }} .memorize-standard__description {
+    color: var(--ms-text);
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  #memorize-standard-{{ section.id }} .memorize-standard__description p {
+    margin: 0;
+  }
+
+  #memorize-standard-{{ section.id }} .memorize-standard__description p + p {
+    margin-top: 8px;
+  }
+
+  @media (max-width: 990px) {
+    #memorize-standard-{{ section.id }} .memorize-standard__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    #memorize-standard-{{ section.id }} .memorize-standard__card {
+      min-height: 200px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    #memorize-standard-{{ section.id }} {
+      margin-top: {{ section.settings.mobile_margin_top }}px;
+      margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
+      padding: {{ section.settings.mobile_padding_top }}px 16px {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    #memorize-standard-{{ section.id }} .memorize-standard__grid {
+      grid-template-columns: 1fr;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    #memorize-standard-{{ section.id }} .memorize-standard__card {
+      min-height: 0;
+      padding: 22px 20px;
+    }
+
+    #memorize-standard-{{ section.id }} .memorize-standard__heading {
+      margin-bottom: 23px;
+    }
+
+    #memorize-standard-{{ section.id }} .memorize-standard__watermark {
+      top: -10px;
+      left: 2%;
+      width: 48%;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "The Memorize Standard",
+  "tag": "section",
+  "class": "shopify-section-memorize-standard",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Memorize Standard"
+    },
+    {
+      "type": "image_picker",
+      "id": "watermark_image",
+      "label": "Optional watermark image"
+    },
+    {
+      "type": "range",
+      "id": "watermark_opacity",
+      "label": "Watermark opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f5eaf1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#07354a"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Card border color",
+      "default": "#9bacc0"
+    },
+    {
+      "type": "header",
+      "content": "Layout and spacing"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Max content width",
+      "min": 800,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Desktop top margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Desktop bottom margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_top",
+      "label": "Mobile top margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_bottom",
+      "label": "Mobile bottom margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "standard_card",
+      "name": "Standard card",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "title",
+          "label": "Card title",
+          "default": "Signature Quilted Interiors"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Card description",
+          "default": "<p>Quilted inside the trunk. Steel outside. Soft where it should be, structured where it counts.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "The Memorize Standard",
+      "blocks": [
+        {
+          "type": "standard_card",
+          "settings": {
+            "title": "Signature Quilted Interiors",
+            "description": "<p>Quilted (like a designer bag) inside the trunk. Steel outside. Soft where it should be, structured where it counts.</p>"
+          }
+        },
+        {
+          "type": "standard_card",
+          "settings": {
+            "title": "Refined Tailoring & Embroidery",
+            "description": "<p>Designed to be seen. Tailored to last. Custom embroidery designed from 12 fonts &amp; 18 thread colors.</p>"
+          }
+        },
+        {
+          "type": "standard_card",
+          "settings": {
+            "title": "Fabric Options For Every Style",
+            "description": "<p>45+ luxe fabric choices from modern classic to grand millennial, French country to Americana and more. Your style. Your story. Your trunk.</p>"
+          }
+        },
+        {
+          "type": "standard_card",
+          "settings": {
+            "title": "Not Just Personalized. Personal.",
+            "description": "<p>Personal guidance on fabric &amp; thread color combinations, directly from the founder.<br>Message us!</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
