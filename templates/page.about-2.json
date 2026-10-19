@@ -74,8 +74,76 @@
         "mobile-text-alignment": "bottom"
       }
     },
+    "what_will_you_keep_YBzcbm": {
+      "type": "what-will-you-keep",
+      "blocks": {
+        "trunk_card_NR9etF": {
+          "type": "trunk_card",
+          "settings": {
+            "title": "Baby trunks",
+            "description": "Teeny tiny socks, the hospital bracelet, the favorite stuffy",
+            "button_label": "Design your trunk",
+            "button_link": ""
+          }
+        },
+        "trunk_card_yg8RW7": {
+          "type": "trunk_card",
+          "settings": {
+            "title": "Wedding trunks",
+            "description": "Love letters, the invitation suite, the shoes that danced you into forever",
+            "button_label": "Design your trunk",
+            "button_link": ""
+          }
+        },
+        "trunk_card_9MUAY3": {
+          "type": "trunk_card",
+          "settings": {
+            "title": "Graduation trunks",
+            "description": "The diploma, the pennant and pompoms, the handwritten cards",
+            "button_label": "Design your trunk",
+            "button_link": ""
+          }
+        },
+        "trunk_card_Tp6iia": {
+          "type": "trunk_card",
+          "settings": {
+            "title": "Family trunks",
+            "description": "Communion crosses, Kiddush cups, grandma's recipe book",
+            "button_label": "Design your trunk",
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "trunk_card_NR9etF",
+        "trunk_card_yg8RW7",
+        "trunk_card_9MUAY3",
+        "trunk_card_Tp6iia"
+      ],
+      "name": "What Will You Keep",
+      "settings": {
+        "heading": "What Will You Keep?",
+        "subtitle": "Every milestone deserves a home.",
+        "background_color": "#fffbf8",
+        "card_background": "#f5eaf1",
+        "heading_color": "#07354a",
+        "text_color": "#07354a",
+        "button_background": "#920968",
+        "button_text_color": "#ffffff",
+        "content_width": 1200,
+        "padding_top": 72,
+        "padding_bottom": 80,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 48,
+        "mobile_margin_top": 0,
+        "mobile_margin_bottom": 0
+      }
+    },
     "image_with_text_zNhEMy": {
       "type": "image-with-text",
+      "disabled": true,
       "custom_css": [
         ".featured-content--root[data-text-position=\"left\"] .featured-content--image {min-width: 60%;}",
         ",.featured-content--root[data-text-position=\"right\"] {min-width: 40%;}",
@@ -342,6 +410,7 @@
     "main",
     "featured_text_i6g3jg",
     "image_with_text_WqQdX6",
+    "what_will_you_keep_YBzcbm",
     "image_with_text_zNhEMy",
     "featured_text_Kfmr6K",
     "testimonials_3k3RA8",
