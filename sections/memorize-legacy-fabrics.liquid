@@ -20,7 +20,7 @@
   {% if section.settings.pattern_image != blank %}
     <div
       class="memorize-legacy__pattern"
-      style="background-image: url('{{ section.settings.pattern_image | image_url: width: 1800 }}'); background-size: {{ section.settings.pattern_size }}px auto;"
+      style="background-image: url('{{ section.settings.pattern_image | image_url: width: 1800 }}'); background-size: cover;"
       aria-hidden="true"
     ></div>
   {% endif %}
