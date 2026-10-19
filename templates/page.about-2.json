@@ -133,63 +133,6 @@
         "link-text": ""
       }
     },
-    "testimonials_3k3RA8": {
-      "type": "testimonials",
-      "blocks": {
-        "testimonial_gMxAyY": {
-          "type": "testimonial",
-          "settings": {
-            "icon": "none",
-            "author-role": "",
-            "author-name": "Make Space for the Moments that Shape You",
-            "description": "<p>We design storage that elevates your memories — never hidden in a plastic bin.</p>"
-          }
-        },
-        "testimonial_f8hbLk": {
-          "type": "testimonial",
-          "settings": {
-            "icon": "none",
-            "author-role": "",
-            "author-name": "Built to Last, Designed to Love",
-            "description": "<p>Quilted for softness and structure, tailored for a clean, elevated finish — made to be opened and reopened.</p>"
-          }
-        },
-        "testimonial_yVRRmq": {
-          "type": "testimonial",
-          "settings": {
-            "icon": "none",
-            "author-role": "",
-            "author-name": "We Are With You Every Step",
-            "description": "<p>Want help selecting from our range of fabrics? Thread colors? We’re here from start to finish. <em><strong>Message us!</strong></em></p>"
-          }
-        }
-      },
-      "block_order": [
-        "testimonial_gMxAyY",
-        "testimonial_f8hbLk",
-        "testimonial_yVRRmq"
-      ],
-      "custom_css": [
-        ".testimonials--image {height: 56px; width: auto;}",
-        "[data-item~=\"block-heading\"] {font-size: 28px;}",
-        "img {display: block; -o-object-fit: cover; object-fit: contain; height: 100%; width: 100%; border-radius: var(--image--radius); overflow: hidden; transition: filter 0.25s linear;}",
-        "@media screen and (max-width: 767px) {[data-item~=\"block-heading\"] {font-size: 20px; }}",
-        ".testimonials--info {border: 1px solid #00334d; border-radius: 20px;}"
-      ],
-      "settings": {
-        "background-overlay-image": "shopify://shop_images/Untitled_design_58.png",
-        "top-border": false,
-        "spacing-above": true,
-        "spacing-below": true,
-        "background-color": "accent-1",
-        "light-text": false,
-        "container-width": "4",
-        "image-shape": "natural",
-        "overline": "",
-        "heading": "Our Promises to You",
-        "mobile-width": "1"
-      }
-    },
     "image_with_text_3WrzTf": {
       "type": "image-with-text",
       "disabled": true,
@@ -339,6 +282,88 @@
         "mobile-text-alignment": "center"
       }
     },
+    "memorize_our_story_fPdWKe": {
+      "type": "memorize-our-story",
+      "name": "Memorize Our Story",
+      "settings": {
+        "eyebrow": "Our Story",
+        "heading": "Modern Keepsake Trunks.\nRefined Tailoring.\nPersonal Stories.",
+        "subtitle": "<p>Memorize Trunks exists because I couldn't find the right one.</p>",
+        "body": "<p>As I gathered keepsakes from my daughter's childhood, hand-knit sweaters from my Aunt Shelley, handwritten cards from her grandparents, finger-paint canvases, and her first tiny grass-stained soccer jersey, I knew those memories deserved more than a plastic bin with a P-touch label. I envisioned a keepsake trunk with impeccably tailored construction, quilted interiors, and fabrics that felt design-forward. So I decided to create one.</p>",
+        "image": "shopify://shop_images/Memorize-Custom-Styled-Trunks-Our-Story-Slonim-family.webp",
+        "image_alt": "Memorize Trunks founder with family",
+        "background_color": "#fffbf8",
+        "heading_color": "#07354a",
+        "text_color": "#07354a",
+        "accent_color": "#920968",
+        "content_width": 1200,
+        "padding_top": 72,
+        "padding_bottom": 72,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 40,
+        "mobile_margin_top": 0,
+        "mobile_margin_bottom": 0
+      }
+    },
+    "testimonials_3k3RA8": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_gMxAyY": {
+          "type": "testimonial",
+          "settings": {
+            "icon": "none",
+            "author-role": "",
+            "author-name": "Make Space for the Moments that Shape You",
+            "description": "<p>We design storage that elevates your memories — never hidden in a plastic bin.</p>"
+          }
+        },
+        "testimonial_f8hbLk": {
+          "type": "testimonial",
+          "settings": {
+            "icon": "none",
+            "author-role": "",
+            "author-name": "Built to Last, Designed to Love",
+            "description": "<p>Quilted for softness and structure, tailored for a clean, elevated finish — made to be opened and reopened.</p>"
+          }
+        },
+        "testimonial_yVRRmq": {
+          "type": "testimonial",
+          "settings": {
+            "icon": "none",
+            "author-role": "",
+            "author-name": "We Are With You Every Step",
+            "description": "<p>Want help selecting from our range of fabrics? Thread colors? We’re here from start to finish. <em><strong>Message us!</strong></em></p>"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_gMxAyY",
+        "testimonial_f8hbLk",
+        "testimonial_yVRRmq"
+      ],
+      "custom_css": [
+        ".testimonials--image {height: 56px; width: auto;}",
+        "[data-item~=\"block-heading\"] {font-size: 28px;}",
+        "img {display: block; -o-object-fit: cover; object-fit: contain; height: 100%; width: 100%; border-radius: var(--image--radius); overflow: hidden; transition: filter 0.25s linear;}",
+        "@media screen and (max-width: 767px) {[data-item~=\"block-heading\"] {font-size: 20px; }}",
+        ".testimonials--info {border: 1px solid #00334d; border-radius: 20px;}"
+      ],
+      "settings": {
+        "background-overlay-image": "shopify://shop_images/Untitled_design_58.png",
+        "top-border": false,
+        "spacing-above": true,
+        "spacing-below": true,
+        "background-color": "accent-1",
+        "light-text": false,
+        "container-width": "4",
+        "image-shape": "natural",
+        "overline": "",
+        "heading": "Our Promises to You",
+        "mobile-width": "1"
+      }
+    },
     "gayle_founder_story_4zJBfq": {
       "type": "gayle-founder-story",
       "name": "Gayle Founder Story",
@@ -396,11 +421,12 @@
     "image_with_text_WqQdX6",
     "image_with_text_zNhEMy",
     "featured_text_Kfmr6K",
-    "testimonials_3k3RA8",
     "image_with_text_3WrzTf",
     "image_with_text_A9dFb4",
     "image_with_text_HEW7D3",
     "image_with_text_9bpQgf",
+    "memorize_our_story_fPdWKe",
+    "testimonials_3k3RA8",
     "gayle_founder_story_4zJBfq",
     "what_will_you_keep_YBzcbm"
   ]
