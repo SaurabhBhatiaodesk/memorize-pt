@@ -1,0 +1,415 @@
+{% comment %}
+  Memorize — Not Just Personalized. Personal.
+  Four-image editable gallery. Original images are selected in Theme Editor.
+{% endcomment %}
+
+<section
+  id="memorize-personal-{{ section.id }}"
+  class="memorize-personal"
+  style="
+    --mp-bg: {{ section.settings.background_color }};
+    --mp-heading: {{ section.settings.heading_color }};
+    --mp-text: {{ section.settings.text_color }};
+    --mp-content-width: {{ section.settings.content_width }}px;
+    --mp-gap: {{ section.settings.card_gap }}px;
+    --mp-padding-top: {{ section.settings.padding_top }}px;
+    --mp-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --mp-margin-top: {{ section.settings.margin_top }}px;
+    --mp-margin-bottom: {{ section.settings.margin_bottom }}px;
+  "
+>
+  <div class="memorize-personal__inner">
+    {% if section.settings.heading != blank %}
+      <h2 class="memorize-personal__heading">
+        {{ section.settings.heading | escape }}
+      </h2>
+    {% endif %}
+
+    {% if section.settings.description != blank %}
+      <div class="memorize-personal__description rte">
+        {{ section.settings.description }}
+      </div>
+    {% endif %}
+
+    <div class="memorize-personal__grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'gallery_item' %}
+          <div class="memorize-personal__card" {{ block.shopify_attributes }}>
+            {% if block.settings.link != blank %}
+              <a
+                class="memorize-personal__image-link"
+                href="{{ block.settings.link }}"
+                aria-label="{{ block.settings.caption | default: 'View gallery item' | escape }}"
+              >
+            {% else %}
+              <div class="memorize-personal__image-link">
+            {% endif %}
+
+              {% if block.settings.image != blank %}
+                {{
+                  block.settings.image
+                  | image_url: width: 900
+                  | image_tag:
+                    class: 'memorize-personal__image',
+                    loading: 'lazy',
+                    widths: '250, 400, 600, 900',
+                    sizes: '(max-width: 599px) 90vw, (max-width: 989px) 45vw, 22vw',
+                    alt: block.settings.caption
+                }}
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'memorize-personal__image memorize-personal__placeholder' }}
+              {% endif %}
+
+            {% if block.settings.link != blank %}
+              </a>
+            {% else %}
+              </div>
+            {% endif %}
+
+            {% if block.settings.caption != blank %}
+              <p class="memorize-personal__caption">
+                {{ block.settings.caption | escape }}
+              </p>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  #memorize-personal-{{ section.id }} {
+    width: 100%;
+    margin-top: var(--mp-margin-top);
+    margin-bottom: var(--mp-margin-bottom);
+    padding: var(--mp-padding-top) 24px var(--mp-padding-bottom);
+    background: var(--mp-bg);
+    color: var(--mp-text);
+  }
+
+  #memorize-personal-{{ section.id }} *,
+  #memorize-personal-{{ section.id }} *::before,
+  #memorize-personal-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #memorize-personal-{{ section.id }} .memorize-personal__inner {
+    width: 100%;
+    max-width: var(--mp-content-width);
+    margin: 0 auto;
+  }
+
+  #memorize-personal-{{ section.id }} .memorize-personal__heading {
+    margin: 0;
+    color: var(--mp-heading);
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-size: clamp(28px, 2.5vw, 38px);
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  #memorize-personal-{{ section.id }} .memorize-personal__description {
+    max-width: 760px;
+    margin: 12px auto 36px;
+    color: var(--mp-text);
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: clamp(14px, 1.1vw, 16px);
+    line-height: 1.65;
+    text-align: center;
+  }
+
+  #memorize-personal-{{ section.id }} .memorize-personal__description p {
+    margin: 0;
+  }
+
+  #memorize-personal-{{ section.id }} .memorize-personal__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--mp-gap);
+    align-items: start;
+  }
+
+  #memorize-personal-{{ section.id }} .memorize-personal__card {
+    min-width: 0;
+  }
+
+  #memorize-personal-{{ section.id }} .memorize-personal__image-link {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1.15 / 1;
+    overflow: hidden;
+    border-radius: 9px;
+    background: #ebe8e6;
+  }
+
+  #memorize-personal-{{ section.id }} .memorize-personal__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .25s ease;
+  }
+
+  #memorize-personal-{{ section.id }} a.memorize-personal__image-link:hover .memorize-personal__image {
+    transform: scale(1.035);
+  }
+
+  #memorize-personal-{{ section.id }} a.memorize-personal__image-link:focus-visible {
+    outline: 2px solid var(--mp-heading);
+    outline-offset: 3px;
+  }
+
+  #memorize-personal-{{ section.id }} .memorize-personal__caption {
+    margin: 13px 0 0;
+    color: var(--mp-heading);
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: .14em;
+    line-height: 1.5;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 989px) {
+    #memorize-personal-{{ section.id }} .memorize-personal__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 26px;
+    }
+  }
+
+  @media (max-width: 599px) {
+    #memorize-personal-{{ section.id }} {
+      margin-top: {{ section.settings.mobile_margin_top }}px;
+      margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
+      padding: {{ section.settings.mobile_padding_top }}px 16px {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    #memorize-personal-{{ section.id }} .memorize-personal__description {
+      margin-bottom: 25px;
+    }
+
+    #memorize-personal-{{ section.id }} .memorize-personal__grid {
+      grid-template-columns: 1fr;
+      gap: 26px;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #memorize-personal-{{ section.id }} .memorize-personal__image {
+      transition: none;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Memorize Personal Gallery",
+  "tag": "section",
+  "class": "shopify-section-memorize-personal",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Not Just Personalized. Personal."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Every trunk is personally overseen by our founder, Gayle, who spent more than 20 years in product development before she built her first trunk.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fffbf8"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading and caption color",
+      "default": "#07354a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Description color",
+      "default": "#07354a"
+    },
+    {
+      "type": "header",
+      "content": "Layout and spacing"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Maximum content width",
+      "min": 800,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Card gap",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Desktop top margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Desktop bottom margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_top",
+      "label": "Mobile top margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_bottom",
+      "label": "Mobile bottom margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "gallery_item",
+      "name": "Gallery item",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption",
+          "default": "Signature Quilted Interior"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Optional image link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Memorize Personal Gallery",
+      "blocks": [
+        {
+          "type": "gallery_item",
+          "settings": {
+            "caption": "Signature Quilted Interior"
+          }
+        },
+        {
+          "type": "gallery_item",
+          "settings": {
+            "caption": "Custom Embroidery From 12 Fonts + 18 Thread Colors"
+          }
+        },
+        {
+          "type": "gallery_item",
+          "settings": {
+            "caption": "Personally Overseen By Our Founder"
+          }
+        },
+        {
+          "type": "gallery_item",
+          "settings": {
+            "caption": "Refined Tailoring"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
