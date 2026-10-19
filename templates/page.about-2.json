@@ -307,6 +307,63 @@
         "mobile_margin_bottom": 0
       }
     },
+    "memorize_standard_dVBPVc": {
+      "type": "memorize-standard",
+      "blocks": {
+        "standard_card_DCUk7P": {
+          "type": "standard_card",
+          "settings": {
+            "title": "Signature Quilted Interiors",
+            "description": "<p>Quilted (like a designer bag) inside the trunk. Steel outside. Soft where it should be, structured where it counts.</p>"
+          }
+        },
+        "standard_card_HCrLyy": {
+          "type": "standard_card",
+          "settings": {
+            "title": "Refined Tailoring & Embroidery",
+            "description": "<p>Designed to be seen. Tailored to last. Custom embroidery designed from 12 fonts &amp; 18 thread colors.</p>"
+          }
+        },
+        "standard_card_yGMmXC": {
+          "type": "standard_card",
+          "settings": {
+            "title": "Fabric Options For Every Style",
+            "description": "<p>45+ luxe fabric choices from modern classic to grand millennial, French country to Americana and more. Your style. Your story. Your trunk.</p>"
+          }
+        },
+        "standard_card_kWFdHg": {
+          "type": "standard_card",
+          "settings": {
+            "title": "Not Just Personalized. Personal.",
+            "description": "<p>Personal guidance on fabric &amp; thread color combinations, directly from the founder.<br>Message us!</p>"
+          }
+        }
+      },
+      "block_order": [
+        "standard_card_DCUk7P",
+        "standard_card_HCrLyy",
+        "standard_card_yGMmXC",
+        "standard_card_kWFdHg"
+      ],
+      "name": "The Memorize Standard",
+      "settings": {
+        "heading": "The Memorize Standard",
+        "watermark_image": "shopify://shop_images/Untitled_design_58.png",
+        "watermark_opacity": 100,
+        "background_color": "#f5eaf1",
+        "text_color": "#07354a",
+        "border_color": "#9bacc0",
+        "content_width": 1300,
+        "padding_top": 64,
+        "padding_bottom": 72,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 48,
+        "mobile_margin_top": 0,
+        "mobile_margin_bottom": 0
+      }
+    },
     "testimonials_3k3RA8": {
       "type": "testimonials",
       "blocks": {
@@ -343,6 +400,7 @@
         "testimonial_f8hbLk",
         "testimonial_yVRRmq"
       ],
+      "disabled": true,
       "custom_css": [
         ".testimonials--image {height: 56px; width: auto;}",
         "[data-item~=\"block-heading\"] {font-size: 28px;}",
@@ -426,6 +484,7 @@
     "image_with_text_HEW7D3",
     "image_with_text_9bpQgf",
     "memorize_our_story_fPdWKe",
+    "memorize_standard_dVBPVc",
     "testimonials_3k3RA8",
     "gayle_founder_story_4zJBfq",
     "what_will_you_keep_YBzcbm"
