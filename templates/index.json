@@ -82,7 +82,7 @@
         "spacing-below": false,
         "spacing-around-blocks": false,
         "blocks_per_slide": 1,
-        "background-color": "none",
+        "background-color": "accent-1",
         "light-text": false,
         "text-style": "none",
         "text-background-color": "transparent",
