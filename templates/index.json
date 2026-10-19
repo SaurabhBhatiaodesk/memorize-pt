@@ -315,6 +315,7 @@
         "gallery_item_W6XN9U": {
           "type": "gallery_item",
           "settings": {
+            "image": "shopify://shop_images/6_bc11e0b2-5fc7-4d36-822f-231d2112392b.png",
             "caption": "Signature Quilted Interior",
             "link": ""
           }
@@ -329,6 +330,7 @@
         "gallery_item_C7UAUU": {
           "type": "gallery_item",
           "settings": {
+            "image": "shopify://shop_images/5_38f7184f-b397-41ae-bd80-51a7c244e975.png",
             "caption": "Personally Overseen By Our Founder",
             "link": ""
           }
