@@ -1,0 +1,366 @@
+{% comment %}
+  Memorize Our Story — image and text section.
+  Add to sections/memorize-our-story.liquid
+{% endcomment %}
+
+<section
+  id="memorize-story-{{ section.id }}"
+  class="memorize-story"
+  style="
+    --ms-background: {{ section.settings.background_color }};
+    --ms-heading: {{ section.settings.heading_color }};
+    --ms-text: {{ section.settings.text_color }};
+    --ms-accent: {{ section.settings.accent_color }};
+    --ms-width: {{ section.settings.content_width }}px;
+  "
+>
+  <div class="memorize-story__container">
+    <div class="memorize-story__copy">
+      {% if section.settings.eyebrow != blank %}
+        <p class="memorize-story__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="memorize-story__heading">{{ section.settings.heading | escape | newline_to_br }}</h2>
+      {% endif %}
+
+      {% if section.settings.subtitle != blank %}
+        <div class="memorize-story__subtitle rte">{{ section.settings.subtitle }}</div>
+      {% endif %}
+
+      {% if section.settings.body != blank %}
+        <div class="memorize-story__body rte">{{ section.settings.body }}</div>
+      {% endif %}
+    </div>
+
+    <div class="memorize-story__media">
+      {% if section.settings.image != blank %}
+        {{
+          section.settings.image
+          | image_url: width: 1400
+          | image_tag:
+            class: 'memorize-story__image',
+            loading: 'lazy',
+            widths: '360, 540, 750, 990, 1200, 1400',
+            sizes: '(max-width: 749px) 100vw, 45vw',
+            alt: section.settings.image_alt
+        }}
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'memorize-story__image memorize-story__placeholder' }}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  #memorize-story-{{ section.id }} {
+    width: 100%;
+    background: var(--ms-background);
+    color: var(--ms-text);
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+    padding: {{ section.settings.padding_top }}px 24px {{ section.settings.padding_bottom }}px;
+  }
+
+  #memorize-story-{{ section.id }} *,
+  #memorize-story-{{ section.id }} *::before,
+  #memorize-story-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #memorize-story-{{ section.id }} .memorize-story__container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    column-gap: clamp(40px, 5vw, 86px);
+    width: 100%;
+    max-width: min(var(--ms-width), var(--max-width--large, 1600px));
+    margin: 0 auto;
+  }
+
+  #memorize-story-{{ section.id }} .memorize-story__copy,
+  #memorize-story-{{ section.id }} .memorize-story__media {
+    min-width: 0;
+  }
+
+  #memorize-story-{{ section.id }} .memorize-story__eyebrow {
+    margin: 0 0 18px;
+    color: var(--ms-accent);
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .19em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  #memorize-story-{{ section.id }} .memorize-story__heading {
+    margin: 0 0 18px;
+    color: var(--ms-heading);
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-size: clamp(30px, 2.75vw, 45px);
+    font-weight: 500;
+    letter-spacing: -.025em;
+    line-height: 1.1;
+  }
+
+  #memorize-story-{{ section.id }} .memorize-story__subtitle {
+    margin: 0 0 22px;
+    color: var(--ms-heading);
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-size: clamp(17px, 1.25vw, 21px);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  #memorize-story-{{ section.id }} .memorize-story__body {
+    color: var(--ms-text);
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: clamp(13px, 1vw, 16px);
+    line-height: 1.78;
+  }
+
+  #memorize-story-{{ section.id }} .memorize-story__subtitle p,
+  #memorize-story-{{ section.id }} .memorize-story__body p {
+    margin: 0;
+  }
+
+  #memorize-story-{{ section.id }} .memorize-story__subtitle p + p,
+  #memorize-story-{{ section.id }} .memorize-story__body p + p {
+    margin-top: 14px;
+  }
+
+  #memorize-story-{{ section.id }} .memorize-story__media {
+    width: 100%;
+    border-radius: 9px;
+    overflow: hidden;
+  }
+
+  #memorize-story-{{ section.id }} .memorize-story__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  #memorize-story-{{ section.id }} .memorize-story__placeholder {
+    background: #ede8e5;
+  }
+
+  @media (max-width: 990px) {
+    #memorize-story-{{ section.id }} .memorize-story__container {
+      column-gap: 32px;
+    }
+
+    #memorize-story-{{ section.id }} .memorize-story__heading {
+      font-size: clamp(28px, 3.4vw, 36px);
+    }
+  }
+
+  @media (max-width: 749px) {
+    #memorize-story-{{ section.id }} {
+      margin-top: {{ section.settings.mobile_margin_top }}px;
+      margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
+      padding: {{ section.settings.mobile_padding_top }}px 18px {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    #memorize-story-{{ section.id }} .memorize-story__container {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+    }
+
+    #memorize-story-{{ section.id }} .memorize-story__heading {
+      font-size: clamp(29px, 7vw, 38px);
+    }
+
+    #memorize-story-{{ section.id }} .memorize-story__body {
+      font-size: 14px;
+    }
+
+    #memorize-story-{{ section.id }} .memorize-story__image {
+      aspect-ratio: 1 / 1;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Memorize Our Story",
+  "tag": "section",
+  "class": "shopify-section-memorize-story",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Our Story"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Modern Keepsake Trunks.\nRefined Tailoring.\nPersonal Stories."
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Italic subtitle",
+      "default": "<p>Memorize Trunks exists because I couldn't find the right one.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Story text",
+      "default": "<p>As I gathered keepsakes from my daughter's childhood, hand-knit sweaters from my Aunt Shelley, handwritten cards from her grandparents, finger-paint canvases, and her first tiny grass-stained soccer jersey, I knew those memories deserved more than a plastic bin with a P-touch label. I envisioned a keepsake trunk with impeccably tailored construction, quilted interiors, and fabrics that felt design-forward. So I decided to create one.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Story image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Memorize Trunks founder with family"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#fffbf8"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#07354a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text color",
+      "default": "#07354a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Eyebrow color",
+      "default": "#920968"
+    },
+    {
+      "type": "header",
+      "content": "Layout and spacing"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Max content width",
+      "min": 800,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Desktop top margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Desktop bottom margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_top",
+      "label": "Mobile top margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_bottom",
+      "label": "Mobile bottom margin",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Memorize Our Story"
+    }
+  ]
+}
+{% endschema %}
