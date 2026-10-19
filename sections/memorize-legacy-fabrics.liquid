@@ -20,7 +20,7 @@
   {% if section.settings.pattern_image != blank %}
     <div
       class="memorize-legacy__pattern"
-      style="background-image: url('{{ section.settings.pattern_image | image_url: width: 1800 }}'); background-size: cover;"
+      style="background-image: url('{{ section.settings.pattern_image | image_url: width: 1800 }}'); background-size: {{ section.settings.pattern_size }}px auto;"
       aria-hidden="true"
     ></div>
   {% endif %}
@@ -119,7 +119,6 @@
   #memorize-legacy-{{ section.id }} .memorize-legacy__heading {
     margin: 0 0 12px;
     color: var(--ml-text);
-    font-family: var(--font-heading-family, Georgia, serif);
     font-size: clamp(25px, 2.4vw, 33px);
     font-weight: 500;
     letter-spacing: -.035em;
@@ -128,7 +127,6 @@
 
   #memorize-legacy-{{ section.id }} .memorize-legacy__description {
     color: var(--ml-text);
-    font-family: var(--font-body-family, Arial, sans-serif);
     font-size: 13px;
     line-height: 1.75;
   }
@@ -151,7 +149,6 @@
 
   #memorize-legacy-{{ section.id }} .memorize-legacy__quote {
     color: var(--ml-text);
-    font-family: var(--font-heading-family, Georgia, serif);
     font-size: clamp(14px, 1.2vw, 17px);
     font-style: italic;
     line-height: 1.65;
@@ -160,7 +157,6 @@
   #memorize-legacy-{{ section.id }} .memorize-legacy__attribution {
     margin: 10px 0 14px;
     color: #607e8f;
-    font-family: var(--font-body-family, Arial, sans-serif);
     font-size: 10px;
     font-weight: 500;
     letter-spacing: .17em;
@@ -179,7 +175,6 @@
     border-radius: 6px;
     background: transparent;
     color: var(--ml-text);
-    font-family: var(--font-body-family, Arial, sans-serif);
     font-size: 10px;
     font-weight: 500;
     letter-spacing: .15em;
