@@ -216,6 +216,7 @@
     },
     "image_with_text_3WrzTf": {
       "type": "image-with-text",
+      "disabled": true,
       "custom_css": [
         ".image--root[data-overlay-style=\"darken\"]:after {background: linear-gradient(rgba(0, 0, 0, 0.4), 20%, rgba(0, 0, 0, 0.4));}"
       ],
@@ -391,7 +392,6 @@
   },
   "order": [
     "main",
-    "gayle_founder_story_4zJBfq",
     "featured_text_i6g3jg",
     "image_with_text_WqQdX6",
     "image_with_text_zNhEMy",
@@ -401,6 +401,7 @@
     "image_with_text_A9dFb4",
     "image_with_text_HEW7D3",
     "image_with_text_9bpQgf",
+    "gayle_founder_story_4zJBfq",
     "what_will_you_keep_YBzcbm"
   ]
 }
