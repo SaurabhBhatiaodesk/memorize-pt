@@ -303,8 +303,8 @@
         "padding_bottom": 40,
         "margin_top": 0,
         "margin_bottom": 0,
-        "mobile_padding_top": 24,
-        "mobile_padding_bottom": 24,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 40,
         "mobile_margin_top": 0,
         "mobile_margin_bottom": 0
       }
