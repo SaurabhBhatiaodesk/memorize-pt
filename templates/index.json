@@ -323,6 +323,7 @@
         "gallery_item_P8qBJq": {
           "type": "gallery_item",
           "settings": {
+            "image": "shopify://shop_images/custom_embroidery.png",
             "caption": "Custom Embroidery From 12 Fonts + 18 Thread Colors",
             "link": ""
           }
