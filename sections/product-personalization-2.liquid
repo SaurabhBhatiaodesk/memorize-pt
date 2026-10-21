@@ -1553,12 +1553,11 @@ $(document).on("click", ".sdev_radios_btn", function () {
           // A personalized trunk added here gets its embroidery fee like one added from the popup.
           const onPageFeeVariantId = getOnPageEmbroideryVariantId();
           if (onPageFeeVariantId) formData.set('properties[personalize_it_variant_id]', String(onPageFeeVariantId));
-          fetch(window.Shopify.routes.root + 'cart/add.js', { method: 'POST', body: formData })
+          addOnPageTrunkAndEmbroidery(formData, onPageFeeVariantId)
             .then(async response => {
               if (!response.ok) throw new Error(await response.text() || 'Add to cart failed.');
               return response.json();
             })
-            .then(() => addOnPageEmbroideryFee(onPageFeeVariantId))
             .then(() => {
               localStorage.setItem('pageRefreshed', 'true');
               window.location.href = '/cart';
@@ -2071,17 +2070,13 @@ $(document).on("click", ".sdev_radios_btn", function () {
                   // A personalized trunk added here gets its embroidery fee like one added from the popup.
                   const onPageFeeVariantId = getOnPageEmbroideryVariantId();
                   if (onPageFeeVariantId) formData.set('properties[personalize_it_variant_id]', String(onPageFeeVariantId));
-                  fetch(window.Shopify.routes.root + 'cart/add.js', {
-                    method: 'POST',
-                    body: formData
-                  })
+                  addOnPageTrunkAndEmbroidery(formData, onPageFeeVariantId)
                   .then(async response => {
                     if (!response.ok) {
                       throw new Error(await response.text() || 'Add to cart failed.');
                     }
                     return response.json();
                   })
-                  .then(() => addOnPageEmbroideryFee(onPageFeeVariantId))
                   .then(() => {
                     localStorage.setItem('pageRefreshed', 'true');
                     window.location.href = "/cart";
@@ -3126,15 +3121,27 @@ $(document).on("click", ".sdev_radios_btn", function () {
     return 42002574966857;
   }
 
-  // For the paths that post the trunk as a form: the fee follows in a second request, right after the trunk. If it fails the
-  // cart page guard adds the fee when the cart opens, as before.
-  function addOnPageEmbroideryFee(variantId) {
-    if (!variantId) return Promise.resolve();
+  // Submit the trunk and its fee together so a failed second request cannot
+  // leave a personalized trunk in the cart without its embroidery charge.
+  function addOnPageTrunkAndEmbroidery(formData, variantId) {
+    if (!variantId) {
+      return fetch(window.Shopify.routes.root + 'cart/add.js', { method: 'POST', body: formData });
+    }
+
+    const itemsData = new FormData();
+    for (const [name, value] of formData.entries()) {
+      const itemField = name === 'id' || name === 'quantity' || name === 'selling_plan' || /^properties\[/.test(name);
+      const itemName = name.startsWith('properties[')
+        ? `items[0][properties]${name.slice('properties'.length)}`
+        : `items[0][${name}]`;
+      itemsData.append(itemField ? itemName : name, value);
+    }
+    itemsData.append('items[1][id]', String(variantId));
+    itemsData.append('items[1][quantity]', formData.get('quantity') || '1');
     return fetch(window.Shopify.routes.root + 'cart/add.js', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: [{ id: variantId, quantity: 1, properties: {} }] })
-    }).catch(() => null);
+      body: itemsData
+    });
   }
 
   function defaultAddToCart(variantId) {
