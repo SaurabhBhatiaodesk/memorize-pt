@@ -15,7 +15,7 @@
     --gayle-bottom: {{ section.settings.padding_bottom }}px;
   "
 >
-  <div class="gayle-design__media">
+  <div class="gayle-design__media" id="gayle-design">
     {% if section.settings.pattern_image != blank %}
       <div class="gayle-design__pattern" aria-hidden="true" style="background-image: url('{{ section.settings.pattern_image | image_url: width: 1400 }}');"></div>
     {% endif %}
