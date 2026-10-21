@@ -1806,11 +1806,15 @@ document.addEventListener('change', function(event) {
               if (value) formData.set(`properties[${propertyName}]`, value);
             });
           }
+          // A personalized trunk added here gets its embroidery fee like one added from the popup.
+          const onPageFeeVariantId = getOnPageEmbroideryVariantId();
+          if (onPageFeeVariantId) formData.set('properties[personalize_it_variant_id]', String(onPageFeeVariantId));
           fetch(window.Shopify.routes.root + 'cart/add.js', { method: 'POST', body: formData })
             .then(async response => {
               if (!response.ok) throw new Error(await response.text() || 'Add to cart failed.');
               return response.json();
             })
+            .then(() => addOnPageEmbroideryFee(onPageFeeVariantId))
             .then(() => {
               localStorage.setItem('pageRefreshed', 'true');
               window.location.href = '/cart';
@@ -2373,6 +2377,9 @@ document.addEventListener('change', function(event) {
                       if (value) formData.set(`properties[${propertyName}]`, value);
                     });
                   }
+                  // A personalized trunk added here gets its embroidery fee like one added from the popup.
+                  const onPageFeeVariantId = getOnPageEmbroideryVariantId();
+                  if (onPageFeeVariantId) formData.set('properties[personalize_it_variant_id]', String(onPageFeeVariantId));
                   fetch(window.Shopify.routes.root + 'cart/add.js', {
                     method: 'POST',
                     body: formData
@@ -2383,6 +2390,7 @@ document.addEventListener('change', function(event) {
                     }
                     return response.json();
                   })
+                  .then(() => addOnPageEmbroideryFee(onPageFeeVariantId))
                   .then(() => {
                     localStorage.setItem('pageRefreshed', 'true');
                     window.location.href = "/cart";
@@ -3563,6 +3571,31 @@ document.addEventListener('change', function(event) {
     }
   });
 
+  // The embroidery fee for a trunk added with the on-page Add To Cart after the personalization was typed in the popup and the
+  // popup was closed. Same variants and rules as the popup path (up to 18 / 28 / 40 characters, a monogram is the first tier),
+  // so the cart gets the trunk, its fee line and the personalize_it_variant_id property exactly like from the popup's own button.
+  // 0 = the trunk is not personalized.
+  function getOnPageEmbroideryVariantId() {
+    const words = getPropertyValue('WordsNumbers');
+    const monogram = getPropertyValue('Monogram');
+    if (!words && !monogram) return 0;
+    if (getPropertyValue('Embroidery Type') === 'Monogram' || !words) return 42002574966857;
+    if (words.length > 28) return 42002575032393;
+    if (words.length > 18) return 42002574999625;
+    return 42002574966857;
+  }
+
+  // For the paths that post the trunk as a form: the fee follows in a second request, right after the trunk. If it fails the
+  // cart page guard adds the fee when the cart opens, as before.
+  function addOnPageEmbroideryFee(variantId) {
+    if (!variantId) return Promise.resolve();
+    return fetch(window.Shopify.routes.root + 'cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: [{ id: variantId, quantity: 1, properties: {} }] })
+    }).catch(() => null);
+  }
+
   function defaultAddToCart(variantId) {
     console.log("Add to cart button is working --------");
     console.log("Add to cart variantId ::", variantId);
@@ -3575,6 +3608,7 @@ document.addEventListener('change', function(event) {
     // any personalization the customer entered in the popup and closed
     // without submitting, instead of adding a plain item.
     const cartItem = { id: variantId, quantity: 1 };
+    const cartItems = [cartItem];
     const persistedWordsNumbers = getPropertyValue('WordsNumbers');
     const persistedMonogram = getPropertyValue('Monogram');
     if (persistedWordsNumbers || persistedMonogram) {
@@ -3584,11 +3618,17 @@ document.addEventListener('change', function(event) {
         if (value) properties[propertyName] = value;
       });
       cartItem.properties = properties;
+      // A personalized trunk gets its embroidery fee in the same request, like from the popup.
+      const onPageFeeVariantId = getOnPageEmbroideryVariantId();
+      if (onPageFeeVariantId) {
+        cartItem.properties.personalize_it_variant_id = String(onPageFeeVariantId);
+        cartItems.push({ id: onPageFeeVariantId, quantity: 1, properties: {} });
+      }
     }
     fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: [cartItem] }),
+      body: JSON.stringify({ items: cartItems }),
     })
     .then(res => {
       if (!res.ok) throw new Error('Network response was not ok');
