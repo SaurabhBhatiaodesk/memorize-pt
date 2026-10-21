@@ -1623,18 +1623,52 @@
       !Object.prototype.hasOwnProperty.call(properties, 'personalize_it_variant_id');
   }
 
+  // The three Custom Embroidery variants: up to 18 / 28 / 40 characters.
+  const EMBROIDERY_VARIANT_IDS = [42002574966857, 42002574999625, 42002575032393];
+
+  function getFirstItemProperty(item, names) {
+    const properties = (item && item.properties) || {};
+
+    for (const name of names) {
+      const value = String(properties[name] == null ? '' : properties[name]).trim();
+      if (value) return value;
+    }
+
+    return '';
+  }
+
+  // Which embroidery variant a trunk line needs, 0 if it is not personalized. This follows the rules of the guard in
+  // assets/cart.js (itemHasPersonalization / getRequiredEmbroideryVariantId): the guard adds a missing fee for EVERY
+  // personalized trunk, also one added with the on-page Add To Cart (no personalize_it_variant_id property, no fee line
+  // yet). If this cleanup only counted trunks WITH the property it would delete the fee the guard has just added, the
+  // two would fight and the cart would show no embroidery charge for a while.
+  function getRequiredEmbroideryVariantId(item) {
+    const savedVariantId = Number(
+      getFirstItemProperty(item, ['_embroidery_variant_id', 'personalize_it_variant_id'])
+    );
+
+    if (EMBROIDERY_VARIANT_IDS.includes(savedVariantId)) return savedVariantId;
+
+    const required = getFirstItemProperty(item, ['_requires_embroidery_charge']).toLowerCase();
+    const type = getFirstItemProperty(item, ['Embroidery Type', 'Embroidery', 'embroidery_type']);
+    const words = getFirstItemProperty(item, ['WordsNumbers', 'wordsnumbers', 'Words/Numbers', '_embroidery_text', 'embroidery_text']);
+    const monogram = getFirstItemProperty(item, ['Monogram', 'monogram', '_monogram']);
+
+    const personalized = required === 'true' || required === '1' || Boolean(type && (words || monogram));
+    if (!personalized) return 0;
+
+    if (words.length > 28) return EMBROIDERY_VARIANT_IDS[2];
+    if (words.length > 18) return EMBROIDERY_VARIANT_IDS[1];
+    return EMBROIDERY_VARIANT_IDS[0];
+  }
+
   function getRequiredEmbroideryQuantities(cartItems) {
     const requiredByVariantId = {};
 
     (cartItems || []).forEach(item => {
       if (Number(item.product_id) === CUSTOM_EMBROIDERY_PRODUCT_ID) return;
 
-      const properties = item.properties || {};
-      const embroideryVariantId = Number(
-        properties.personalize_it_variant_id ||
-        properties._embroidery_variant_id ||
-        0
-      );
+      const embroideryVariantId = getRequiredEmbroideryVariantId(item);
 
       if (!embroideryVariantId) return;
 
