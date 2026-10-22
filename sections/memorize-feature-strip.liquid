@@ -74,6 +74,7 @@
     text-align: center;
     text-transform: uppercase;
     width: auto;
+    max-width: calc(100% - 32px);
     white-space: nowrap;
   }
 
@@ -111,7 +112,18 @@
 
     new Swiper(carousel, {
       slidesPerView: 'auto',
-      spaceBetween: {{ section.settings.item_gap }},
+      spaceBetween: 16,
+      breakpoints: {
+        576: {
+          spaceBetween: 20
+        },
+        992: {
+          spaceBetween: 24
+        },
+        1280: {
+          spaceBetween: {{ section.settings.item_gap }}
+        }
+      },
       autoplay: {
         delay: 3500,
         disableOnInteraction: false,
