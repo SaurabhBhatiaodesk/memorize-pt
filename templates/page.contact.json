@@ -105,7 +105,7 @@
         "accent_color": "#920968",
         "margin_top": 0,
         "margin_bottom": 60,
-        "mobile_margin_top": 0,
+        "mobile_margin_top": 20,
         "mobile_margin_bottom": 60,
         "padding_top": 65,
         "padding_bottom": 65,
