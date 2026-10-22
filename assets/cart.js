@@ -622,7 +622,15 @@ class Cart extends HTMLElement {
       result.repaired &&
       result.ok
     ) {
-      await Cart.fetchTotals();
+      try {
+        await Cart.fetchTotals();
+      } catch (error) {
+        console.error(
+          "Cart totals refresh failed:",
+          error
+        );
+      }
+
       this.scheduleCartHtmlRefresh();
     }
 
@@ -662,28 +670,40 @@ class Cart extends HTMLElement {
     Cart.WATCHER_INTERVAL =
       window.setInterval(
         async () => {
-          const activeInstance =
-            Cart.instances.find(
+          const activeInstances =
+            Cart.instances.filter(
               (instance) =>
-                instance.isConnected
+                instance.isConnected &&
+                !instance
+                  .checkoutValidationRunning
             );
 
-          if (
-            !activeInstance ||
-            activeInstance
-              .checkoutValidationRunning
-          ) {
-            return;
-          }
+          await Promise.all(
+            activeInstances.map(
+              async (instance) => {
+                try {
+                  const ok =
+                    await instance
+                      .ensureEmbroideryPresent();
 
-          const ok =
-            await activeInstance
-              .ensureEmbroideryPresent();
-
-          activeInstance
-            .toggleCheckoutAvailability(
-              ok
-            );
+                  if (
+                    !instance
+                      .checkoutValidationRunning
+                  ) {
+                    instance
+                      .toggleCheckoutAvailability(
+                        ok
+                      );
+                  }
+                } catch (error) {
+                  console.error(
+                    "Embroidery watcher failed:",
+                    error
+                  );
+                }
+              }
+            )
+          );
         },
         1500
       );
@@ -771,8 +791,17 @@ class Cart extends HTMLElement {
       );
     }
 
-    const ok =
-      await this.ensureEmbroideryPresent();
+    let ok = false;
+
+    try {
+      ok =
+        await this.ensureEmbroideryPresent();
+    } catch (error) {
+      console.error(
+        "Checkout embroidery check failed:",
+        error
+      );
+    }
 
     if (!ok) {
       this.checkoutValidationRunning =
