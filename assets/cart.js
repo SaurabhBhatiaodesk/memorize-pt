@@ -37,6 +37,8 @@ class Cart extends HTMLElement {
     this.note = this.querySelector(".cart--notes--textarea");
     this.cart_form = this.querySelector("form");
 
+    // Keep accelerated checkout unavailable until the required fee is verified.
+    this.toggleCheckoutAvailability(false);
     this.toggleLoadingOnSubmit();
     this.bindCheckoutFormProtection();
 
@@ -1264,6 +1266,8 @@ class Cart extends HTMLElement {
     this.cart_form =
       this.querySelector("form");
 
+    // The cart has refreshed, so verify the current contents again first.
+    this.toggleCheckoutAvailability(false);
     this.toggleLoadingOnSubmit();
     this.bindCheckoutFormProtection();
 

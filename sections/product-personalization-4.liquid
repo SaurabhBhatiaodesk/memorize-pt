@@ -1716,6 +1716,9 @@ $(document).on("click", ".sdev_radios_btn", function () {
         clearTimeout(previewFailSafeTimer);
         controlLoaderOverlay('no');
         console.warn('Proceeding to cart without a preview image:', reason);
+        document.querySelectorAll('.properties-cstm-image, .custom-image-link-os, input[name="properties[image]"]').forEach((input) => {
+          input.value = '';
+        });
         if (type === 'desktop' || type === 'mobile') {
           let personalizeItVariantId;
           const personalizeItVariantIdInput = document.querySelector('.personalize-it-variant-id-os');
@@ -1773,7 +1776,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
             .catch((error) => {
               console.error('Error:', error);
               toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
-              alert('We could not add this item to cart. Please try again.');
+              alert('We could not confirm whether this item was added. Please check your cart before trying again.');
             });
         }
       };
@@ -2268,7 +2271,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
                   .catch((error) => {
                     console.error('Error:', error);
                     toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
-                    alert('We could not add this item to cart. Please try again.');
+                    alert('We could not confirm whether this item was added. Please check your cart before trying again.');
                   });
                 } else {
                   console.error("shopifyForm not found.");
@@ -3446,9 +3449,21 @@ $(document).on("click", ".sdev_radios_btn", function () {
 
   // Submit the trunk and its fee together so a failed second request cannot
   // leave a personalized trunk in the cart without its embroidery charge.
+  async function fetchCartAdd(options) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+    try {
+      const response = await fetch(window.Shopify.routes.root + 'cart/add.js', { ...options, signal: controller.signal });
+      const body = await response.text();
+      return new Response(body, { status: response.status, statusText: response.statusText, headers: response.headers });
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
   function addOnPageTrunkAndEmbroidery(formData, variantId) {
     if (!variantId) {
-      return fetch(window.Shopify.routes.root + 'cart/add.js', { method: 'POST', body: formData });
+      return fetchCartAdd({ method: 'POST', body: formData });
     }
 
     const itemsData = new FormData();
@@ -3461,7 +3476,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
     }
     itemsData.append('items[1][id]', String(variantId));
     itemsData.append('items[1][quantity]', formData.get('quantity') || '1');
-    return fetch(window.Shopify.routes.root + 'cart/add.js', {
+    return fetchCartAdd({
       method: 'POST',
       body: itemsData
     });
@@ -3494,7 +3509,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
         cartItems.push({ id: onPageFeeVariantId, quantity: 1, properties: {} });
       }
     }
-    fetch('/cart/add.js', {
+    fetchCartAdd({
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ items: cartItems }),
@@ -3509,7 +3524,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
     })
     .catch(error => {
       console.error('Add to cart error:', error);
-      alert(error);
+      alert('We could not confirm whether this item was added. Please check your cart before trying again.');
       toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
     });
   }
@@ -3653,7 +3668,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
 
     if (cartNote) formData.note = cartNote;
 
-    fetch(window.Shopify.routes.root + 'cart/add.js', {
+    fetchCartAdd({
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
@@ -3672,7 +3687,7 @@ $(document).on("click", ".sdev_radios_btn", function () {
       if (addToCartButton) toggleButtonState(addToCartButton, false, 'ADD TO CART');
       if (mobileAddToCartButton) toggleButtonState(mobileAddToCartButton, false, 'ADD TO CART');
       if (MainAddToCartButton) toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
-      alert('We could not add this item to cart. Please try again.');
+      alert('We could not confirm whether this item was added. Please check your cart before trying again.');
     });
   }
 </script>
