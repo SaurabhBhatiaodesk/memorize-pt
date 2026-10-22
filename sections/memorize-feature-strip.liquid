@@ -88,6 +88,10 @@
     transform: rotate(45deg);
   }
 
+  #memorize-feature-strip-{{ section.id }} .swiper-slide:last-child .memorize-feature-strip__diamond {
+    display: none;
+  }
+
   @media (max-width: 749px) {
     #memorize-feature-strip-{{ section.id }} {
       margin-top: {{ section.settings.mobile_margin_top }}px;
@@ -132,6 +136,7 @@
       rewind: true,
       speed: 500,
       watchOverflow: true,
+      centerInsufficientSlides: true,
       a11y: {
         enabled: true
       }
