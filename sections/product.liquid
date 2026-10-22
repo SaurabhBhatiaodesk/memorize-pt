@@ -1915,7 +1915,10 @@ label.radios--option-label.customText h3 {
               if (value) formData.set(`properties[${propertyName}]`, value);
             });
           }
-          fetch(window.Shopify.routes.root + 'cart/add.js', { method: 'POST', body: formData })
+          // A personalized trunk added here gets its embroidery fee like one added from the popup.
+          const onPageFeeVariantId = getOnPageEmbroideryVariantId();
+          if (onPageFeeVariantId) formData.set('properties[personalize_it_variant_id]', String(onPageFeeVariantId));
+          addOnPageTrunkAndEmbroidery(formData, onPageFeeVariantId)
             .then(async response => {
               if (!response.ok) throw new Error(await response.text() || 'Add to cart failed.');
               return response.json();
@@ -1927,7 +1930,7 @@ label.radios--option-label.customText h3 {
             .catch((error) => {
               console.error('Error:', error);
               resetAddToCartButtons();
-              alert('We could not add this item to cart. Please try again.');
+              alert('We could not confirm whether this item was added. Please check your cart before trying again.');
             });
         }
       };
@@ -2336,10 +2339,10 @@ label.radios--option-label.customText h3 {
                       if (value) formData.set(`properties[${propertyName}]`, value);
                     });
                   }
-                  fetch(window.Shopify.routes.root + 'cart/add.js', {
-                    method: 'POST',
-                    body: formData
-                  })
+                  // A personalized trunk added here gets its embroidery fee like one added from the popup.
+                  const onPageFeeVariantId = getOnPageEmbroideryVariantId();
+                  if (onPageFeeVariantId) formData.set('properties[personalize_it_variant_id]', String(onPageFeeVariantId));
+                  addOnPageTrunkAndEmbroidery(formData, onPageFeeVariantId)
                   .then(async response => {
                     if (!response.ok) {
                       throw new Error(await response.text() || 'Add to cart failed.');
@@ -2356,7 +2359,7 @@ label.radios--option-label.customText h3 {
                       MainAddToCartButton.disabled = false;
                       MainAddToCartButton.textContent = 'ADD TO CART';
                     }
-                    alert('We could not add this item to cart. Please try again.');
+                    alert('We could not confirm whether this item was added. Please check your cart before trying again.');
                   });
                 } else {
                   console.error("shopifyForm not found.");
@@ -3620,7 +3623,7 @@ label.radios--option-label.customText h3 {
           return;
         }
         const formData = new FormData(shopifyForm);
-        fetch(window.Shopify.routes.root + 'cart/add.js', { method: 'POST', body: formData })
+        fetchCartAdd({ method: 'POST', body: formData })
           .then(async response => {
             if (!response.ok) throw new Error(await response.text() || 'Add to cart failed.');
             return response.json();
@@ -3633,7 +3636,7 @@ label.radios--option-label.customText h3 {
             console.error('Error:', error);
             MainAddToCartButton.disabled = false;
             MainAddToCartButton.textContent = 'ADD TO CART';
-            alert('We could not add this item to cart. Please try again.');
+            alert('We could not confirm whether this item was added. Please check your cart before trying again.');
           });
         return;
       }
@@ -3646,6 +3649,57 @@ label.radios--option-label.customText h3 {
     });
   }
 
+
+  // The embroidery fee for a trunk added with the on-page Add To Cart after the personalization was typed in the popup and the
+  // popup was closed. Same variants and rules as the popup path (up to 18 / 28 / 40 characters, a monogram is the first tier),
+  // so the cart gets the trunk, its fee line and the personalize_it_variant_id property exactly like from the popup's own button.
+  // 0 = the trunk is not personalized.
+  function getOnPageEmbroideryVariantId() {
+    const words = getPropertyValue('WordsNumbers');
+    const monogram = getPropertyValue('Monogram');
+    if (!words && !monogram) return 0;
+    if (getPropertyValue('Embroidery Type') === 'Monogram' || !words) return 42002574966857;
+    if (words.length > 28) return 42002575032393;
+    if (words.length > 18) return 42002574999625;
+    return 42002574966857;
+  }
+
+  // Every cart/add.js request of the on-page Add To Cart goes through here: it gives up after 30 seconds instead of
+  // leaving the button stuck, and reads the body once so callers can still use .ok and .json().
+  async function fetchCartAdd(options) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+    try {
+      const response = await fetch(window.Shopify.routes.root + 'cart/add.js', { ...options, signal: controller.signal });
+      const body = await response.text();
+      return new Response(body, { status: response.status, statusText: response.statusText, headers: response.headers });
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  // Submit the trunk and its fee together so a failed second request cannot
+  // leave a personalized trunk in the cart without its embroidery charge.
+  function addOnPageTrunkAndEmbroidery(formData, variantId) {
+    if (!variantId) {
+      return fetchCartAdd({ method: 'POST', body: formData });
+    }
+
+    const itemsData = new FormData();
+    for (const [name, value] of formData.entries()) {
+      const itemField = name === 'id' || name === 'quantity' || name === 'selling_plan' || /^properties\[/.test(name);
+      const itemName = name.startsWith('properties[')
+        ? `items[0][properties]${name.slice('properties'.length)}`
+        : `items[0][${name}]`;
+      itemsData.append(itemField ? itemName : name, value);
+    }
+    itemsData.append('items[1][id]', String(variantId));
+    itemsData.append('items[1][quantity]', formData.get('quantity') || '1');
+    return fetchCartAdd({
+      method: 'POST',
+      body: itemsData
+    });
+  }
 
   // Form submission
   function customformSubmission (personalizeItVariantId){
@@ -3722,7 +3776,7 @@ label.radios--option-label.customText h3 {
       console.warn('Add-ons were not added to the cart request', addonError);
     }
 
-      fetch(window.Shopify.routes.root + 'cart/add.js', {
+      fetchCartAdd({
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'
@@ -3756,7 +3810,7 @@ label.radios--option-label.customText h3 {
           MainAddToCartButton.disabled = false;
           MainAddToCartButton.textContent = 'ADD TO CART';
         }
-        alert('We could not add this item to cart. Please try again.');
+        alert('We could not confirm whether this item was added. Please check your cart before trying again.');
     });
   }
 
