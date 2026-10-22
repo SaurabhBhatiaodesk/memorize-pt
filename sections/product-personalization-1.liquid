@@ -1764,6 +1764,9 @@ document.addEventListener('change', function(event) {
         clearTimeout(previewFailSafeTimer);
         controlLoaderOverlay('no');
         console.warn('Proceeding to cart without a preview image:', reason);
+        document.querySelectorAll('.properties-cstm-image, .custom-image-link-os, input[name="properties[image]"]').forEach((input) => {
+          input.value = '';
+        });
         if (type === 'desktop' || type === 'mobile') {
           let personalizeItVariantId;
           const personalizeItVariantIdInput = document.querySelector('.personalize-it-variant-id-os');
@@ -1809,12 +1812,11 @@ document.addEventListener('change', function(event) {
           // A personalized trunk added here gets its embroidery fee like one added from the popup.
           const onPageFeeVariantId = getOnPageEmbroideryVariantId();
           if (onPageFeeVariantId) formData.set('properties[personalize_it_variant_id]', String(onPageFeeVariantId));
-          fetch(window.Shopify.routes.root + 'cart/add.js', { method: 'POST', body: formData })
+          addOnPageTrunkAndEmbroidery(formData, onPageFeeVariantId)
             .then(async response => {
               if (!response.ok) throw new Error(await response.text() || 'Add to cart failed.');
               return response.json();
             })
-            .then(() => addOnPageEmbroideryFee(onPageFeeVariantId))
             .then(() => {
               localStorage.setItem('pageRefreshed', 'true');
               window.location.href = '/cart';
@@ -1822,7 +1824,7 @@ document.addEventListener('change', function(event) {
             .catch((error) => {
               console.error('Error:', error);
               toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
-              alert('We could not add this item to cart. Please try again.');
+              alert('We could not confirm whether this item was added. Please check your cart before trying again.');
             });
         }
       };
@@ -2380,17 +2382,13 @@ document.addEventListener('change', function(event) {
                   // A personalized trunk added here gets its embroidery fee like one added from the popup.
                   const onPageFeeVariantId = getOnPageEmbroideryVariantId();
                   if (onPageFeeVariantId) formData.set('properties[personalize_it_variant_id]', String(onPageFeeVariantId));
-                  fetch(window.Shopify.routes.root + 'cart/add.js', {
-                    method: 'POST',
-                    body: formData
-                  })
+                  addOnPageTrunkAndEmbroidery(formData, onPageFeeVariantId)
                   .then(async response => {
                     if (!response.ok) {
                       throw new Error(await response.text() || 'Add to cart failed.');
                     }
                     return response.json();
                   })
-                  .then(() => addOnPageEmbroideryFee(onPageFeeVariantId))
                   .then(() => {
                     localStorage.setItem('pageRefreshed', 'true');
                     window.location.href = "/cart";
@@ -2398,7 +2396,7 @@ document.addEventListener('change', function(event) {
                   .catch((error) => {
                     console.error('Error:', error);
                     toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
-                    alert('We could not add this item to cart. Please try again.');
+                    alert('We could not confirm whether this item was added. Please check your cart before trying again.');
                   });
                 } else {
                   console.error("shopifyForm not found.");
@@ -3585,15 +3583,41 @@ document.addEventListener('change', function(event) {
     return 42002574966857;
   }
 
-  // For the paths that post the trunk as a form: the fee follows in a second request, right after the trunk. If it fails the
-  // cart page guard adds the fee when the cart opens, as before.
-  function addOnPageEmbroideryFee(variantId) {
-    if (!variantId) return Promise.resolve();
-    return fetch(window.Shopify.routes.root + 'cart/add.js', {
+  // Every cart/add.js request of the on-page Add To Cart goes through here: it gives up after 30 seconds instead of
+  // leaving the button stuck, and reads the body once so callers can still use .ok and .json().
+  async function fetchCartAdd(options) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+    try {
+      const response = await fetch(window.Shopify.routes.root + 'cart/add.js', { ...options, signal: controller.signal });
+      const body = await response.text();
+      return new Response(body, { status: response.status, statusText: response.statusText, headers: response.headers });
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  // Submit the trunk and its fee together so a failed second request cannot
+  // leave a personalized trunk in the cart without its embroidery charge.
+  function addOnPageTrunkAndEmbroidery(formData, variantId) {
+    if (!variantId) {
+      return fetchCartAdd({ method: 'POST', body: formData });
+    }
+
+    const itemsData = new FormData();
+    for (const [name, value] of formData.entries()) {
+      const itemField = name === 'id' || name === 'quantity' || name === 'selling_plan' || /^properties\[/.test(name);
+      const itemName = name.startsWith('properties[')
+        ? `items[0][properties]${name.slice('properties'.length)}`
+        : `items[0][${name}]`;
+      itemsData.append(itemField ? itemName : name, value);
+    }
+    itemsData.append('items[1][id]', String(variantId));
+    itemsData.append('items[1][quantity]', formData.get('quantity') || '1');
+    return fetchCartAdd({
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: [{ id: variantId, quantity: 1, properties: {} }] })
-    }).catch(() => null);
+      body: itemsData
+    });
   }
 
   function defaultAddToCart(variantId) {
@@ -3625,7 +3649,7 @@ document.addEventListener('change', function(event) {
         cartItems.push({ id: onPageFeeVariantId, quantity: 1, properties: {} });
       }
     }
-    fetch('/cart/add.js', {
+    fetchCartAdd({
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ items: cartItems }),
@@ -3641,7 +3665,7 @@ document.addEventListener('change', function(event) {
     })
     .catch(error => {
       console.error('Add to cart error:', error);
-      alert(error);
+      alert('We could not confirm whether this item was added. Please check your cart before trying again.');
       toggleButtonState(MainAddToCartButton, false, 'ADD TO CART');
     });
   }
@@ -3824,7 +3848,7 @@ document.addEventListener('change', function(event) {
 
     if (cartNote) formData.note = cartNote;
     console.log("customformSubmission formData ::", formData);
-    fetch(window.Shopify.routes.root + 'cart/add.js', {
+    fetchCartAdd({
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
@@ -3841,7 +3865,7 @@ document.addEventListener('change', function(event) {
       // Same fix as above: restore whichever button actually triggered this
       // submission, not just MainAddToCartButton.
       restorePersonalizationButtons();
-      alert('We could not add this item to cart. Please try again.');
+      alert('We could not confirm whether this item was added. Please check your cart before trying again.');
     });
   }</script>
 
