@@ -4,6 +4,8 @@
   Mobile: one-feature-at-a-time swipeable and auto-advancing slider.
 {% endcomment %}
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
 <section
   id="memorize-feature-strip-{{ section.id }}"
   class="memorize-feature-strip"
@@ -20,20 +22,19 @@
     --mfs-gap: {{ section.settings.item_gap }}px;
   "
 >
-  <div class="memorize-feature-strip__inner" data-feature-track aria-label="Memorize features">
+  <div class="memorize-feature-strip__carousel swiper" data-feature-swiper aria-label="Memorize features">
+    <div class="memorize-feature-strip__inner swiper-wrapper">
     {% assign rendered_features = 0 %}
     {% for block in section.blocks %}
       {% if block.type == 'feature' and block.settings.text != blank %}
-        {% if rendered_features > 0 %}
-          <span class="memorize-feature-strip__diamond" aria-hidden="true"></span>
-        {% endif %}
-
-        <span class="memorize-feature-strip__item" {{ block.shopify_attributes }}>
+        <div class="memorize-feature-strip__item swiper-slide" {{ block.shopify_attributes }}>
           {{ block.settings.text | escape }}
-        </span>
+          <span class="memorize-feature-strip__diamond" aria-hidden="true"></span>
+        </div>
         {% assign rendered_features = rendered_features | plus: 1 %}
       {% endif %}
     {% endfor %}
+    </div>
   </div>
 </section>
 
@@ -53,16 +54,15 @@
     box-sizing: border-box;
   }
 
-  #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__inner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    column-gap: var(--mfs-gap);
-    row-gap: 12px;
+  #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__carousel {
     width: 100%;
     max-width: min(var(--mfs-width), 100%);
     margin: 0 auto;
+    overflow: hidden;
+  }
+
+  #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__inner {
+    align-items: center;
   }
 
   #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__item {
@@ -73,6 +73,8 @@
     line-height: 1.5;
     text-align: center;
     text-transform: uppercase;
+    width: auto;
+    white-space: nowrap;
   }
 
   #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__diamond {
@@ -80,53 +82,9 @@
     width: 5px;
     height: 5px;
     flex: 0 0 5px;
+    margin-left: var(--mfs-gap);
     background: var(--mfs-divider);
     transform: rotate(45deg);
-  }
-
-  @media (min-width: 1200px) {
-    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__inner {
-      flex-wrap: nowrap;
-    }
-
-    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__item {
-      white-space: nowrap;
-    }
-  }
-
-  @media (min-width: 750px) and (max-width: 1199px) {
-    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__inner {
-      flex-wrap: nowrap;
-      justify-content: flex-start;
-      gap: 0;
-      overflow-x: auto;
-      overflow-y: hidden;
-      scroll-snap-type: x mandatory;
-      scroll-behavior: smooth;
-      overscroll-behavior-x: contain;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      touch-action: pan-x pan-y;
-    }
-
-    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__inner::-webkit-scrollbar {
-      display: none;
-    }
-
-    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex: 0 0 100%;
-      min-width: 0;
-      min-height: 20px;
-      padding: 0 8px;
-      scroll-snap-align: start;
-    }
-
-    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__diamond {
-      display: none;
-    }
   }
 
   @media (max-width: 749px) {
@@ -136,134 +94,36 @@
       padding: {{ section.settings.mobile_padding_top }}px 14px {{ section.settings.mobile_padding_bottom }}px;
     }
 
-    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__inner {
-      display: flex;
-      flex-wrap: nowrap;
-      justify-content: flex-start;
-      gap: 0;
-      overflow-x: auto;
-      overflow-y: hidden;
-      scroll-snap-type: x mandatory;
-      scroll-behavior: smooth;
-      overscroll-behavior-x: contain;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      touch-action: pan-x pan-y;
-    }
-
-    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__inner::-webkit-scrollbar {
-      display: none;
-    }
-
     #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex: 0 0 100%;
-      min-width: 0;
-      min-height: 20px;
-      padding: 0 8px;
-      scroll-snap-align: start;
       font-size: {{ section.settings.mobile_font_size }}px;
       letter-spacing: .12em;
-    }
-
-    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__diamond {
-      display: none;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__inner {
-      scroll-behavior: auto;
     }
   }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
   (function () {
     const root = document.getElementById('memorize-feature-strip-{{ section.id }}');
-    if (!root || root.dataset.sliderInitialized === 'true') return;
-    root.dataset.sliderInitialized = 'true';
+    const carousel = root && root.querySelector('[data-feature-swiper]');
+    if (!carousel || carousel.dataset.swiperInitialized === 'true' || !window.Swiper) return;
+    carousel.dataset.swiperInitialized = 'true';
 
-    const track = root.querySelector('[data-feature-track]');
-    const slides = Array.from(track.querySelectorAll('.memorize-feature-strip__item'));
-    if (slides.length < 2) return;
-
-    const sliderViewport = window.matchMedia('(max-width: 1199px)');
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let timer = null;
-    let resumeTimer = null;
-    let index = 0;
-    let userInteracting = false;
-
-    function stop() {
-      if (timer !== null) {
-        window.clearInterval(timer);
-        timer = null;
+    new Swiper(carousel, {
+      slidesPerView: 'auto',
+      spaceBetween: {{ section.settings.item_gap }},
+      autoplay: {
+        delay: 3500,
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true
+      },
+      rewind: true,
+      speed: 500,
+      watchOverflow: true,
+      a11y: {
+        enabled: true
       }
-    }
-
-    function goTo(nextIndex) {
-      index = nextIndex % slides.length;
-      track.scrollTo({
-        left: slides[index].offsetLeft - slides[0].offsetLeft,
-        behavior: reducedMotion.matches ? 'instant' : 'smooth'
-      });
-    }
-
-    function start() {
-      stop();
-      if (!sliderViewport.matches || reducedMotion.matches || userInteracting || document.hidden) return;
-      timer = window.setInterval(function () {
-        goTo(index + 1);
-      }, 3500);
-    }
-
-    function pauseForInteraction() {
-      userInteracting = true;
-      stop();
-      window.clearTimeout(resumeTimer);
-      resumeTimer = window.setTimeout(function () {
-        userInteracting = false;
-        start();
-      }, 6000);
-    }
-
-    function syncIndex() {
-      if (!sliderViewport.matches) return;
-      const slideWidth = slides[0].getBoundingClientRect().width;
-      if (slideWidth > 0) {
-        index = Math.min(slides.length - 1, Math.round(track.scrollLeft / slideWidth));
-      }
-    }
-
-    track.addEventListener('touchstart', pauseForInteraction, { passive: true });
-    track.addEventListener('pointerdown', pauseForInteraction);
-    track.addEventListener('scroll', syncIndex, { passive: true });
-    root.addEventListener('mouseenter', stop);
-    root.addEventListener('mouseleave', start);
-    sliderViewport.addEventListener('change', function () {
-      if (!sliderViewport.matches) {
-        stop();
-        track.scrollLeft = 0;
-        index = 0;
-      }
-      start();
     });
-    reducedMotion.addEventListener('change', start);
-    document.addEventListener('visibilitychange', start);
-
-    if (window.Shopify && window.Shopify.designMode) {
-      document.addEventListener('shopify:block:select', function (event) {
-        const slide = event.target.closest('.memorize-feature-strip__item');
-        if (!slide || !root.contains(slide)) return;
-        pauseForInteraction();
-        goTo(slides.indexOf(slide));
-      });
-    }
-
-    start();
   })();
 </script>
 
