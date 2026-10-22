@@ -3447,8 +3447,8 @@ $(document).on("click", ".sdev_radios_btn", function () {
     return 42002574966857;
   }
 
-  // Submit the trunk and its fee together so a failed second request cannot
-  // leave a personalized trunk in the cart without its embroidery charge.
+  // Every cart/add.js request of the on-page Add To Cart goes through here: it gives up after 30 seconds instead of
+  // leaving the button stuck, and reads the body once so callers can still use .ok and .json().
   async function fetchCartAdd(options) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 30000);
@@ -3461,6 +3461,8 @@ $(document).on("click", ".sdev_radios_btn", function () {
     }
   }
 
+  // Submit the trunk and its fee together so a failed second request cannot
+  // leave a personalized trunk in the cart without its embroidery charge.
   function addOnPageTrunkAndEmbroidery(formData, variantId) {
     if (!variantId) {
       return fetchCartAdd({ method: 'POST', body: formData });
