@@ -94,6 +94,41 @@
     }
   }
 
+  @media (min-width: 750px) and (max-width: 1199px) {
+    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__inner {
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      gap: 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      touch-action: pan-x pan-y;
+    }
+
+    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__inner::-webkit-scrollbar {
+      display: none;
+    }
+
+    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 100%;
+      min-width: 0;
+      min-height: 20px;
+      padding: 0 8px;
+      scroll-snap-align: start;
+    }
+
+    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__diamond {
+      display: none;
+    }
+  }
+
   @media (max-width: 749px) {
     #memorize-feature-strip-{{ section.id }} {
       margin-top: {{ section.settings.mobile_margin_top }}px;
@@ -155,7 +190,7 @@
     const slides = Array.from(track.querySelectorAll('.memorize-feature-strip__item'));
     if (slides.length < 2) return;
 
-    const mobile = window.matchMedia('(max-width: 749px)');
+    const sliderViewport = window.matchMedia('(max-width: 1199px)');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let timer = null;
     let resumeTimer = null;
@@ -179,7 +214,7 @@
 
     function start() {
       stop();
-      if (!mobile.matches || reducedMotion.matches || userInteracting || document.hidden) return;
+      if (!sliderViewport.matches || reducedMotion.matches || userInteracting || document.hidden) return;
       timer = window.setInterval(function () {
         goTo(index + 1);
       }, 3500);
@@ -196,7 +231,7 @@
     }
 
     function syncIndex() {
-      if (!mobile.matches) return;
+      if (!sliderViewport.matches) return;
       const slideWidth = slides[0].getBoundingClientRect().width;
       if (slideWidth > 0) {
         index = Math.min(slides.length - 1, Math.round(track.scrollLeft / slideWidth));
@@ -208,8 +243,8 @@
     track.addEventListener('scroll', syncIndex, { passive: true });
     root.addEventListener('mouseenter', stop);
     root.addEventListener('mouseleave', start);
-    mobile.addEventListener('change', function () {
-      if (!mobile.matches) {
+    sliderViewport.addEventListener('change', function () {
+      if (!sliderViewport.matches) {
         stop();
         track.scrollLeft = 0;
         index = 0;
