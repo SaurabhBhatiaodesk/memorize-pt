@@ -61,7 +61,7 @@
     column-gap: var(--mfs-gap);
     row-gap: 12px;
     width: 100%;
-    max-width: min(var(--mfs-width), var(--max-width--large, 100%));
+    max-width: min(var(--mfs-width), 100%);
     margin: 0 auto;
   }
 
@@ -82,6 +82,16 @@
     flex: 0 0 5px;
     background: var(--mfs-divider);
     transform: rotate(45deg);
+  }
+
+  @media (min-width: 1200px) {
+    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__inner {
+      flex-wrap: nowrap;
+    }
+
+    #memorize-feature-strip-{{ section.id }} .memorize-feature-strip__item {
+      white-space: nowrap;
+    }
   }
 
   @media (max-width: 749px) {
