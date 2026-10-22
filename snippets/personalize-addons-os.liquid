@@ -172,13 +172,13 @@
     .addons-dots-os[hidden] { display: none; }
     .addon-dot-os { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 999px; background: #c9d6e3; cursor: pointer; transition: width .25s ease, background .25s ease; }
     .addon-dot-os.is-active { width: 22px; background: #274864; }
-    .addon-main-os { display: flex; gap: 14px; align-items: center; }
-    .addon-img-os { flex: 0 0 96px; }
-    .addon-img-os img { width: 96px; height: 96px; object-fit: contain; border-radius: 12px; background: #f6f3ef; padding: 6px; box-sizing: border-box; display: block; }
+    .addon-main-os { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 20px; align-items: start; }
+    .addon-img-os { width: 112px; }
+    .addon-img-os img { width: 112px; height: 112px; object-fit: contain; border-radius: 10px; background: #f6f3ef; padding: 8px; box-sizing: border-box; display: block; }
     .addon-info-os { flex: 1 1 auto; min-width: 0; }
-    .addon-title-os { font-size: 17px; line-height: 22px; color: #274864; margin-bottom: 8px; }
-    .addon-price-os { font-size: 16px; font-weight: 600; color: #274864; margin: -2px 0 10px; }
-    .addon-desc-os { font-size: 14px; line-height: 20px; color: #274864; margin: -4px 0 10px; white-space: pre-line; }
+    .addon-title-os { font-size: 17px; line-height: 22px; color: #274864; margin: 0 0 6px; }
+    .addon-price-os { font-size: 16px; font-weight: 600; color: #274864; margin: 0 0 10px; }
+    .addon-desc-os { font-size: 14px; line-height: 20px; color: #274864; margin: 0 0 14px; white-space: pre-line; }
     .addon-saved-os { margin-top: 8px; font-size: 14px; line-height: 18px; color: #274864; word-break: break-word; }
     .addon-saved-os[hidden] { display: none; }
     .addon-btn-os {
@@ -222,6 +222,9 @@
     .addon-count-os { font-size: 14px; line-height: 18px; color: #274864; }
     .addon-remove-os { background: none; border: 0; padding: 8px 0 0; color: #5b7088; text-decoration: underline; cursor: pointer; font-size: 13px; }
     @media screen and (max-width: 767px) {
+      .addon-main-os { grid-template-columns: 88px minmax(0, 1fr); gap: 14px; }
+      .addon-img-os { width: 88px; }
+      .addon-img-os img { width: 88px; height: 88px; }
       /* Same look as the mobile embroidery type buttons */
       .addon-choices-os { flex-direction: column; gap: 10px; }
       .addon-choice-os { width: 100%; min-height: 44px; border: 1px solid #274864; border-radius: 5px; font-size: 16px; }
@@ -266,6 +269,21 @@
         function formatPrice(cents) {
           var amount = (Number(cents) || 0) / 100;
           return config.currency + (amount % 1 === 0 ? String(amount) : amount.toFixed(2));
+        }
+        function priceDetail(description, cents) {
+          var lines = String(description || '').split(/\n+/);
+          var amount = (Number(cents) || 0) / 100;
+          var number = amount % 1 === 0 ? String(amount) : amount.toFixed(2);
+          var escapedCurrency = String(config.currency || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          var priceLine = new RegExp('^[•\\s-]*' + escapedCurrency + '\\s*' + number.replace('.', '\\.') + '(?:\\.00)?\\s*(.*)$');
+          var detail = '';
+          var remaining = lines.filter(function (line) {
+            var match = line.trim().match(priceLine);
+            if (!match) return true;
+            detail = String(match[1] || '').trim();
+            return false;
+          });
+          return { detail: detail, description: remaining.join('\n').trim() };
         }
         function isEngravable(p) {
           return (!!config.engravableHandle && p.handle === config.engravableHandle) || (!!config.engravableTag && Array.isArray(p.tags) && p.tags.indexOf(config.engravableTag) !== -1);
@@ -325,8 +343,10 @@
           }
           var info = el('div', 'addon-info-os');
           info.appendChild(el('div', 'addon-title-os', p.title));
-          if (p.price !== null && p.price !== undefined) info.appendChild(el('div', 'addon-price-os', formatPrice(p.price)));
           var description = isEngravable(p) ? plainText(p.description) : '';
+          var display = priceDetail(description, p.price);
+          if (p.price !== null && p.price !== undefined) info.appendChild(el('div', 'addon-price-os', formatPrice(p.price) + (display.detail ? ' ' + display.detail : '')));
+          description = display.description;
           if (description) info.appendChild(el('div', 'addon-desc-os', description));
           var button = el('button', 'addon-btn-os', isEngravable(p) ? 'Engrave It' : 'Add');
           button.type = 'button';
